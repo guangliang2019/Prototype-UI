@@ -1,0 +1,27 @@
+{
+  "name": "prototype-ui",
+  "version": "0.0.1",
+  "description": "Headless UI with Web Component",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "tsc": "^2.0.4",
+    "typescript": "^5.5.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx http-server . -p 3000",
+    "build": "npx tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guangliang2019/Prototype-UI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guangliang2019/Prototype-UI/issues"
+  },
+  "homepage": "https://github.com/guangliang2019/Prototype-UI#readme"
+}
