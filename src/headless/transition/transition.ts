@@ -1,100 +1,160 @@
-// TODO: 处理 transtion 结束时的回调，改为使用 onTransitionEnd
-// TODO: 处理 transition 未结束时的表现，确保正确取消监听
+import { TransitionProps } from './interface';
 
-import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { DEFALUT_TRANSITION_PROPS, type TransitionProps } from './interface';
+enum TransitionState {
+  Idle = 'idle',
+  Entering = 'entering',
+  Entered = 'entered',
+  Leaving = 'leaving',
+  Left = 'left',
+}
 
-@customElement('headless-transition')
-export class HeadlessTransition extends LitElement implements TransitionProps {
-  @property({ type: Boolean }) show = DEFALUT_TRANSITION_PROPS['show'];
-  @property({ type: Boolean }) unmount = DEFALUT_TRANSITION_PROPS['unmount'];
-  @property({ type: Boolean }) appear = DEFALUT_TRANSITION_PROPS['appear'];
-  @property({ type: Function }) beforeEnter = DEFALUT_TRANSITION_PROPS['beforeEnter'];
-  @property({ type: Function }) afterEnter = DEFALUT_TRANSITION_PROPS['afterEnter'];
-  @property({ type: Function }) beforeLeave = DEFALUT_TRANSITION_PROPS['beforeLeave'];
-  @property({ type: Function }) afterLeave = DEFALUT_TRANSITION_PROPS['afterLeave'];
-  @property({ type: String }) beforeEnterClass = DEFALUT_TRANSITION_PROPS['beforeEnterClass'];
-  @property({ type: String }) afterEnterClass = DEFALUT_TRANSITION_PROPS['afterEnterClass'];
-  @property({ type: String }) beforeLeaveClass = DEFALUT_TRANSITION_PROPS['beforeLeaveClass'];
-  @property({ type: String }) afterLeaveClass = DEFALUT_TRANSITION_PROPS['afterLeaveClass'];
+export class HeadlessTransition extends HTMLElement implements TransitionProps {
+  private state: TransitionState = TransitionState.Idle;
 
-  createRenderRoot() {
-    return this; // 直接返回 `this`，不创建 Shadow DOM
+  // Properties
+  private _show = true;
+
+  get show() {
+    return this._show;
   }
 
-  static styles = css`
-    :host {
-      display: block;
+  set show(value: boolean) {
+    const oldValue = this._show;
+    this._show = value;
+    if (oldValue !== value) {
+      this.toggleAttribute('show', value);
+      this.show
+        ? this.transitionTo(TransitionState.Entering)
+        : this.transitionTo(TransitionState.Leaving);
     }
-  `;
+  }
 
-  updated(changedProperties: Map<string | number | symbol, unknown>) {
-    if (changedProperties.has('show')) {
-      this.toggleVisibility();
-    }
+  unmount = false;
+  appear = false;
+  beforeEnter?: () => void;
+  afterEnter?: () => void;
+  beforeLeave?: () => void;
+  afterLeave?: () => void;
+  beforeEnterClass = '';
+  afterEnterClass = '';
+  beforeLeaveClass = '';
+  afterLeaveClass = '';
+
+  constructor() {
+    super();
+    this.beforeEnterClass = this.className;
+  }
+
+  static get observedAttributes() {
+    return [
+      'show',
+      'unmount',
+      'appear',
+      'before-enter',
+      'after-enter',
+      'before-leave',
+      'after-leave',
+      'before-enter-class',
+      'after-enter-class',
+      'before-leave-class',
+      'after-leave-class',
+    ];
   }
 
   connectedCallback() {
-    super.connectedCallback();
     if (this.appear && this.show) {
-      this.enter();
+      this.transitionTo(TransitionState.Entering);
     }
   }
 
-  private toggleVisibility() {
-    if (this.show) {
-      this.enter();
-    } else {
-      this.leave();
+  attributeChangedCallback(name: string, oldValue: any, newValue: any) {
+    const mapping: Record<string, any> = {
+      'show': () => {
+        this.show = newValue !== null;
+        this.show
+          ? this.transitionTo(TransitionState.Entering)
+          : this.transitionTo(TransitionState.Leaving);
+      },
+      'unmount': () => (this.unmount = newValue !== null),
+      'appear': () => (this.appear = newValue !== null),
+      'before-enter': () => (this.beforeEnter = new Function(newValue) as () => void),
+      'after-enter': () => (this.afterEnter = new Function(newValue) as () => void),
+      'before-leave': () => (this.beforeLeave = new Function(newValue) as () => void),
+      'after-leave': () => (this.afterLeave = new Function(newValue) as () => void),
+      'before-enter-class': () => (this.beforeEnterClass = newValue),
+      'after-enter-class': () => (this.afterEnterClass = newValue),
+      'before-leave-class': () => (this.beforeLeaveClass = newValue),
+      'after-leave-class': () => (this.afterLeaveClass = newValue),
+    };
+
+    mapping[name]?.();
+  }
+
+  private transitionTo(newState: TransitionState) {
+    this.removeEventListener('transitionend', this.onTransitionEnd);
+    this.state = newState;
+
+    switch (newState) {
+      case TransitionState.Entering:
+        this.enter();
+        break;
+      case TransitionState.Leaving:
+        this.leave();
+        break;
+      case TransitionState.Entered:
+        this.afterEnter?.();
+        break;
+      case TransitionState.Left:
+        this.afterLeave?.();
+        if (this.unmount) this.remove();
+        break;
     }
   }
 
   private enter() {
-    if (this.beforeEnter) this.beforeEnter();
+    this.beforeEnter?.();
+    this.resetTransitionClasses();
+    if (this.beforeEnterClass) this.classList.add(this.beforeEnterClass);
 
-    if (this.beforeEnterClass) {
-      this.classList.add(this.beforeEnterClass);
-    }
-
-    setTimeout(() => {
-      if (this.beforeEnterClass) {
-        this.classList.remove(this.beforeEnterClass);
-      }
-
-      if (this.afterEnterClass) {
-        this.classList.add(this.afterEnterClass);
-      }
-
-      if (this.afterEnter) this.afterEnter();
-    }, 300);
+    requestAnimationFrame(() => {
+      if (this.beforeEnterClass) this.classList.remove(this.beforeEnterClass);
+      if (this.afterEnterClass) this.classList.add(this.afterEnterClass);
+      this.addEventListener('transitionend', this.onTransitionEnd, {
+        once: true,
+      });
+    });
   }
 
   private leave() {
-    if (this.beforeLeave) this.beforeLeave();
+    this.beforeLeave?.();
+    this.resetTransitionClasses();
+    if (this.beforeLeaveClass) this.classList.add(this.beforeLeaveClass);
 
-    if (this.beforeLeaveClass) {
-      this.classList.add(this.beforeLeaveClass);
-    }
-
-    setTimeout(() => {
-      if (this.beforeLeaveClass) {
-        this.classList.remove(this.beforeLeaveClass);
-      }
-
-      if (this.afterLeaveClass) {
-        this.classList.add(this.afterLeaveClass);
-      }
-
-      if (this.afterLeave) this.afterLeave();
-
-      if (this.unmount) {
-        this.remove();
-      }
-    }, 300);
+    requestAnimationFrame(() => {
+      if (this.beforeLeaveClass) this.classList.remove(this.beforeLeaveClass);
+      if (this.afterLeaveClass) this.classList.add(this.afterLeaveClass);
+      this.addEventListener('transitionend', this.onTransitionEnd, {
+        once: true,
+      });
+    });
   }
 
-  render() {
-    return html`<slot></slot>`;
+  private onTransitionEnd = () => {
+    if (this.state === TransitionState.Entering) {
+      this.transitionTo(TransitionState.Entered);
+    } else if (this.state === TransitionState.Leaving) {
+      this.transitionTo(TransitionState.Left);
+    }
+  };
+
+  private resetTransitionClasses() {
+    this.classList.remove(
+      this.beforeEnterClass,
+      this.afterEnterClass,
+      this.beforeLeaveClass,
+      this.afterLeaveClass
+    );
   }
 }
+
+customElements.define('headless-transition', HeadlessTransition);

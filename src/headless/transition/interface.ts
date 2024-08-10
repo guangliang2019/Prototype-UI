@@ -7,22 +7,22 @@ export interface TransitionProps {
   beforeLeave?: () => void;
   afterLeave?: () => void;
 
-  beforeEnterClass?: string;
+  // beforeEnterClass?: string;
   afterEnterClass?: string;
-  beforeLeaveClass?: string;
+  // beforeLeaveClass?: string;
   afterLeaveClass?: string;
 }
 
-export const DEFALUT_TRANSITION_PROPS: TransitionProps = {
-  show: false,
+export const DEFAULT_TRANSITION_PROPS: TransitionProps = {
+  show: true,
   unmount: true,
   appear: false,
   beforeEnter: undefined,
   afterEnter: undefined,
   beforeLeave: undefined,
   afterLeave: undefined,
-  beforeEnterClass: undefined,
+  // beforeEnterClass: undefined,
   afterEnterClass: undefined,
-  beforeLeaveClass: undefined,
+  // beforeLeaveClass: undefined,
   afterLeaveClass: undefined,
 };

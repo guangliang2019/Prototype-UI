@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Headless Transition</title>
+    <style>
+      /* 一些简单的过渡效果的样式 */
+      .before-enter {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 3s, transform 3s;
+      }
+
+      .after-enter {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 3s, transform 3s;
+      }
+
+      .before-leave {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 3s, transform 3s;
+      }
+
+      .after-leave {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 3s, transform 3s;
+      }
+    </style>
+  </head>
+  <body>
+    <headless-transition
+      id="transition-element"
+      appear
+      class="before-enter"
+      after-enter-class="after-enter"
+      before-leave-class="before-leave"
+      after-leave-class="after-leave"
+    >
+      <div style="padding: 20px; background-color: lightblue">
+        This is a transition content.
+      </div>
+    </headless-transition>
+
+    <button id="toggle-button">Toggle Transition</button>
+    <script type="module" src="/main.ts"></script>
+    <script type="module">
+      const toggleButton = document.getElementById("toggle-button");
+      const transitionElement = document.getElementById("transition-element");
+      transitionElement.afterEnter = () => {
+        console.log("afterEnter");
+      }
+      transitionElement.afterLeave = () => {
+        debugger;
+        console.log("afterLeave");
+      }
+
+      toggleButton.addEventListener("click", () => {
+        // 切换 show 属性来触发 enter/leave 过渡
+        transitionElement.show = !transitionElement.show;
+        console.log(transitionElement.show);
+      });
+    </script>
+  </body>
+</html>
