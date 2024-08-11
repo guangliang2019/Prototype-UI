@@ -1,1 +1,1 @@
-import './headless/transition/transition';
+import './index';

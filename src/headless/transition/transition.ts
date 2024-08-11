@@ -1,3 +1,11 @@
+/**
+ * Headless Transition with Web Component
+ * 
+ * @link https://github.com/guangliang2019/Prototype-UI/blob/main/src/headless/transition/transition.ts
+ * @author guangliang2019
+ * @date 2024-08-11
+ */
+
 import { DEFAULT_TRANSITION_PROPS, TransitionProps } from './interface';
 
 enum TransitionState {
@@ -8,10 +16,9 @@ enum TransitionState {
   Left = 'left',
 }
 
-export class HeadlessTransition extends HTMLElement implements TransitionProps {
+export default class HeadlessTransition extends HTMLElement implements TransitionProps {
   private _state: TransitionState = TransitionState.Idle;
 
-  // Properties
   private _show = DEFAULT_TRANSITION_PROPS['show'];
   // prettier-ignore
   get show() { return this._show; }
@@ -53,7 +60,6 @@ export class HeadlessTransition extends HTMLElement implements TransitionProps {
       'before-leave',
       'after-leave',
       'after-enter-class',
-      'before-leave-class',
       'after-leave-class',
     ];
   }
@@ -133,6 +139,7 @@ export class HeadlessTransition extends HTMLElement implements TransitionProps {
     });
   }
 
+  // gl: this shuold be a arrow function, cause it's used in transitionend event listener's callback
   private _onTransitionEnd = () => {
     if (this._state === TransitionState.Entering) {
       this._transitionTo(TransitionState.Entered);

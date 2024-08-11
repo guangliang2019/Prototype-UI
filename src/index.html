@@ -31,6 +31,8 @@
       }
     </style>
   </head>
+
+  <script type="module" src="/main.ts"></script>
   <body>
     <headless-transition
       id="transition-element"
@@ -44,12 +46,21 @@
         This is a transition content.
       </div>
     </headless-transition>
-
     <button id="toggle-button">Toggle Transition</button>
-    <script type="module" src="/main.ts"></script>
+    <click-outside id="click-outside-element">
+      <div style="padding: 20px; background-color: lightcoral">
+        This is a click-outside content.
+    </click-outside>
+
+    
     <script type="module">
       const toggleButton = document.getElementById("toggle-button");
       const transitionElement = document.getElementById("transition-element");
+      const clickOutsideElement = document.getElementById("click-outside-element");
+
+      clickOutsideElement.onClickOutside = () => {
+        console.log("ClickOutside");
+      }
       transitionElement.afterEnter = () => {
         console.log("afterEnter");
       }

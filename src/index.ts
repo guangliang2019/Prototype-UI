@@ -1,1 +1,2 @@
-export { HeadlessTransition } from "./headless/transition/transition";
+import './headless/transition';
+import './common';
