@@ -7,9 +7,7 @@ export interface TransitionProps {
   beforeLeave?: () => void;
   afterLeave?: () => void;
 
-  // beforeEnterClass?: string;
   afterEnterClass?: string;
-  // beforeLeaveClass?: string;
   afterLeaveClass?: string;
 }
 
