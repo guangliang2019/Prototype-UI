@@ -1,4 +1,4 @@
-import { TransitionProps } from './interface';
+import { DEFAULT_TRANSITION_PROPS, TransitionProps } from './interface';
 
 enum TransitionState {
   Idle = 'idle',
@@ -9,40 +9,38 @@ enum TransitionState {
 }
 
 export class HeadlessTransition extends HTMLElement implements TransitionProps {
-  private state: TransitionState = TransitionState.Idle;
+  private _state: TransitionState = TransitionState.Idle;
 
   // Properties
-  private _show = true;
-
-  get show() {
-    return this._show;
-  }
-
+  private _show = DEFAULT_TRANSITION_PROPS['show'];
+  // prettier-ignore
+  get show() { return this._show; }
   set show(value: boolean) {
     const oldValue = this._show;
     this._show = value;
     if (oldValue !== value) {
       this.toggleAttribute('show', value);
       this.show
-        ? this.transitionTo(TransitionState.Entering)
-        : this.transitionTo(TransitionState.Leaving);
+        ? this._transitionTo(TransitionState.Entering)
+        : this._transitionTo(TransitionState.Leaving);
     }
   }
 
-  unmount = false;
-  appear = false;
-  beforeEnter?: () => void;
-  afterEnter?: () => void;
-  beforeLeave?: () => void;
-  afterLeave?: () => void;
-  beforeEnterClass = '';
-  afterEnterClass = '';
-  beforeLeaveClass = '';
-  afterLeaveClass = '';
+  appear = DEFAULT_TRANSITION_PROPS['appear'];
+  unmount = DEFAULT_TRANSITION_PROPS['unmount'];
+
+  beforeEnter?: () => void = DEFAULT_TRANSITION_PROPS['beforeEnter'];
+  afterEnter?: () => void = DEFAULT_TRANSITION_PROPS['afterEnter'];
+  beforeLeave?: () => void = DEFAULT_TRANSITION_PROPS['beforeLeave'];
+  afterLeave?: () => void = DEFAULT_TRANSITION_PROPS['afterLeave'];
+
+  private _beforeEnterClass = '';
+  afterEnterClass = DEFAULT_TRANSITION_PROPS['afterEnterClass'];
+  afterLeaveClass = DEFAULT_TRANSITION_PROPS['afterLeaveClass'];
 
   constructor() {
     super();
-    this.beforeEnterClass = this.className;
+    this._beforeEnterClass = this.className;
   }
 
   static get observedAttributes() {
@@ -54,7 +52,6 @@ export class HeadlessTransition extends HTMLElement implements TransitionProps {
       'after-enter',
       'before-leave',
       'after-leave',
-      'before-enter-class',
       'after-enter-class',
       'before-leave-class',
       'after-leave-class',
@@ -63,7 +60,7 @@ export class HeadlessTransition extends HTMLElement implements TransitionProps {
 
   connectedCallback() {
     if (this.appear && this.show) {
-      this.transitionTo(TransitionState.Entering);
+      this._transitionTo(TransitionState.Entering);
     }
   }
 
@@ -72,8 +69,8 @@ export class HeadlessTransition extends HTMLElement implements TransitionProps {
       'show': () => {
         this.show = newValue !== null;
         this.show
-          ? this.transitionTo(TransitionState.Entering)
-          : this.transitionTo(TransitionState.Leaving);
+          ? this._transitionTo(TransitionState.Entering)
+          : this._transitionTo(TransitionState.Leaving);
       },
       'unmount': () => (this.unmount = newValue !== null),
       'appear': () => (this.appear = newValue !== null),
@@ -81,25 +78,23 @@ export class HeadlessTransition extends HTMLElement implements TransitionProps {
       'after-enter': () => (this.afterEnter = new Function(newValue) as () => void),
       'before-leave': () => (this.beforeLeave = new Function(newValue) as () => void),
       'after-leave': () => (this.afterLeave = new Function(newValue) as () => void),
-      'before-enter-class': () => (this.beforeEnterClass = newValue),
       'after-enter-class': () => (this.afterEnterClass = newValue),
-      'before-leave-class': () => (this.beforeLeaveClass = newValue),
       'after-leave-class': () => (this.afterLeaveClass = newValue),
     };
 
     mapping[name]?.();
   }
 
-  private transitionTo(newState: TransitionState) {
-    this.removeEventListener('transitionend', this.onTransitionEnd);
-    this.state = newState;
+  private _transitionTo(newState: TransitionState) {
+    this.removeEventListener('transitionend', this._onTransitionEnd);
+    this._state = newState;
 
     switch (newState) {
       case TransitionState.Entering:
-        this.enter();
+        this._enter();
         break;
       case TransitionState.Leaving:
-        this.leave();
+        this._leave();
         break;
       case TransitionState.Entered:
         this.afterEnter?.();
@@ -111,49 +106,43 @@ export class HeadlessTransition extends HTMLElement implements TransitionProps {
     }
   }
 
-  private enter() {
+  private _enter() {
     this.beforeEnter?.();
-    this.resetTransitionClasses();
-    if (this.beforeEnterClass) this.classList.add(this.beforeEnterClass);
+    this._resetTransitionClasses();
+    if (this._beforeEnterClass) this.classList.add(this._beforeEnterClass);
 
     requestAnimationFrame(() => {
-      if (this.beforeEnterClass) this.classList.remove(this.beforeEnterClass);
+      if (this._beforeEnterClass) this.classList.remove(this._beforeEnterClass);
       if (this.afterEnterClass) this.classList.add(this.afterEnterClass);
-      this.addEventListener('transitionend', this.onTransitionEnd, {
+      this.addEventListener('transitionend', this._onTransitionEnd, {
         once: true,
       });
     });
   }
 
-  private leave() {
+  private _leave() {
     this.beforeLeave?.();
-    this.resetTransitionClasses();
-    if (this.beforeLeaveClass) this.classList.add(this.beforeLeaveClass);
+    this._resetTransitionClasses();
 
     requestAnimationFrame(() => {
-      if (this.beforeLeaveClass) this.classList.remove(this.beforeLeaveClass);
+      if (this.afterEnterClass) this.classList.remove(this.afterEnterClass);
       if (this.afterLeaveClass) this.classList.add(this.afterLeaveClass);
-      this.addEventListener('transitionend', this.onTransitionEnd, {
+      this.addEventListener('transitionend', this._onTransitionEnd, {
         once: true,
       });
     });
   }
 
-  private onTransitionEnd = () => {
-    if (this.state === TransitionState.Entering) {
-      this.transitionTo(TransitionState.Entered);
-    } else if (this.state === TransitionState.Leaving) {
-      this.transitionTo(TransitionState.Left);
+  private _onTransitionEnd = () => {
+    if (this._state === TransitionState.Entering) {
+      this._transitionTo(TransitionState.Entered);
+    } else if (this._state === TransitionState.Leaving) {
+      this._transitionTo(TransitionState.Left);
     }
   };
 
-  private resetTransitionClasses() {
-    this.classList.remove(
-      this.beforeEnterClass,
-      this.afterEnterClass,
-      this.beforeLeaveClass,
-      this.afterLeaveClass
-    );
+  private _resetTransitionClasses() {
+    this.classList.remove(this._beforeEnterClass, this.afterEnterClass, this.afterLeaveClass);
   }
 }
 

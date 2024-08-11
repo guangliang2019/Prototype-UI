@@ -1,1 +1,1 @@
-import "./headless/transition/transition.ts";
+import './headless/transition/transition';

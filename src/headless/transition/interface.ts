@@ -13,16 +13,14 @@ export interface TransitionProps {
   afterLeaveClass?: string;
 }
 
-export const DEFAULT_TRANSITION_PROPS: TransitionProps = {
+export const DEFAULT_TRANSITION_PROPS = {
   show: true,
-  unmount: true,
+  unmount: false,
   appear: false,
   beforeEnter: undefined,
   afterEnter: undefined,
   beforeLeave: undefined,
   afterLeave: undefined,
-  // beforeEnterClass: undefined,
-  afterEnterClass: undefined,
-  // beforeLeaveClass: undefined,
-  afterLeaveClass: undefined,
+  afterEnterClass: "",
+  afterLeaveClass: "",
 };
