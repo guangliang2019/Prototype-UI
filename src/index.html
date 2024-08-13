@@ -42,38 +42,54 @@
       before-leave-class="before-leave"
       after-leave-class="after-leave"
     >
-      <div style="padding: 20px; background-color: lightblue">
-        This is a transition content.
-      </div>
+      <div style="padding: 20px; background-color: lightblue">This is a transition content.</div>
     </headless-transition>
     <button id="toggle-button">Toggle Transition</button>
     <click-outside id="click-outside-element">
-      <div style="padding: 20px; background-color: lightcoral">
-        This is a click-outside content.
+      <div>
+        <div style="padding: 20px; background-color: lightcoral">
+          This is a click-outside content.
+        </div>
+      </div>
     </click-outside>
 
-    
+    <context-provider id="context-provider" key="tab">
+      <div style="padding: 20px; background-color: lightgreen">
+        This is a context-provider content.
+        <context-consumer id="context-consumer" key="tab"></context-consumer>
+      </div>
+    </context-provider>
+    <button id="context-button">Change Context</button>
+
     <script type="module">
-      const toggleButton = document.getElementById("toggle-button");
-      const transitionElement = document.getElementById("transition-element");
-      const clickOutsideElement = document.getElementById("click-outside-element");
+      const toggleButton = document.getElementById('toggle-button');
+      const transitionElement = document.getElementById('transition-element');
+      const clickOutsideElement = document.getElementById('click-outside-element');
+      const providerElement = document.getElementById('context-provider');
+      const consumerElement = document.getElementById('context-consumer');
+      const contextButton = document.getElementById('context-button');
 
       clickOutsideElement.onClickOutside = () => {
-        console.log("ClickOutside");
-      }
+        // console.log('ClickOutside');
+      };
       transitionElement.afterEnter = () => {
-        console.log("afterEnter");
-      }
+        // console.log('afterEnter');
+      };
       transitionElement.afterLeave = () => {
-        debugger;
-        console.log("afterLeave");
-      }
-
-      toggleButton.addEventListener("click", () => {
+        console.log('afterLeave');
+      };
+      toggleButton.addEventListener('click', () => {
         // 切换 show 属性来触发 enter/leave 过渡
         transitionElement.show = !transitionElement.show;
-        console.log(transitionElement.show);
       });
+
+      consumerElement.onContextChange = (context) => {
+        console.log('consumer received context change', context);
+      };
+
+      contextButton.onclick = () => {
+        providerElement.setContext({ a: 1 });
+      };
     </script>
   </body>
 </html>
