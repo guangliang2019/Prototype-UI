@@ -22,10 +22,10 @@ export default class ContextProvider<T extends Object>
   constructor() {
     super();
     this.handleRequestContext = this.handleRequestContext.bind(this);
-    this._key = this.getAttribute('key') || '';
   }
 
   connectedCallback() {
+    this._key = this.getAttribute('key') || '';
     this.addEventListener('request-context', this.handleRequestContext as EventListener);
     ContextManager.getInstance().addProvider(this);
   }
@@ -35,9 +35,9 @@ export default class ContextProvider<T extends Object>
     ContextManager.getInstance().removeProvider(this);
   }
 
-  setContext(value: T) {
-    this._contextValue = value;
-    ContextManager.getInstance().updateContext(this, value);
+  setContext(value: Partial<T>, notify = true) {
+    this._contextValue = { ...this._contextValue, ...value };
+    if (notify) ContextManager.getInstance().updateContext(this, value);
   }
 
   private handleRequestContext(event: CustomEvent<RequestContextEventDetail<T>>) {

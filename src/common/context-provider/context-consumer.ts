@@ -24,7 +24,6 @@ export default class ContextConsumer<T extends Object>
 
   constructor() {
     super();
-    this._key = this.getAttribute('key') || '';
   }
 
   static get observedAttributes() {
@@ -39,13 +38,14 @@ export default class ContextConsumer<T extends Object>
   }
 
   connectedCallback() {
-    if (!this.key) throw new Error('context-consumer requires a "key" attribute.');
+    this._key = this.getAttribute('key') || '';
+    if (this.key === '') throw new Error('context-consumer requires a "key" attribute.');
     this[requestContextSymbol]();
   }
 
-  [setConsumerContextSymbol](value: T) {
-    this._contextValue = value;
-    this.onContextChange(value);
+  [setConsumerContextSymbol](value: Partial<T>) {
+    this._contextValue = { ...this._contextValue, ...value };
+    this.onContextChange(this._contextValue);
   }
 
   [requestContextSymbol]() {

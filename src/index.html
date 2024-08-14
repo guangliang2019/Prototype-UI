@@ -53,13 +53,29 @@
       </div>
     </click-outside>
 
-    <context-provider id="context-provider" key="tab">
+    <context-provider id="context-provider" key="test">
       <div style="padding: 20px; background-color: lightgreen">
         This is a context-provider content.
-        <context-consumer id="context-consumer" key="tab"></context-consumer>
+        <context-consumer id="context-consumer" key="test"></context-consumer>
       </div>
     </context-provider>
     <button id="context-button">Change Context</button>
+    <div>
+      <headless-tab default-value="tab1">
+        <headless-tab-trigger value="tab1">
+          <span>Tab 1</span>
+        </headless-tab-trigger>
+        <headless-tab-trigger value="tab2">
+          <span>Tab 2</span>
+        </headless-tab-trigger>
+        <headless-tab-content value="tab1">
+          <span>Tab 1 Content</span>
+        </headless-tab-content>
+        <headless-tab-content value="tab2" style="display: none">
+          <span>Tab 2 Content</span>
+        </headless-tab-content>
+      </headless-tab>
+    </div>
 
     <script type="module">
       const toggleButton = document.getElementById('toggle-button');

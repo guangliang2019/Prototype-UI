@@ -149,7 +149,7 @@ export default class ContextManager {
    * @param value 新的 context 值
    * @returns
    */
-  updateContext<T extends Object>(provider: ContextProvider<T>, value: T) {
+  updateContext<T extends Object>(provider: ContextProvider<T>, value: Partial<T>) {
     const entry = this._providerEntryMap.get(provider.key)?.get(provider);
     if (!entry) return;
 
