@@ -11,8 +11,8 @@ export default class ContextProvider<T extends Object>
   extends HTMLElement
   implements ContextProviderProps<T>
 {
-  private _key = '';
-  private _contextValue: T = {} as T;
+  protected _key = '';
+  protected _contextValue: T = {} as T;
 
   // prettier-ignore
   get contextValue() { return this._contextValue; }
@@ -25,7 +25,8 @@ export default class ContextProvider<T extends Object>
   }
 
   connectedCallback() {
-    this._key = this.getAttribute('key') || '';
+    // 仅在单独使用时从属性中读取 key，其余时间当作基类使用，有子类直接赋值 key
+    if (this.tagName === 'CONTEXT-PROVIDER') this._key = this.getAttribute('key') || '';
     this.addEventListener('request-context', this.handleRequestContext as EventListener);
     ContextManager.getInstance().addProvider(this);
   }

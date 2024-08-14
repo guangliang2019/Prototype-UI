@@ -17,7 +17,7 @@ export const createContext = <T extends Object>(
 
 export const useContext = <T extends Object>(key: string, el: HTMLElement) => {
   const consumer = new ContextConsumer<T>();
-  consumer.setAttribute('key', 'headless-tab');
+  consumer.setAttribute('key', key);
 
   while (el.firstChild) consumer.appendChild(el.firstChild);
   el.appendChild(consumer);

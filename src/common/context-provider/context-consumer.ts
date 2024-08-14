@@ -12,8 +12,8 @@ export default class ContextConsumer<T extends Object>
   extends HTMLElement
   implements ContextConsumerProps<T>
 {
-  private _contextValue = {} as T;
-  private _key = '';
+  protected _contextValue = {} as T;
+  protected _key = '';
 
   onContextChange: (value: T) => void = () => {};
 
@@ -21,10 +21,6 @@ export default class ContextConsumer<T extends Object>
   get contextValue() { return this._contextValue; }
   // prettier-ignore
   get key() { return this._key; }
-
-  constructor() {
-    super();
-  }
 
   static get observedAttributes() {
     return ['onContextChange'];
@@ -38,8 +34,8 @@ export default class ContextConsumer<T extends Object>
   }
 
   connectedCallback() {
-    this._key = this.getAttribute('key') || '';
-    if (this.key === '') throw new Error('context-consumer requires a "key" attribute.');
+    // 仅在单独使用时从属性中读取 key，其余时间当作基类使用，有子类直接赋值 key
+    if (this.tagName === 'CONTEXT-CONSUMER') this._key = this.getAttribute('key') || '';
     this[requestContextSymbol]();
   }
 

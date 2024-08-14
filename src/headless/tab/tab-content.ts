@@ -1,19 +1,23 @@
-import { useContext } from '../../common/context-provider';
+import { ContextConsumer } from '../../common/context-provider';
 import { TabContext, TabContentProps } from './interface';
 
-export default class HeadlessTabContent extends HTMLElement implements TabContentProps {
+export default class HeadlessTabContent
+  extends ContextConsumer<TabContext>
+  implements TabContentProps
+{
   private _value = '';
   // prettier-ignore
   get value(): string { return this._value; }
 
   connectedCallback() {
+    this._key = 'headless-tab';
+    super.connectedCallback();
     this._value = this.getAttribute('value') || '';
     this._render();
   }
 
   private _render() {
-    const consumer = useContext<TabContext>('headless-tab', this);
-    consumer.onContextChange = (value) => {
+    this.onContextChange = (value) => {
       if (value.tabValue === this._value) {
         this.style.display = 'unset';
       }

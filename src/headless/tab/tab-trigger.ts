@@ -1,21 +1,26 @@
-import { useContext } from '../../common/context-provider';
+import { ContextConsumer } from '../../common/context-provider';
 import { TabContext, TabTrigerProps } from './interface';
 
-export default class HeadlessTabTrigger extends HTMLElement implements TabTrigerProps {
+export default class HeadlessTabTrigger
+  extends ContextConsumer<TabContext>
+  implements TabTrigerProps
+{
   private _value = '';
 
   get value(): string {
     return this._value;
   }
+
   connectedCallback() {
+    this._key = 'headless-tab';
+    super.connectedCallback();
     this._value = this.getAttribute('value') || '';
     this._render();
   }
 
   private _render() {
-    const consumer = useContext<TabContext>('headless-tab', this);
     this.addEventListener('click', () => {
-      consumer.contextValue.changeTab(this._value);
+      this.contextValue.changeTab(this._value);
     });
   }
 }
