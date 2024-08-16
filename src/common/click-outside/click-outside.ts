@@ -18,7 +18,6 @@ export default class ClickOutside extends HTMLElement implements ClickOutsidePro
   public onClickOutside = DEFAULT_CLICK_OUTSIDE_PROPS['onClickOutside'];
 
   connectedCallback() {
-    console.log('connectedCallback');
     this._handleClickOutside = this._handleClickOutside.bind(this);
     window.addEventListener('click', this._handleClickOutside);
   }
