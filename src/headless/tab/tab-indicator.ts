@@ -13,9 +13,12 @@ export default class HeadlessTabIndicator
   onTabChange: (context: TabContext) => void = () => {};
   onTabResize: (context: TabContext) => void = () => {};
 
-  connectedCallback() {
+  constructor() {
+    super();
     this._key = 'headless-tab';
+  }
 
+  connectedCallback() {
     super.connectedCallback();
     if (this._contextValue.index !== -1) {
       this._currentTabRef = this._contextValue.tabRefs[this._contextValue.index];

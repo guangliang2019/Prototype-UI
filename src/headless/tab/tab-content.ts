@@ -9,8 +9,12 @@ export default class HeadlessTabContent
   // prettier-ignore
   get value(): string { return this._value; }
 
-  connectedCallback() {
+  constructor() {
+    super();
     this._key = 'headless-tab';
+  }
+
+  connectedCallback() {
     super.connectedCallback();
     this._value = this.getAttribute('value') || '';
     this.onContextChange = (value) => {

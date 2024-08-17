@@ -11,9 +11,12 @@ export default class HeadlessTabTrigger
     return this._value;
   }
 
-  connectedCallback() {
+  constructor() {
+    super();
     this._key = 'headless-tab';
+  }
 
+  connectedCallback() {
     super.connectedCallback();
     this._value = this.getAttribute('value') || '';
     this._contextValue.tabs.push(this._value);
