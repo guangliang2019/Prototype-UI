@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Headless Transition</title>
     <style>
+      body {
+        margin: 0;
+      }
+      body {
+        background-color: hsl(var(--background));
+        --background: 240 10% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 240 10% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 240 5.9% 10%;
+        --secondary: 240 3.7% 15.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --accent: 240 3.7% 15.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 85.7% 97.3%;
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 240 4.9% 83.9%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+      }
       /* 一些简单的过渡效果的样式 */
       .before-enter {
         opacity: 0;
@@ -29,83 +59,103 @@
         transform: translateY(-10px);
         transition: opacity 3s, transform 3s;
       }
+
+      .tab-indicator-backward {
+        transition: right 0.12s ease-out 0.09s, left 0.12s ease-out;
+      }
+
+      .tab-indicator-forward {
+        transition: right 0.12s ease-out, left 0.12s ease-out 0.09s;
+      }
+
+      .text-muted-foreground {
+        color: hsl(var(--muted-foreground));
+      }
+
+      .bg-muted {
+        background-color: hsl(var(--muted));
+      }
+
+      .bg-background {
+        background-color: hsl(var(--background));
+      }
+
+      .bg-backdrop-invert {
+        backdrop-filter: invert(1);
+      }
+
+      /* .data-\[state\=active\]\:bg-background[data-state='active'] {
+        background-color: hsl(var(--background));
+      } */
     </style>
   </head>
 
   <script type="module" src="/main.ts"></script>
-  <body>
-    <headless-transition
-      id="transition-element"
-      appear
-      class="before-enter"
-      after-enter-class="after-enter"
-      before-leave-class="before-leave"
-      after-leave-class="after-leave"
-    >
-      <div style="padding: 20px; background-color: lightblue">This is a transition content.</div>
-    </headless-transition>
-    <button id="toggle-button">Toggle Transition</button>
-    <click-outside id="click-outside-element">
-      <div>
-        <div style="padding: 20px; background-color: lightcoral">
-          This is a click-outside content.
-        </div>
-      </div>
-    </click-outside>
-
-    <context-provider id="context-provider" key="test">
-      <div style="padding: 20px; background-color: lightgreen">
-        This is a context-provider content.
-        <context-consumer id="context-consumer" key="test"></context-consumer>
-      </div>
-    </context-provider>
-    <button id="context-button">Change Context</button>
+  <body class="p-4">
     <div>
       <headless-tab default-value="tab1">
-        <headless-tab-trigger value="tab1">
-          <span>Tab 1</span>
-        </headless-tab-trigger>
-        <headless-tab-trigger value="tab2">
-          <span>Tab 2</span>
-        </headless-tab-trigger>
-        <headless-tab-content value="tab1">
-          <span>Tab 1 Content</span>
-        </headless-tab-content>
-        <headless-tab-content value="tab2" style="display: none">
-          <span>Tab 2 Content</span>
-        </headless-tab-content>
+        <div class="inline-block relative text-muted-foreground bg-muted p-1 rounded-md">
+          <headless-tab-trigger value="tab1">
+            <span>Tab 1</span>
+          </headless-tab-trigger>
+          <headless-tab-trigger value="tab2">
+            <span>Tab 2222</span>
+          </headless-tab-trigger>
+          <headless-tab-trigger class="" value="tab3">
+            <span>Tab 33333333</span>
+          </headless-tab-trigger>
+          <headless-tab-indicator
+            class="h-7 rounded-md bg-backdrop-invert absolute tab-indicator absolute"
+          ></headless-tab-indicator>
+        </div>
+        <div class="text-zinc-200 p-2 mt-2">
+          <headless-tab-content  value="tab1">
+            <span >Tab 1 Content</span>
+          </headless-tab-content>
+          <headless-tab-content value="tab2" style="display: none">
+            <span>Tab 2 Content</span>
+          </headless-tab-content>
+          <headless-tab-content value="tab3" style="display: none">
+            <span>Tab 3 Content</span>
+          </headless-tab-content>
+        </div>
       </headless-tab>
     </div>
 
     <script type="module">
-      const toggleButton = document.getElementById('toggle-button');
-      const transitionElement = document.getElementById('transition-element');
-      const clickOutsideElement = document.getElementById('click-outside-element');
-      const providerElement = document.getElementById('context-provider');
-      const consumerElement = document.getElementById('context-consumer');
-      const contextButton = document.getElementById('context-button');
-
-      clickOutsideElement.onClickOutside = () => {
-        // console.log('ClickOutside');
-      };
-      transitionElement.afterEnter = () => {
-        // console.log('afterEnter');
-      };
-      transitionElement.afterLeave = () => {
-        console.log('afterLeave');
-      };
-      toggleButton.addEventListener('click', () => {
-        // 切换 show 属性来触发 enter/leave 过渡
-        transitionElement.show = !transitionElement.show;
+      const tabIndicator = document.getElementsByTagName('headless-tab-indicator')[0];
+      const tabTriggers = document.getElementsByTagName('headless-tab-trigger');
+      Array.from(tabTriggers).forEach((tabTrigger) => {
+        tabTrigger.className =
+          'relative cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow text-zinc-600 dark:text-zinc-200';
       });
-
-      consumerElement.onContextChange = (context) => {
-        console.log('consumer received context change', context);
+      let _currentTabIndex = 0;
+      tabIndicator.onTabResize = (context) => {
+        requestAnimationFrame(() => {
+          const currentRef = context.tabRefs[context.index];
+          tabIndicator.style.right = `${getOffsetRight(currentRef)}px`;
+          tabIndicator.style.left = `${currentRef.offsetLeft}px`;
+        });
       };
 
-      contextButton.onclick = () => {
-        providerElement.setContext({ a: 1 });
+      tabIndicator.onTabChange = (context) => {
+        requestAnimationFrame(() => {
+          if (_currentTabIndex < context.index) {
+            tabIndicator.classList.add('tab-indicator-forward');
+            tabIndicator.classList.remove('tab-indicator-backward');
+          } else {
+            tabIndicator.classList.add('tab-indicator-backward');
+            tabIndicator.classList.remove('tab-indicator-forward');
+          }
+          _currentTabIndex = context.index;
+        });
       };
+
+      function getOffsetRight(element) {
+        const el = element;
+        const right = el.parentElement.offsetWidth - (el.offsetWidth + el.offsetLeft);
+        return right;
+      }
     </script>
   </body>
 </html>
