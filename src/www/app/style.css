@@ -1,0 +1,23 @@
+.text-foreground\/60 {
+  color: hsl(var(--foreground) / 0.6);
+}
+
+.text-foreground\/80 {
+  color: hsl(var(--foreground) / 0.8);
+}
+
+.hover\:text-foreground\/80:hover {
+  color: hsl(var(--foreground) / 0.8);
+}
+
+.data-\[selected\]\:text-foreground[data-selected] {
+  color: hsl(var(--foreground));
+}
+
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}

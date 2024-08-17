@@ -1,15 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Headless Transition</title>
+    <title>Headless Web Component</title>
     <style>
       body {
-        margin: 0;
-      }
-      body {
-        background-color: hsl(var(--background));
         --background: 240 10% 3.9%;
         --foreground: 0 0% 98%;
         --card: 240 10% 3.9%;
@@ -34,128 +30,14 @@
         --chart-3: 30 80% 55%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
-      }
-      /* 一些简单的过渡效果的样式 */
-      .before-enter {
-        opacity: 0;
-        transform: translateY(-10px);
-        transition: opacity 3s, transform 3s;
-      }
 
-      .after-enter {
-        opacity: 1;
-        transform: translateY(0);
-        transition: opacity 3s, transform 3s;
-      }
-
-      .before-leave {
-        opacity: 1;
-        transform: translateY(0);
-        transition: opacity 3s, transform 3s;
-      }
-
-      .after-leave {
-        opacity: 0;
-        transform: translateY(-10px);
-        transition: opacity 3s, transform 3s;
-      }
-
-      .tab-indicator-backward {
-        transition: right 0.12s ease-out 0.09s, left 0.12s ease-out;
-      }
-
-      .tab-indicator-forward {
-        transition: right 0.12s ease-out, left 0.12s ease-out 0.09s;
-      }
-
-      .text-muted-foreground {
-        color: hsl(var(--muted-foreground));
-      }
-
-      .bg-muted {
-        background-color: hsl(var(--muted));
-      }
-
-      .bg-background {
         background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
       }
-
-      .bg-backdrop-invert {
-        backdrop-filter: invert(1);
-      }
-
-      /* .data-\[state\=active\]\:bg-background[data-state='active'] {
-        background-color: hsl(var(--background));
-      } */
     </style>
   </head>
-
-  <script type="module" src="/main.ts"></script>
-  <body class="p-4">
-    <div>
-      <headless-tab default-value="tab1">
-        <div class="inline-block relative text-muted-foreground bg-muted p-1 rounded-md">
-          <headless-tab-trigger value="tab1">
-            <span>Tab 1</span>
-          </headless-tab-trigger>
-          <headless-tab-trigger value="tab2">
-            <span>Tab 2222</span>
-          </headless-tab-trigger>
-          <headless-tab-trigger class="" value="tab3">
-            <span>Tab 33333333</span>
-          </headless-tab-trigger>
-          <headless-tab-indicator
-            class="h-7 rounded-md bg-backdrop-invert absolute tab-indicator absolute"
-          ></headless-tab-indicator>
-        </div>
-        <div class="text-zinc-200 p-2 mt-2">
-          <headless-tab-content  value="tab1">
-            <span >Tab 1 Content</span>
-          </headless-tab-content>
-          <headless-tab-content value="tab2" style="display: none">
-            <span>Tab 2 Content</span>
-          </headless-tab-content>
-          <headless-tab-content value="tab3" style="display: none">
-            <span>Tab 3 Content</span>
-          </headless-tab-content>
-        </div>
-      </headless-tab>
-    </div>
-
-    <script type="module">
-      const tabIndicator = document.getElementsByTagName('headless-tab-indicator')[0];
-      const tabTriggers = document.getElementsByTagName('headless-tab-trigger');
-      Array.from(tabTriggers).forEach((tabTrigger) => {
-        tabTrigger.className =
-          'relative cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow text-zinc-600 dark:text-zinc-200';
-      });
-      let _currentTabIndex = 0;
-      tabIndicator.onTabResize = (context) => {
-        requestAnimationFrame(() => {
-          const currentRef = context.tabRefs[context.index];
-          tabIndicator.style.right = `${getOffsetRight(currentRef)}px`;
-          tabIndicator.style.left = `${currentRef.offsetLeft}px`;
-        });
-      };
-
-      tabIndicator.onTabChange = (context) => {
-        requestAnimationFrame(() => {
-          if (_currentTabIndex < context.index) {
-            tabIndicator.classList.add('tab-indicator-forward');
-            tabIndicator.classList.remove('tab-indicator-backward');
-          } else {
-            tabIndicator.classList.add('tab-indicator-backward');
-            tabIndicator.classList.remove('tab-indicator-forward');
-          }
-          _currentTabIndex = context.index;
-        });
-      };
-
-      function getOffsetRight(element) {
-        const el = element;
-        const right = el.parentElement.offsetWidth - (el.offsetWidth + el.offsetLeft);
-        return right;
-      }
-    </script>
+  <script type="module" src="./www/main.ts"></script>
+  <body>
+    <app-root></app-root>
   </body>
 </html>
