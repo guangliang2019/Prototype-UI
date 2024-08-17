@@ -21,3 +21,7 @@
   padding-right: 2rem;
   padding-left: 2rem;
 }
+
+.text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+}

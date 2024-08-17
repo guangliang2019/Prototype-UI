@@ -34,6 +34,22 @@
         background-color: hsl(var(--background));
         color: hsl(var(--foreground));
       }
+
+      .tab-indicator-backward {
+        transition:
+          right 0.12s ease-out 0.09s,
+          left 0.12s ease-out;
+      }
+
+      .tab-indicator-forward {
+        transition:
+          right 0.12s ease-out,
+          left 0.12s ease-out 0.09s;
+      }
+
+      .bg-backdrop-invert {
+        backdrop-filter: invert(1);
+      }
     </style>
   </head>
   <script type="module" src="./www/main.ts"></script>
