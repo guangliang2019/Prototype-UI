@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Headless Web Component</title>
     <style>
+      @font-face {
+        font-family: 'GeistSans';
+        src: url('./www/assets/font/GeistVF.woff2') format('woff2-variations');
+      }
+
       body {
+        --font-geist-sans: 'GeistSans', sans-serif;
         --background: 240 10% 3.9%;
         --foreground: 0 0% 98%;
         --card: 240 10% 3.9%;
@@ -33,6 +39,31 @@
 
         background-color: hsl(var(--background));
         color: hsl(var(--foreground));
+        font-family:
+          var(--font-geist-sans),
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          'Helvetica Neue',
+          Arial,
+          'Noto Sans',
+          sans-serif,
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+          'Segoe UI Symbol',
+          'Noto Color Emoji';
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        unicode-bidi: isolate;
+        font-feature-settings: normal;
+        font-synthesis-weight: none;
+        font-variation-settings: normal;
+        text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
       }
 
       .tab-indicator-backward {
