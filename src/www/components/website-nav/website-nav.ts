@@ -1,4 +1,5 @@
 import '@/headless/tab';
+import './github-button';
 
 export default class WebsiteNav extends HTMLElement {
   private _navItemsCls =
@@ -20,6 +21,9 @@ export default class WebsiteNav extends HTMLElement {
             <headless-tab-trigger value="examples" class="${this._navItemsCls}">Examples</headless-tab-trigger>
             <headless-tab-trigger value="colors" class="${this._navItemsCls}">Colors</headless-tab-trigger>
           </nav>
+          <div class="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+            <github-button></github-button>
+          </div>
         </div>
       </header>
     `;
