@@ -34,7 +34,7 @@ export default class AppRoot extends HTMLElement {
                     <div class="pb-12 pt-8">
                       <p class="leading-7 [&:not(:first-child)]:mt-6">The <strong>Web Component</strong> version for shadcn/ui.</p>
                       <p class="leading-7 [&:not(:first-child)]:mt-6">Open Source & Still in development.</p>
-                      <p class="leading-7 [&:not(:first-child)]:mt-6">Based on Prototype-UI, a Prototype web component library. It's in development too.</p>
+                      <p class="leading-7 [&:not(:first-child)]:mt-6">Based on Prototype-UI, a headless web component library. It's in development too.</p>
                     </div>
                     </div>
                     <div class="hidden text-sm xl:block w-[300px] -ml-8 mt-1">
