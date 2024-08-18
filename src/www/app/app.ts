@@ -8,13 +8,13 @@ export default class AppRoot extends HTMLElement {
       /* html */
       `
       <div id="app">
-        <headless-tab default-value="docs">
+        <prototype-tab default-value="docs">
           <website-nav></website-nav>
           <main class="flex-1 flex justify-center">
-            <headless-tab-content value="docs">
-              <headless-tab default-value="Introduction" class="container flex-1 items-start md:gap-8 lg:gap-12">
+            <prototype-tab-content value="docs">
+              <prototype-tab default-value="Introduction" class="container flex-1 items-start md:gap-8 lg:gap-12">
                 <website-aside></website-aside>
-                <headless-tab-content value="Introduction">
+                <prototype-tab-content value="Introduction">
                   <main class="flex relative flex-1 py-6 lg:gap-10 lg:py-8 flex-row ">
                     <div class="mx-auto min-w-0">
                       <div class="mb-4 flex items-center space-x-1 text-sm leading-none text-muted-foreground">
@@ -34,7 +34,7 @@ export default class AppRoot extends HTMLElement {
                     <div class="pb-12 pt-8">
                       <p class="leading-7 [&:not(:first-child)]:mt-6">The <strong>Web Component</strong> version for shadcn/ui.</p>
                       <p class="leading-7 [&:not(:first-child)]:mt-6">Open Source & Still in development.</p>
-                      <p class="leading-7 [&:not(:first-child)]:mt-6">Based on Prototype-UI, a headless web component library. It's in development too.</p>
+                      <p class="leading-7 [&:not(:first-child)]:mt-6">Based on Prototype-UI, a Prototype web component library. It's in development too.</p>
                     </div>
                     </div>
                     <div class="hidden text-sm xl:block w-[300px] -ml-8 mt-1">
@@ -58,13 +58,13 @@ export default class AppRoot extends HTMLElement {
                       </div>
                     </div>
                   </main>
-                </headless-tab-content>
+                </prototype-tab-content>
                 <components-docs></components-docs>
-              </headless-tab>
-            </headless-tab-content>
-            <headless-tab-content style="display: none" value="components"> components </headless-tab-content>
+              </prototype-tab>
+            </prototype-tab-content>
+            <prototype-tab-content style="display: none" value="components"> components </prototype-tab-content>
           </main>
-        </headless-tab>
+        </prototype-tab>
       </div>
       `;
   }

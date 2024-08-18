@@ -1,7 +1,7 @@
 import { ContextConsumer } from '../../common';
 import { ButtonProps } from './interface';
 
-export default class HeadlessButton<T extends Object>
+export default class PrototypeButton<T extends Object>
   extends ContextConsumer<T>
   implements ButtonProps
 {
@@ -69,7 +69,7 @@ export default class HeadlessButton<T extends Object>
 
   constructor() {
     super();
-    this._key = 'headless-button';
+    this._key = 'prototype-button';
     this.tabIndex = 0;
   }
 
@@ -129,4 +129,4 @@ export default class HeadlessButton<T extends Object>
   }
 }
 
-customElements.define('headless-button', HeadlessButton<{}>);
+customElements.define('prototype-button', PrototypeButton<{}>);

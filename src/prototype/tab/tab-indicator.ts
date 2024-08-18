@@ -1,7 +1,7 @@
 import { ContextConsumer } from '../../common/context-provider';
 import { TabContext, TabIndicatorProps } from './interface';
 
-export default class HeadlessTabIndicator
+export default class PrototypeTabIndicator
   extends ContextConsumer<TabContext>
   implements TabIndicatorProps
 {
@@ -15,7 +15,7 @@ export default class HeadlessTabIndicator
 
   constructor() {
     super();
-    this._key = 'headless-tab';
+    this._key = 'prototype-tab';
   }
 
   connectedCallback() {
@@ -34,4 +34,4 @@ export default class HeadlessTabIndicator
   }
 }
 
-customElements.define('headless-tab-indicator', HeadlessTabIndicator);
+customElements.define('prototype-tab-indicator', PrototypeTabIndicator);

@@ -1,7 +1,7 @@
 import { ContextConsumer } from '../../common/context-provider';
 import { TabContext, TabContentProps } from './interface';
 
-export default class HeadlessTabContent
+export default class PrototypeTabContent
   extends ContextConsumer<TabContext>
   implements TabContentProps
 {
@@ -11,7 +11,7 @@ export default class HeadlessTabContent
 
   constructor() {
     super();
-    this._key = 'headless-tab';
+    this._key = 'prototype-tab';
   }
 
   connectedCallback() {
@@ -24,4 +24,4 @@ export default class HeadlessTabContent
   }
 }
 
-customElements.define('headless-tab-content', HeadlessTabContent);
+customElements.define('prototype-tab-content', PrototypeTabContent);

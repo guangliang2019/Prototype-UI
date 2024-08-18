@@ -1,7 +1,7 @@
 export default class ButtonDocs extends HTMLElement {
   connectedCallback() {
     this.innerHTML = /* html */ `
-    <headless-tab-content style="display: none" value="Button">
+    <prototype-tab-content style="display: none" value="Button">
       <main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]"> 
         <div class="mb-4 flex items-center space-x-1 text-sm leading-none text-muted-foreground">
           <div class="truncate">Docs</div>
@@ -15,12 +15,12 @@ export default class ButtonDocs extends HTMLElement {
           </p>
         <div>
         <div class="pb-12 pt-8">
-        <headless-tab default-value="preivew">
+        <prototype-tab default-value="preivew">
         
-        </headless-tab>
+        </prototype-tab>
         </div>
       </main>
-    </headless-tab-content>
+    </prototype-tab-content>
     `;
   }
 }

@@ -1,4 +1,4 @@
-import '@/headless/tab'
+import '@/prototype/tab'
 class WebsiteAside extends HTMLElement {
   connectedCallback() {
     this.innerHTML = 

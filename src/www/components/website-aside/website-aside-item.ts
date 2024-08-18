@@ -5,9 +5,9 @@ class WebsiteAsideItem extends HTMLElement {
 
     this.innerHTML = 
     /* html */`
-    <headless-tab-trigger value="${this._value}" class="cursor-pointer group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline text-muted-foreground data-[selected]:text-foreground">
+    <prototype-tab-trigger value="${this._value}" class="cursor-pointer group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline text-muted-foreground data-[selected]:text-foreground">
       ${this._value}
-    </headless-tab-trigger>
+    </prototype-tab-trigger>
     `
   }
 }
