@@ -14,7 +14,7 @@ export default defineConfig({
     outDir: '../dist', // 输出目录设为项目根目录下的 dist 文件夹
     sourcemap: false, // 依然生成 Source Maps
     rollupOptions: {
-      input: './index.html', // 设置打包的入口文件
+      input: './src/index.html', // 设置打包的入口文件
     },
   },
 });
