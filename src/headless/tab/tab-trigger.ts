@@ -25,10 +25,10 @@ export default class HeadlessTabTrigger
     this.onContextChange = (value) => {
       if (value.tabValue === this._value) {
         this.tabIndex = 0;
-        this.setAttribute('data-state', 'active');
+        this.setAttribute('data-selected', '');
       } else {
         this.tabIndex = -1;
-        this.setAttribute('data-state', 'inactive');
+        this.removeAttribute('data-selected');
       }
     };
 
