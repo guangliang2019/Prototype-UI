@@ -1,7 +1,7 @@
 import { ContextProvider } from '../../common/context-provider';
 import { TabContext, TabProps } from './interface';
 
-export default class HeadlessTab extends ContextProvider<TabContext> implements TabProps {
+export default class PrototypeTab extends ContextProvider<TabContext> implements TabProps {
   private _defaultValue = '';
   // prettier-ignore
   get defaultValue(): string { return this._defaultValue; }
@@ -12,7 +12,7 @@ export default class HeadlessTab extends ContextProvider<TabContext> implements 
   private _tabs: string[] = [];
 
   connectedCallback() {
-    this._key = 'headless-tab';
+    this._key = 'prototype-tab';
     super.connectedCallback();
     this._defaultValue = this.getAttribute('default-value') || '';
     this._index = this._tabs.indexOf(this._defaultValue);
@@ -38,4 +38,4 @@ export default class HeadlessTab extends ContextProvider<TabContext> implements 
   }
 }
 
-customElements.define('headless-tab', HeadlessTab);
+customElements.define('prototype-tab', PrototypeTab);

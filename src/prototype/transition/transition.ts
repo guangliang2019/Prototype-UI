@@ -1,7 +1,7 @@
 /**
- * Headless Transition with Web Component
+ * Prototype Transition with Web Component
  * 
- * @link https://github.com/guangliang2019/Prototype-UI/blob/main/src/headless/transition/transition.ts
+ * @link https://github.com/guangliang2019/Prototype-UI/blob/main/src/prototype/transition/transition.ts
  * @author guangliang2019
  * @date 2024-08-11
  */
@@ -16,7 +16,7 @@ enum TransitionState {
   Left = 'left',
 }
 
-export default class HeadlessTransition extends HTMLElement implements TransitionProps {
+export default class PrototypeTransition extends HTMLElement implements TransitionProps {
   private _state: TransitionState = TransitionState.Idle;
 
   private _show = DEFAULT_TRANSITION_PROPS['show'];
@@ -153,4 +153,4 @@ export default class HeadlessTransition extends HTMLElement implements Transitio
   }
 }
 
-customElements.define('headless-transition', HeadlessTransition);
+customElements.define('prototype-transition', PrototypeTransition);

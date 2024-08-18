@@ -1,7 +1,7 @@
 import { ContextConsumer } from '../../common/context-provider';
 import { TabContext, TabTrigerProps } from './interface';
 
-export default class HeadlessTabTrigger
+export default class PrototypeTabTrigger
   extends ContextConsumer<TabContext>
   implements TabTrigerProps
 {
@@ -13,7 +13,7 @@ export default class HeadlessTabTrigger
 
   constructor() {
     super();
-    this._key = 'headless-tab';
+    this._key = 'prototype-tab';
   }
 
   connectedCallback() {
@@ -63,4 +63,4 @@ export default class HeadlessTabTrigger
   };
 }
 
-customElements.define('headless-tab-trigger', HeadlessTabTrigger);
+customElements.define('prototype-tab-trigger', PrototypeTabTrigger);
