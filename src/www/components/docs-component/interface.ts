@@ -21,6 +21,6 @@ export interface DocsSectionContent {
   content: string;
 }
 
-export interface DocContext {
+export interface DocsContext {
   doc: Doc;
 }
