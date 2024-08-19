@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: 'GeistSans';
-  src: url('./www/assets/font/GeistVF.woff2') format('woff2-variations');
+  src: url('./assets/font/GeistVF.woff2') format('woff2-variations');
 }
 
 body {

@@ -18,7 +18,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --emptyOutDir",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

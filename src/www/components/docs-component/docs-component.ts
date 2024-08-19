@@ -1,8 +1,8 @@
 import { ContextProvider } from '../../../common';
 import { Div, h, Main, P, PrototypeTabContent, Span } from '../../../utils/dom';
-import { Doc, DocContext } from './interface';
+import { Doc, DocsContext } from './interface';
 
-export default abstract class DocsComponent extends ContextProvider<DocContext> {
+export default abstract class DocsComponent extends ContextProvider<DocsContext> {
   protected _doc: Doc | undefined = undefined;
 
   constructor() {
