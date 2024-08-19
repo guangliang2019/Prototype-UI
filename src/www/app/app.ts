@@ -11,7 +11,7 @@ export default class AppRoot extends HTMLElement {
   private _render() {
     const content = Div({ id: 'app' }, [
       PrototypeTab({ 'default-value': 'docs' }, [
-        h('website-nav', {}),
+        h('website-nav'),
         Main({ class: 'flex-1 flex justify-center' }, [
           PrototypeTabContent({ value: 'docs' }, [
             PrototypeTab(
@@ -19,7 +19,7 @@ export default class AppRoot extends HTMLElement {
                 'default-value': 'Introduction',
                 class: 'container flex-1 items-start',
               },
-              [h('website-aside', {}), h('docs-introduction'), h('components-docs')]
+              [h('website-aside'), h('docs-introduction'), h('components-docs')]
             ),
           ]),
           PrototypeTabContent({ style: 'display: none', value: 'components' }, ['components']),

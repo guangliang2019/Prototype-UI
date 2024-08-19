@@ -1,34 +1,97 @@
 import '@/prototype/tab';
+import { Aside, Div, h } from '../../../utils/dom';
 class WebsiteAside extends HTMLElement {
+  private _index: Record<string, { title: string; value: string }[]> = {};
+  constructor() {
+    super();
+    this._index = {
+      'Getting Started': [
+        {
+          title: 'Introduction',
+          value: 'Introduction',
+        },
+      ],
+      'Shadcn UI': [
+        {
+          title: 'Button',
+          value: 'Button',
+        },
+        {
+          title: 'Tab',
+          value: 'Tab',
+        },
+      ],
+      'Prototype UI': [
+        {
+          title: 'Tab',
+          value: 'Prototype Tab',
+        },
+        {
+          title: 'Transition',
+          value: 'Prototype Transition',
+        },
+      ],
+    };
+  }
+
+  private _render() {
+    const fragment = document.createDocumentFragment();
+
+    fragment.appendChild(
+      Div({ class: 'pb-4' }, [
+        h('h4', { class: 'mb-1 rounded-md px-2 py-1 text-sm font-semibold' }, ['Getting Started']),
+        Div({ class: 'grid grid-flow-row auto-rows-max text-sm' }, [
+          this._renderItems(this._index['Getting Started']),
+        ]),
+      ])
+    );
+
+    fragment.appendChild(
+      Div({ class: 'pb-4' }, [
+        h('h4', { class: 'mb-1 rounded-md px-2 py-1 text-sm font-semibold' }, ['Shadcn UI']),
+        Div({ class: 'grid grid-flow-row auto-rows-max text-sm' }, [
+          this._renderItems(this._index['Shadcn UI']),
+        ]),
+      ])
+    );
+
+    fragment.appendChild(
+      Div({ class: 'pb-4' }, [
+        h('h4', { class: 'mb-1 rounded-md px-2 py-1 text-sm font-semibold' }, ['Prototype UI']),
+        Div({ class: 'grid grid-flow-row auto-rows-max text-sm' }, [
+          this._renderItems(this._index['Prototype UI']),
+        ]),
+      ])
+    );
+
+    this.appendChild(
+      Aside(
+        {
+          class:
+            'fixed md:w-[220px] lg:w-[240px] top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block',
+        },
+        [Div({ class: 'relative overflow-hidden h-full py-6 pr-6 lg:py-8' }, [fragment])]
+      )
+    );
+  }
+
+  private _renderItems(items: { title: string; value: string }[]) {
+    const fragment = document.createDocumentFragment();
+
+    items.forEach((item) => {
+      fragment.appendChild(
+        h('website-aside-item', {
+          title: item.title,
+          value: item.value,
+        })
+      );
+    });
+
+    return fragment;
+  }
+
   connectedCallback() {
-    this.innerHTML = /* html */ `
-      <aside class="fixed md:w-[220px] lg:w-[240px] top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block">
-        <div class="relative overflow-hidden h-full py-6 pr-6 lg:py-8">
-          <div class="pb-4">
-            <h4 class="mb-1 rounded-md px-2 py-1 text-sm font-semibold">Getting Started</h4>
-            <div class="grid grid-flow-row auto-rows-max text-sm">
-              <website-aside-item title="Introduction" value="Introduction"></website-aside-item>
-            </div>
-          </div>
-          <div class="pb-4">
-            <h4 class="mb-1 rounded-md px-2 py-1 text-sm font-semibold">Shadcn UI</h4>
-            <div class="grid grid-flow-row auto-rows-max text-sm">
-              <website-aside-item title="Button" value="Button"></website-aside-item>
-              <website-aside-item title="Tab" value="Tab"></website-aside-item>
-              <website-aside-item title="Transition" value="Transition"></website-aside-item>
-            </div>
-          </div>
-          <div class="pb-4">
-            <h4 class="mb-1 rounded-md px-2 py-1 text-sm font-semibold">Prototype UI</h4>
-            <div class="grid grid-flow-row auto-rows-max text-sm">
-              <website-aside-item title="Button" value="Prototype Button"></website-aside-item>
-              <website-aside-item title="Tab" value="Prototype Tab"></website-aside-item>
-              <website-aside-item title="Transition" value="Prototype Transition"></website-aside-item>
-            </div>
-          </div>
-        </div>
-      </aside>
-    `;
+    this._render();
   }
 }
 
