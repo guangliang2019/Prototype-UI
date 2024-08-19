@@ -6,7 +6,7 @@ class DocsIntroduction extends DocsComponent {
     super();
     this._doc = {
       title: 'Introduction',
-      desc: 'Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.',
+      desc: 'The web component version of Headless UI & Shadcn/ui. Still in progress.',
       route: ['Docs', 'introduction'],
       links: [],
       sections: [],
