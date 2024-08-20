@@ -92,7 +92,6 @@ class DocsTabIndicator extends PrototypeTabIndicator {
     this.className = 'absolute -mb-[34px] h-0.5 bg-primary';
 
     this.onTabResize = this._leadingDebounce((context) => {
-      console.log('context', context);
       const currentRef = context.tabRefs[context.index];
       this.style.transition = '';
       this.style.width = `${currentRef.offsetWidth}px`;
