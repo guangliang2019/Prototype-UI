@@ -6,9 +6,6 @@ export interface TransitionProps {
   afterEnter?: () => void;
   beforeLeave?: () => void;
   afterLeave?: () => void;
-
-  afterEnterClass?: string;
-  afterLeaveClass?: string;
 }
 
 export const DEFAULT_TRANSITION_PROPS = {
@@ -19,6 +16,4 @@ export const DEFAULT_TRANSITION_PROPS = {
   afterEnter: undefined,
   beforeLeave: undefined,
   afterLeave: undefined,
-  afterEnterClass: "",
-  afterLeaveClass: "",
 };

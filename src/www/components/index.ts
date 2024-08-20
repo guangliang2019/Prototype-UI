@@ -1,3 +1,3 @@
 import './website-nav';
 import './website-aside';
-import './docs-component'
+import './doc-component'

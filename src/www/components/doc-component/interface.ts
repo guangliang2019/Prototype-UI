@@ -13,14 +13,14 @@ export interface DocLink {
 
 export interface DocSection {
   title: string;
-  contents: DocsSectionContent[];
+  contents: DocSectionContent[];
 }
 
-export interface DocsSectionContent {
+export interface DocSectionContent {
   type: 'code' | 'text';
   content: string;
 }
 
-export interface DocsContext {
+export interface DocContext {
   doc: Doc;
 }

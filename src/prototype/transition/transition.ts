@@ -1,6 +1,6 @@
 /**
  * Prototype Transition with Web Component
- * 
+ *
  * @link https://github.com/guangliang2019/Prototype-UI/blob/main/src/prototype/transition/transition.ts
  * @author guangliang2019
  * @date 2024-08-11
@@ -41,13 +41,8 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
   beforeLeave?: () => void = DEFAULT_TRANSITION_PROPS['beforeLeave'];
   afterLeave?: () => void = DEFAULT_TRANSITION_PROPS['afterLeave'];
 
-  private _beforeEnterClass = '';
-  afterEnterClass = DEFAULT_TRANSITION_PROPS['afterEnterClass'];
-  afterLeaveClass = DEFAULT_TRANSITION_PROPS['afterLeaveClass'];
-
   constructor() {
     super();
-    this._beforeEnterClass = this.className;
   }
 
   static get observedAttributes() {
@@ -59,8 +54,6 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
       'after-enter',
       'before-leave',
       'after-leave',
-      'after-enter-class',
-      'after-leave-class',
     ];
   }
 
@@ -84,8 +77,6 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
       'after-enter': () => (this.afterEnter = new Function(newValue) as () => void),
       'before-leave': () => (this.beforeLeave = new Function(newValue) as () => void),
       'after-leave': () => (this.afterLeave = new Function(newValue) as () => void),
-      'after-enter-class': () => (this.afterEnterClass = newValue),
-      'after-leave-class': () => (this.afterLeaveClass = newValue),
     };
 
     mapping[name]?.();
@@ -114,12 +105,10 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
 
   private _enter() {
     this.beforeEnter?.();
-    this._resetTransitionClasses();
-    if (this._beforeEnterClass) this.classList.add(this._beforeEnterClass);
 
     requestAnimationFrame(() => {
-      if (this._beforeEnterClass) this.classList.remove(this._beforeEnterClass);
-      if (this.afterEnterClass) this.classList.add(this.afterEnterClass);
+      this.removeAttribute('data-closed');
+      this.setAttribute('data-entered', '');
       this.addEventListener('transitionend', this._onTransitionEnd, {
         once: true,
       });
@@ -128,11 +117,10 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
 
   private _leave() {
     this.beforeLeave?.();
-    this._resetTransitionClasses();
 
     requestAnimationFrame(() => {
-      if (this.afterEnterClass) this.classList.remove(this.afterEnterClass);
-      if (this.afterLeaveClass) this.classList.add(this.afterLeaveClass);
+      this.removeAttribute('data-entered');
+      this.setAttribute('data-closed', '');
       this.addEventListener('transitionend', this._onTransitionEnd, {
         once: true,
       });
@@ -147,10 +135,6 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
       this._transitionTo(TransitionState.Left);
     }
   };
-
-  private _resetTransitionClasses() {
-    this.classList.remove(this._beforeEnterClass, this.afterEnterClass, this.afterLeaveClass);
-  }
 }
 
 customElements.define('prototype-transition', PrototypeTransition);

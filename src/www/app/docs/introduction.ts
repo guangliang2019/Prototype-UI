@@ -1,7 +1,6 @@
-import DocsComponent from '../../components/docs-component/docs-component';
-import { Doc } from '../../components/docs-component/interface';
+import { DocComponent } from '../../components/doc-component';
 
-class DocsIntroduction extends DocsComponent {
+class DocIntroduction extends DocComponent {
   constructor() {
     super();
     this._doc = {
@@ -18,4 +17,4 @@ class DocsIntroduction extends DocsComponent {
   }
 }
 
-customElements.define('docs-introduction', DocsIntroduction);
+customElements.define('doc-introduction', DocIntroduction);

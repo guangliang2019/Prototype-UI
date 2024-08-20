@@ -5,10 +5,10 @@ import {
   PrototypeTabTrigger,
 } from '../../../../prototype/tab';
 
-class DocsTab extends PrototypeTab {
+class DocTab extends PrototypeTab {
   constructor() {
     super();
-    this._key = 'docs-tab';
+    this._key = 'doc-tab';
   }
 
   connectedCallback(): void {
@@ -17,17 +17,17 @@ class DocsTab extends PrototypeTab {
   }
 }
 
-class DocsTabContent extends PrototypeTabContent {
+class DocTabContent extends PrototypeTabContent {
   constructor() {
     super();
-    this._key = 'docs-tab';
+    this._key = 'doc-tab';
   }
 }
 
-class DocsTabTrigger extends PrototypeTabTrigger {
+class DocTabTrigger extends PrototypeTabTrigger {
   constructor() {
     super();
-    this._key = 'docs-tab';
+    this._key = 'doc-tab';
   }
 
   connectedCallback() {
@@ -38,10 +38,10 @@ class DocsTabTrigger extends PrototypeTabTrigger {
   }
 }
 
-class DocsTabIndicator extends PrototypeTabIndicator {
+class DocTabIndicator extends PrototypeTabIndicator {
   constructor() {
     super();
-    this._key = 'docs-tab';
+    this._key = 'doc-tab';
   }
 
   private _getOffsetRight(element: HTMLElement) {
@@ -117,7 +117,7 @@ class DocsTabIndicator extends PrototypeTabIndicator {
   }
 }
 
-customElements.define('docs-tab', DocsTab);
-customElements.define('docs-tab-content', DocsTabContent);
-customElements.define('docs-tab-trigger', DocsTabTrigger);
-customElements.define('docs-tab-indicator', DocsTabIndicator);
+customElements.define('doc-tab', DocTab);
+customElements.define('doc-tab-content', DocTabContent);
+customElements.define('doc-tab-trigger', DocTabTrigger);
+customElements.define('doc-tab-indicator', DocTabIndicator);
