@@ -11,8 +11,12 @@ export default class PrototypeTab extends ContextProvider<TabContext> implements
   private _tabRefs: HTMLElement[] = [];
   private _tabs: string[] = [];
 
-  connectedCallback() {
+  constructor() {
+    super();
     this._key = 'prototype-tab';
+  }
+
+  connectedCallback() {
     super.connectedCallback();
     this._defaultValue = this.getAttribute('default-value') || '';
     this._index = this._tabs.indexOf(this._defaultValue);

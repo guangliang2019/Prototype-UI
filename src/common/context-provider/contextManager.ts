@@ -43,6 +43,7 @@ export default class ContextManager {
     if (!this._providerEntryMap.has(provider.key)) {
       this._providerEntryMap.set(provider.key, new WeakMap());
     }
+
     this._providerEntryMap
       .get(provider.key)
       ?.set(provider, { consumersWeakSet: new WeakSet(), consumersSet: new Set() });
