@@ -51,27 +51,70 @@ class DocsTabIndicator extends PrototypeTabIndicator {
   }
 
   private _currentTabIndex = 0;
+  private __resizeObserver = new ResizeObserver((_) => {
+    this.onTabResize(this.contextValue);
+  });
+
+  private _leadingDebounce<T extends (...args: any[]) => void>(
+    func: T,
+    delay: number
+  ): (...funcArgs: Parameters<T>) => void {
+    let timerId: NodeJS.Timeout | null = null;
+    let leadingCall = false; // 标记是否为首次调用
+
+    return function (...args: Parameters<T>): void {
+      if (!timerId) {
+        // 首次调用时，立即执行
+        func(...args);
+        leadingCall = true;
+      }
+
+      // 清除旧的计时器（如果存在）
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+
+      // 设置新的计时器
+      timerId = setTimeout(() => {
+        // 如果这是首次之后的调用，则在冷却期结束后执行函数
+        if (!leadingCall) {
+          func(...args);
+        }
+        leadingCall = false; // 重置标记
+        timerId = null; // 清除计时器
+      }, delay);
+    };
+  }
 
   connectedCallback() {
     super.connectedCallback();
+    this.__resizeObserver.observe(this.parentElement!);
     this.className = 'absolute -mb-[34px] h-0.5 bg-primary';
 
-    this.onTabResize = (context) => {
-      requestAnimationFrame(() => {
-        const currentRef = context.tabRefs[context.index];
-        this.style.right = `${this._getOffsetRight(currentRef)}px`;
-        this.style.left = `${currentRef.offsetLeft}px`;
-      });
-    };
+    this.onTabResize = this._leadingDebounce((context) => {
+      console.log('context', context);
+      const currentRef = context.tabRefs[context.index];
+      this.style.transition = '';
+      this.style.width = `${currentRef.offsetWidth}px`;
+    }, 100);
+
     this.onTabChange = (context) => {
       requestAnimationFrame(() => {
+        this.style.width = 'unset';
         this.style.transition =
           this._currentTabIndex < context.index
             ? 'left .12s ease-out .09s, right .12s ease-out'
             : 'left .12s ease-out, right .12s ease-out .09s';
         this._currentTabIndex = context.index;
+        const currentRef = context.tabRefs[context.index];
+        this.style.right = `${this._getOffsetRight(currentRef)}px`;
+        this.style.left = `${currentRef.offsetLeft}px`;
       });
     };
+  }
+
+  disconnectedCallback() {
+    this.__resizeObserver.disconnect();
   }
 }
 

@@ -7,8 +7,14 @@ export default class PrototypeTabIndicator
 {
   private _currentTabRef: HTMLElement | null = null;
   private _resizeObserver = new ResizeObserver((_) => {
+    if (this._tabChangedFlag) {
+      this._tabChangedFlag = false;
+      return;
+    }
     this.onTabResize(this.contextValue);
   });
+
+  private _tabChangedFlag = false;
 
   onTabChange: (context: TabContext) => void = () => {};
   onTabResize: (context: TabContext) => void = () => {};
@@ -27,6 +33,7 @@ export default class PrototypeTabIndicator
 
     this.onContextChange = (value) => {
       if (this._currentTabRef) this._resizeObserver.unobserve(this._currentTabRef as HTMLElement);
+      this._tabChangedFlag = true;
       this._currentTabRef = value.tabRefs[this._contextValue.index];
       if (this._currentTabRef) this._resizeObserver.observe(this._currentTabRef);
       this.onTabChange(value);
