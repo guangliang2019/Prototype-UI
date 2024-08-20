@@ -1,6 +1,6 @@
 import { A, Div, Li, P, Ul } from '../../../utils/dom';
 
-class DocsAnchor extends HTMLElement {
+class DocAnchor extends HTMLElement {
   connectedCallback() {
     this._render();
   }
@@ -24,4 +24,4 @@ class DocsAnchor extends HTMLElement {
   }
 }
 
-customElements.define('docs-anchor', DocsAnchor);
+customElements.define('doc-anchor', DocAnchor);

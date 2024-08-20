@@ -1,6 +1,6 @@
-import DocsComponent from "../../../components/docs-component/docs-component";
+import { DocComponent } from '../../../components/doc-component';
 
-export default class TransitionDocs extends DocsComponent {
+export default class TransitionDoc extends DocComponent {
   constructor() {
     super();
     this._doc = {
@@ -13,4 +13,4 @@ export default class TransitionDocs extends DocsComponent {
   }
 }
 
-customElements.define('transition-docs', TransitionDocs);
+customElements.define('transition-doc', TransitionDoc);

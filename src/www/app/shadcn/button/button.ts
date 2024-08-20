@@ -1,6 +1,6 @@
-import DocsComponent from '../../../components/docs-component/docs-component';
+import { DocComponent } from '../../../components/doc-component';
 
-export default class ButtonDocs extends DocsComponent {
+export default class ButtonDoc extends DocComponent {
   constructor() {
     super();
     this._doc = {
@@ -17,4 +17,4 @@ export default class ButtonDocs extends DocsComponent {
   }
 }
 
-customElements.define('button-docs', ButtonDocs);
+customElements.define('button-doc', ButtonDoc);

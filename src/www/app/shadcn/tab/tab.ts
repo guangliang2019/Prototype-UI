@@ -1,6 +1,6 @@
-import DocsComponent from '../../../components/docs-component/docs-component';
+import { DocComponent } from '../../../components/doc-component';
 
-export default class TabDocs extends DocsComponent {
+export default class TabDoc extends DocComponent {
   constructor() {
     super();
     this._doc = {
@@ -16,4 +16,4 @@ export default class TabDocs extends DocsComponent {
   }
 }
 
-customElements.define('tab-docs', TabDocs);
+customElements.define('tab-doc', TabDoc);

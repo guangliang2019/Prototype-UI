@@ -1,8 +1,8 @@
 import { ContextConsumer } from '../../../common';
 import { Div } from '../../../utils/dom';
-import { DocsContext } from './interface';
+import { DocContext } from './interface';
 
-class DocsBreadcrumb extends ContextConsumer<DocsContext> {
+class DocBreadcrumb extends ContextConsumer<DocContext> {
   private svg: Document | null = null;
 
   constructor() {
@@ -49,4 +49,4 @@ class DocsBreadcrumb extends ContextConsumer<DocsContext> {
   }
 }
 
-customElements.define('docs-breadcrumb', DocsBreadcrumb);
+customElements.define('doc-breadcrumb', DocBreadcrumb);
