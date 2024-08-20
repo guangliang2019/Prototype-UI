@@ -82,6 +82,8 @@ class DocTabIndicator extends PrototypeTabIndicator {
     this.onTabResize = this._leadingDebounce((context) => {
       const currentRef = context.tabRefs[context.index];
       this.style.transition = '';
+      this.style.left = `${currentRef.offsetLeft}px`;
+      this.style.right = `${this._getOffsetRight(currentRef)}px`;
       this.style.width = `${currentRef.offsetWidth}px`;
     }, 100);
 
