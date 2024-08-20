@@ -18,7 +18,7 @@ export default class PrototypeTabTrigger
 
   connectedCallback() {
     super.connectedCallback();
-    this.classList.add('cursor-pointer');
+    this.style.cursor = 'pointer';
     this._value = this.getAttribute('value') || '';
     this._contextValue.tabs.push(this._value);
     this._contextValue.tabRefs.push(this);
