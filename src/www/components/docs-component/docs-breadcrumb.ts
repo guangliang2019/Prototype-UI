@@ -28,7 +28,6 @@ class DocsBreadcrumb extends ContextConsumer<DocsContext> {
 
     const svgElement = this.svg.documentElement.querySelector('svg');
     const fragment = document.createDocumentFragment();
-    console.log(this._contextValue.doc.route.toString());
 
     const routes = this._contextValue.doc.route;
     for (let i = 0; i < routes.length; i++) {

@@ -78,3 +78,11 @@ body {
 .bg-backdrop-invert {
   backdrop-filter: invert(1);
 }
+
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+* {
+  border-color: hsl(var(--border));
+}
