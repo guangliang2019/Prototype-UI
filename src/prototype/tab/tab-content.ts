@@ -1,18 +1,14 @@
-import { ContextConsumer } from '../../common/context-provider';
+import { ContextConsumer } from '../../common/context';
 import { TabContext, TabContentProps } from './interface';
 
 export default class PrototypeTabContent
   extends ContextConsumer<TabContext>
   implements TabContentProps
 {
+  protected _key = 'prototype-tab';
   private _value = '';
   // prettier-ignore
   get value(): string { return this._value; }
-
-  constructor() {
-    super();
-    this._key = 'prototype-tab';
-  }
 
   connectedCallback() {
     super.connectedCallback();

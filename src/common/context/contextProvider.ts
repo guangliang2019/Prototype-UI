@@ -7,11 +7,11 @@
 import ContextManager from './contextManager';
 import type { ContextProviderProps, RequestContextEventDetail } from './interface';
 
-export default class ContextProvider<T extends Object>
+export default abstract class ContextProvider<T extends Object>
   extends HTMLElement
   implements ContextProviderProps<T>
 {
-  protected _key = '';
+  protected abstract _key: string;
   protected _contextValue: T = {} as T;
 
   // prettier-ignore
@@ -50,5 +50,3 @@ export default class ContextProvider<T extends Object>
     }
   }
 }
-
-customElements.define('context-provider', ContextProvider);

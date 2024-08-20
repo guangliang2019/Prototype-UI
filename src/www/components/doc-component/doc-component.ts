@@ -3,12 +3,8 @@ import { Div, h, Main, P, PrototypeTabContent, Span } from '../../../utils/dom';
 import { Doc, DocContext } from './interface';
 
 export default abstract class DocComponent extends ContextProvider<DocContext> {
-  protected _doc: Doc | undefined = undefined;
-
-  constructor() {
-    super();
-    this._key = 'doc';
-  }
+  protected abstract _doc: Doc;
+  protected _key = 'doc';
 
   connectedCallback() {
     super.connectedCallback();

@@ -1,10 +1,11 @@
-import { ContextConsumer } from '../../common/context-provider';
+import { ContextConsumer } from '../../common/context';
 import { TabContext, TabIndicatorProps } from './interface';
 
 export default class PrototypeTabIndicator
   extends ContextConsumer<TabContext>
   implements TabIndicatorProps
 {
+  protected _key = 'prototype-tab';
   private _currentTabRef: HTMLElement | null = null;
   private _resizeObserver = new ResizeObserver((_) => {
     if (this._tabChangedFlag) {
@@ -18,11 +19,6 @@ export default class PrototypeTabIndicator
 
   onTabChange: (context: TabContext) => void = () => {};
   onTabResize: (context: TabContext) => void = () => {};
-
-  constructor() {
-    super();
-    this._key = 'prototype-tab';
-  }
 
   connectedCallback() {
     super.connectedCallback();

@@ -6,29 +6,20 @@ import {
 } from '../../../../prototype/tab';
 
 class DocTab extends PrototypeTab {
-  constructor() {
-    super();
-    this._key = 'doc-tab';
-  }
+  protected _key = 'doc-tab';
 
-  connectedCallback(): void {
+  connectedCallback() {
     super.connectedCallback();
     this.className = 'relative mr-auto w-full';
   }
 }
 
 class DocTabContent extends PrototypeTabContent {
-  constructor() {
-    super();
-    this._key = 'doc-tab';
-  }
+  protected _key = 'doc-tab';
 }
 
 class DocTabTrigger extends PrototypeTabTrigger {
-  constructor() {
-    super();
-    this._key = 'doc-tab';
-  }
+  protected _key = 'doc-tab';
 
   connectedCallback() {
     super.connectedCallback();
@@ -39,10 +30,7 @@ class DocTabTrigger extends PrototypeTabTrigger {
 }
 
 class DocTabIndicator extends PrototypeTabIndicator {
-  constructor() {
-    super();
-    this._key = 'doc-tab';
-  }
+  protected _key = 'doc-tab';
 
   private _getOffsetRight(element: HTMLElement) {
     const el = element;

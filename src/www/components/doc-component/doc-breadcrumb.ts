@@ -3,12 +3,8 @@ import { Div } from '../../../utils/dom';
 import { DocContext } from './interface';
 
 class DocBreadcrumb extends ContextConsumer<DocContext> {
+  protected _key = 'doc';
   private svg: Document | null = null;
-
-  constructor() {
-    super();
-    this._key = 'doc';
-  }
 
   connectedCallback() {
     super.connectedCallback();

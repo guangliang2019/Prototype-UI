@@ -7,8 +7,8 @@
 import ContextConsumer, {
   requestContextSymbol,
   setConsumerContextSymbol,
-} from './context-consumer';
-import ContextProvider from './context-provider';
+} from './contextConsumer';
+import ContextProvider from './contextProvider';
 
 /**
  * 由于 WeakSet 不能被遍历，因此额外维护一个 Set，切勿忘记同步更新

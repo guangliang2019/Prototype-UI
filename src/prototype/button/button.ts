@@ -5,6 +5,7 @@ export default class PrototypeButton<T extends Object>
   extends ContextConsumer<T>
   implements ButtonProps
 {
+  protected _key = 'prototype-button';
   /**
    * disable，响应式属性，有自定义的 getter 与 setter
    */
@@ -69,7 +70,6 @@ export default class PrototypeButton<T extends Object>
 
   constructor() {
     super();
-    this._key = 'prototype-button';
     this.tabIndex = 0;
   }
 
