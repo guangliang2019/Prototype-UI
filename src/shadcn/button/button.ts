@@ -64,12 +64,14 @@ export default class ShadcnButton<T extends Object = {}>
         borderCls = 'border border-input';
         break;
       case 'destructive':
-        colorCls = 'bg-destructive text-destructive-foregroundhover:bg-destructive/90';
+        colorCls = 'bg-destructive text-destructive-foreground hover:bg-destructive/90';
         break;
       case 'ghost':
         colorCls = 'hover:bg-accent hover:text-accent-foreground';
+        break;
       case 'link':
         extraCls = 'text-primary underline-offset-4 hover:underline';
+        colorCls = '';
         break;
     }
     // prettier-ignore
