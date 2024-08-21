@@ -9,7 +9,7 @@ export default class ShadcnButton<T extends Object = {}>
   private _variant = SHADCN_BUTTON_DEFAULT_PROPS['variant'];
 
   static get observedAttributes() {
-    return [...super.observedAttributes, 'icon-only'];
+    return [...super.observedAttributes, 'variant', 'icon-only'];
   }
 
   attributeChangedCallback(name: string, oldValue: any, newValue: any) {
