@@ -9,11 +9,11 @@ export default class PrototypeButton<T extends Object>
   /**
    * disable，响应式属性，有自定义的 getter 与 setter
    */
-  private _disable = false;
+  private _disabled = false;
   // prettier-ignore
-  get disable () { return this._disable; }
+  get disabled () { return this._disabled; }
   private _handleDisableChange(newValue: boolean) {
-    this._disable = newValue;
+    this._disabled = newValue;
     if (newValue) {
       this.tabIndex = -1;
     } else {
@@ -21,7 +21,7 @@ export default class PrototypeButton<T extends Object>
     }
   }
   // prettier-ignore
-  set disable(value) { this._handleDisableChange(value); }
+  set disabled(value) { this._handleDisableChange(value); }
 
   /**
    * hover，私有属性，私有成员 _hover 为 true 时，元素自动添加 data-hover 属性
@@ -68,13 +68,8 @@ export default class PrototypeButton<T extends Object>
    */
   onClick: () => void = () => {};
 
-  constructor() {
-    super();
-    this.tabIndex = 0;
-  }
-
   private _handleEnterKeyDown = (e: KeyboardEvent) => {
-    if (this.disable) return;
+    if (this.disabled) return;
     if (e.key === 'Enter') {
       // 触发一瞬间的 active 与 inactive 事件
       this._handleActive();
@@ -84,6 +79,7 @@ export default class PrototypeButton<T extends Object>
   };
 
   connectedCallback() {
+    this.tabIndex = 0;
     // 键盘交互时，按下 Enter 键触发点击事件，同时也会立即触发 active 与 inactive 事件
     this.addEventListener('keydown', this._handleEnterKeyDown);
     // 鼠标交互时，鼠标进入和离开时触发
@@ -117,15 +113,14 @@ export default class PrototypeButton<T extends Object>
 
   attributeChangedCallback(name: string, _: any, newValue: any) {
     const mapping: Record<string, any> = {
-      'disable': () => (this.disable = newValue !== null),
-      'on-click': () => (this.onClick = new Function(newValue) as () => void),
+      'disabled': () => (this.disabled = newValue !== null),
     };
 
     mapping[name]?.();
   }
 
   static get observedAttributes() {
-    return ['on-click', 'disable'];
+    return ['disabled'];
   }
 }
 

@@ -26,13 +26,6 @@ export default abstract class ContextConsumer<T extends Object>
     return ['onContextChange'];
   }
 
-  attributeChangedCallback(name: string, _: any, newValue: any) {
-    const mapping: Record<string, any> = {
-      'on-context-change': () => (this.onContextChange = new Function(newValue) as () => void),
-    };
-    mapping[name]?.();
-  }
-
   connectedCallback() {
     // 仅在单独使用时从属性中读取 key，其余时间当作基类使用，有子类直接赋值 key
     if (this.tagName === 'CONTEXT-CONSUMER') this._key = this.getAttribute('key') || '';

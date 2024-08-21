@@ -11,7 +11,7 @@ class DocAnchor extends HTMLElement {
 
     this.appendChild(
       Div({ class: 'hidden text-sm xl:block w-[300px]' }, [
-        Div({ class: 'sticky top-16 -mt-10 h-[calc(100vh-3.5rem)] py-12' }, [
+        Div({ class: 'fixed top-16 -mt-10 h-[calc(100vh-3.5rem)] py-12' }, [
           Div({ class: 'space-y-2' }, [
             P({ class: 'font-medium' }, ['On This Page']),
             Ul({ class: 'm-0 list-none' }, [

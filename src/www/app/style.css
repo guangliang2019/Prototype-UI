@@ -66,3 +66,11 @@
   padding-right: 2rem;
   padding-left: 2rem;
 }
+
+.text-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
+
+.hover\:bg-primary\/90:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}

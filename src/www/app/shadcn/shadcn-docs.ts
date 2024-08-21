@@ -12,6 +12,7 @@ export default class ComponentsDoc extends HTMLElement {
     fragment.appendChild(h('tab-doc'));
 
     this.appendChild(fragment);
+    this.className = 'w-full';
   }
 }
 

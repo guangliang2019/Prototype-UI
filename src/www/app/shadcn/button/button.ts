@@ -19,6 +19,17 @@ export default class ButtonDoc extends DocComponent {
           },
         ],
       },
+      {
+        title: 'Examples',
+        contents: [
+          {
+            title: 'Primary',
+            type: 'code',
+            key: 'primary',
+            content: 'button-basic',
+          },
+        ],
+      },
     ],
   };
 }

@@ -26,7 +26,7 @@ export default abstract class DocComponent extends ContextProvider<DocContext> {
       Main(
         {
           class:
-            'flex relative flex-1 py-6 lg:gap-10 items-start justify-between md:ml-8 lg:ml-10 lg:py-8 max-w-[1104px] lg:w-[calc(100vw-240px-4rem)] md:w-[calc(100vw-220px-3.5rem)]',
+            'lg:ml-[calc(2.5rem+240px)] md:ml-[calc(2rem+220px)] flex relative flex-1 py-6 lg:gap-10 items-start justify-between  lg:py-8 max-w-[1104px] lg:w-[calc(100vw-240px-4rem)] md:w-[calc(100vw-220px-6rem)] sm:w-full xs:w-[100vw]',
         },
         [
           Div({ class: 'w-full' }, [
@@ -86,6 +86,7 @@ export default abstract class DocComponent extends ContextProvider<DocContext> {
                             'aria-label': 'Link to section',
                             href: `#${content.title}`,
                           }),
+                          content.title,
                         ]
                       )
                     );
