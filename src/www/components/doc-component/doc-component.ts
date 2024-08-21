@@ -1,5 +1,5 @@
-import { ContextProvider } from '../../../common';
-import { A, Div, h, Main, P, PrototypeTabContent, Span } from '../../../utils/dom';
+import { ContextProvider } from '@/common';
+import { A, Div, h, Main, P, PrototypeTabContent, Span } from '@/utils/dom';
 import { Doc, DocContext } from './interface';
 
 export default abstract class DocComponent extends ContextProvider<DocContext> {

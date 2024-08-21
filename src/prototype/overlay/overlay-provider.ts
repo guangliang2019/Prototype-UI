@@ -1,4 +1,4 @@
-import { ContextProvider } from '../../common/context';
+import { ContextProvider } from '@/common';
 import { OverlayProviderProps, OverlayContext } from './interface';
 
 export default class PrototypeTab

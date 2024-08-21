@@ -1,5 +1,5 @@
 import '@/prototype/tab';
-import { Aside, Div, h } from '../../../utils/dom';
+import { Aside, Div, h } from '@/utils/dom';
 class WebsiteAside extends HTMLElement {
   private _index: Record<string, { title: string; value: string }[]> = {};
   constructor() {

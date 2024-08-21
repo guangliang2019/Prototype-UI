@@ -1,4 +1,4 @@
-import { PrototypeButton } from '../../prototype/button';
+import { PrototypeButton } from '@/prototype/button';
 import { ShacnButtonProps, SHADCN_BUTTON_DEFAULT_PROPS } from './interface';
 
 export default class ShadcnButton<T extends Object = {}>

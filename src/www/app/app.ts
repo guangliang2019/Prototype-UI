@@ -1,5 +1,5 @@
-import { Div, h, Main, PrototypeTab, PrototypeTabContent } from '../../utils/dom';
-import '../components';
+import { Div, h, Main, PrototypeTab, PrototypeTabContent } from '@/utils/dom';
+import '@/www/components';
 import './docs';
 import './shadcn';
 

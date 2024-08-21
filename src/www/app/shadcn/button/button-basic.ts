@@ -1,6 +1,6 @@
-import { Div, h } from '../../../../utils/dom';
-import { DocCode } from '../../../components/doc-component';
-import '../../../../shadcn/index';
+import { Div, h } from '@/utils/dom';
+import { DocCode } from '@/www/components/doc-component';
+import '@/shadcn';
 
 export default class ButtonBasic extends DocCode {
   protected _code = 'Code component is in development';

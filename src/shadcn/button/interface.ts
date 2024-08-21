@@ -1,4 +1,4 @@
-import { ButtonProps } from '../../prototype/button/interface';
+import { ButtonProps } from '@/prototype/button';
 
 export interface ShacnButtonProps extends ButtonProps {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'link' | 'destructive';

@@ -3,7 +3,7 @@ import {
   PrototypeTabContent,
   PrototypeTabIndicator,
   PrototypeTabTrigger,
-} from '../../../../prototype/tab';
+} from '@/prototype/tab';
 
 class DocTab extends PrototypeTab {
   protected _key = 'doc-tab';

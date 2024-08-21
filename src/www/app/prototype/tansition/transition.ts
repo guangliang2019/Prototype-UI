@@ -1,4 +1,4 @@
-import { DocComponent } from '../../../components/doc-component';
+import { DocComponent } from '@/www/components/doc-component';
 
 export default class TransitionDoc extends DocComponent {
   protected _doc = {

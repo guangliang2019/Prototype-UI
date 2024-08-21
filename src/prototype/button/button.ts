@@ -1,4 +1,4 @@
-import { ContextConsumer } from '../../common';
+import { ContextConsumer } from '@/common';
 import { ButtonProps } from './interface';
 
 export default class PrototypeButton<T extends Object>

@@ -1,6 +1,6 @@
-import { ContextConsumer } from '../../../../common';
-import { Div, h } from '../../../../utils/dom';
+import { Div, h } from '@/utils/dom';
 import { DocContext } from '../interface';
+import { ContextConsumer } from '@/common';
 
 export default abstract class DocCode extends ContextConsumer<DocContext> {
   protected _key = 'doc';

@@ -1,5 +1,5 @@
-import { DocComponent } from '../../../components/doc-component';
-import { Doc } from '../../../components/doc-component/interface';
+import { DocComponent } from '@/www/components/doc-component';
+import { Doc } from '@/www/components/doc-component';
 import './button-basic';
 
 export default class ButtonDoc extends DocComponent {

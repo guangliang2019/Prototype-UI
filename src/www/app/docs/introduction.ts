@@ -1,4 +1,4 @@
-import { DocComponent } from '../../components/doc-component';
+import { DocComponent } from '@/www/components/doc-component';
 
 class DocIntroduction extends DocComponent {
   protected _doc = {

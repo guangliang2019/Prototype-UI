@@ -1,4 +1,4 @@
-import { ContextProvider } from '../../common/context';
+import { ContextProvider } from '@/common';
 import { TabContext, TabProps } from './interface';
 
 export default class PrototypeTab extends ContextProvider<TabContext> implements TabProps {

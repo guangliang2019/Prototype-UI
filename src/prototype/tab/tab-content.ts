@@ -1,4 +1,4 @@
-import { ContextConsumer } from '../../common/context';
+import { ContextConsumer } from '@/common';
 import { TabContext, TabContentProps } from './interface';
 
 export default class PrototypeTabContent

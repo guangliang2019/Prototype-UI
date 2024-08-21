@@ -1,4 +1,4 @@
-import { A, Div, Li, P, Ul } from '../../../utils/dom';
+import { A, Div, Li, P, Ul } from '@/utils/dom';
 
 class DocAnchor extends HTMLElement {
   connectedCallback() {
