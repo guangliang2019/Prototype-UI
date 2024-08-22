@@ -1,4 +1,4 @@
-import { A, Div, Span } from '../../../utils/dom';
+import { A, Div, Span } from '@/utils/dom';
 
 class GitHubButton extends HTMLElement {
   private _svg: Document | null = null;

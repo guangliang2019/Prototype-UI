@@ -1,4 +1,4 @@
-import ContextConsumer from './context-consumer';
+import ContextConsumer from './contextConsumer';
 
 export interface RequestContextEventDetail<T extends Object> {
   key: string;

@@ -1,6 +1,6 @@
 import '@/prototype/tab';
 import './github-button';
-import { Div, h, Nav, PrototypeTabTrigger, Span } from '../../../utils/dom';
+import { Div, h, Nav, PrototypeTabTrigger, Span } from '@/utils/dom';
 
 export default class WebsiteNav extends HTMLElement {
   private _navItemsCls =

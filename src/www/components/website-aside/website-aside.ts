@@ -1,5 +1,5 @@
 import '@/prototype/tab';
-import { Aside, Div, h } from '../../../utils/dom';
+import { Aside, Div, h } from '@/utils/dom';
 class WebsiteAside extends HTMLElement {
   private _index: Record<string, { title: string; value: string }[]> = {};
   constructor() {
@@ -68,7 +68,7 @@ class WebsiteAside extends HTMLElement {
       Aside(
         {
           class:
-            'fixed md:w-[220px] lg:w-[240px] top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block',
+            'fixed md:w-[220px] lg:w-[240px] top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:block',
         },
         [Div({ class: 'relative overflow-hidden h-full py-6 pr-6 lg:py-8' }, [fragment])]
       )

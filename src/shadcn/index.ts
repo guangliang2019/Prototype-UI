@@ -1,0 +1,1 @@
+export { ShadcnButton } from './button';

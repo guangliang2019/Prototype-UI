@@ -8,12 +8,12 @@ import type { ContextConsumerProps, RequestContextEventDetail } from './interfac
 export const setConsumerContextSymbol = Symbol('setConsumerContext');
 export const requestContextSymbol = Symbol('requestContext');
 
-export default class ContextConsumer<T extends Object>
+export default abstract class ContextConsumer<T extends Object>
   extends HTMLElement
   implements ContextConsumerProps<T>
 {
   protected _contextValue = {} as T;
-  protected _key = '';
+  protected abstract _key: string;
 
   onContextChange: (value: T) => void = () => {};
 
@@ -24,13 +24,6 @@ export default class ContextConsumer<T extends Object>
 
   static get observedAttributes() {
     return ['onContextChange'];
-  }
-
-  attributeChangedCallback(name: string, _: any, newValue: any) {
-    const mapping: Record<string, any> = {
-      'on-context-change': () => (this.onContextChange = new Function(newValue) as () => void),
-    };
-    mapping[name]?.();
   }
 
   connectedCallback() {
@@ -56,5 +49,3 @@ export default class ContextConsumer<T extends Object>
     this.dispatchEvent(requestContextEvent);
   }
 }
-
-customElements.define('context-consumer', ContextConsumer);

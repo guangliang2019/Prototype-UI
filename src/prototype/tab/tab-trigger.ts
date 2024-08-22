@@ -1,24 +1,20 @@
-import { ContextConsumer } from '../../common/context-provider';
+import { ContextConsumer } from '@/common';
 import { TabContext, TabTrigerProps } from './interface';
 
 export default class PrototypeTabTrigger
   extends ContextConsumer<TabContext>
   implements TabTrigerProps
 {
+  protected _key = 'prototype-tab';
   private _value = '';
 
   get value(): string {
     return this._value;
   }
 
-  constructor() {
-    super();
-    this._key = 'prototype-tab';
-  }
-
   connectedCallback() {
     super.connectedCallback();
-    this.classList.add('cursor-pointer');
+    this.style.cursor = 'pointer';
     this._value = this.getAttribute('value') || '';
     this._contextValue.tabs.push(this._value);
     this._contextValue.tabRefs.push(this);

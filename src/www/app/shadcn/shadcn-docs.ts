@@ -1,4 +1,4 @@
-import { h } from '../../../utils/dom';
+import { h } from '@/utils/dom';
 
 export default class ComponentsDoc extends HTMLElement {
   connectedCallback() {
@@ -12,6 +12,7 @@ export default class ComponentsDoc extends HTMLElement {
     fragment.appendChild(h('tab-doc'));
 
     this.appendChild(fragment);
+    this.className = 'w-full';
   }
 }
 

@@ -1,10 +1,18 @@
-import { Div, h, Main, PrototypeTab, PrototypeTabContent } from '../../utils/dom';
-import '../components';
+import { Div, h, Main, PrototypeTab, PrototypeTabContent } from '@/utils/dom';
+import '@/www/components';
 import './docs';
 import './shadcn';
 
 export default class AppRoot extends HTMLElement {
   connectedCallback() {
+    const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.body.className = theme;
+
+    // 监听系统主题变化
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+      const newTheme = event.matches ? 'dark' : 'light';
+      document.body.className = newTheme;
+    });
     this._render();
   }
 

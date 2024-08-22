@@ -46,15 +46,7 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
   }
 
   static get observedAttributes() {
-    return [
-      'show',
-      'unmount',
-      'appear',
-      'before-enter',
-      'after-enter',
-      'before-leave',
-      'after-leave',
-    ];
+    return ['show', 'unmount', 'appear'];
   }
 
   connectedCallback() {
@@ -73,10 +65,6 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
       },
       'unmount': () => (this.unmount = newValue !== null),
       'appear': () => (this.appear = newValue !== null),
-      'before-enter': () => (this.beforeEnter = new Function(newValue) as () => void),
-      'after-enter': () => (this.afterEnter = new Function(newValue) as () => void),
-      'before-leave': () => (this.beforeLeave = new Function(newValue) as () => void),
-      'after-leave': () => (this.afterLeave = new Function(newValue) as () => void),
     };
 
     mapping[name]?.();
