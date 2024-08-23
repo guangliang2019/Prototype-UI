@@ -1,6 +1,7 @@
 export interface Doc {
   title: string;
   desc: string;
+  id: string;
   route: string[];
   links: DocLink[];
   sections: DocSection[];

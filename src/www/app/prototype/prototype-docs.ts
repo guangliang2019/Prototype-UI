@@ -1,6 +1,7 @@
 import { h } from '@/utils/dom';
+import './tansition';
 
-export default class ShadcnDoc extends HTMLElement {
+export default class PrototypeDoc extends HTMLElement {
   connectedCallback() {
     this._render();
   }
@@ -8,12 +9,12 @@ export default class ShadcnDoc extends HTMLElement {
   private _render() {
     const fragment = document.createDocumentFragment();
 
-    fragment.appendChild(h('shadcn-button-doc'));
-    fragment.appendChild(h('shadcn-tab-doc'));
+    fragment.appendChild(h('button-doc'));
+    fragment.appendChild(h('transition-doc'));
 
     this.appendChild(fragment);
     this.className = 'w-full';
   }
 }
 
-customElements.define('shadcn-docs', ShadcnDoc);
+customElements.define('prototype-docs', PrototypeDoc);

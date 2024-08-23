@@ -41,10 +41,6 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
   beforeLeave?: () => void = DEFAULT_TRANSITION_PROPS['beforeLeave'];
   afterLeave?: () => void = DEFAULT_TRANSITION_PROPS['afterLeave'];
 
-  constructor() {
-    super();
-  }
-
   static get observedAttributes() {
     return ['show', 'unmount', 'appear'];
   }
@@ -94,9 +90,11 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
   private _enter() {
     this.beforeEnter?.();
 
+    this.removeAttribute('data-closed');
+    this.setAttribute('data-entered', '');
+    this.setAttribute('data-enter', '');
+
     requestAnimationFrame(() => {
-      this.removeAttribute('data-closed');
-      this.setAttribute('data-entered', '');
       this.addEventListener('transitionend', this._onTransitionEnd, {
         once: true,
       });
@@ -106,9 +104,11 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
   private _leave() {
     this.beforeLeave?.();
 
+    this.removeAttribute('data-entered');
+    this.setAttribute('data-leave', '');
+    this.setAttribute('data-closed', '');
+
     requestAnimationFrame(() => {
-      this.removeAttribute('data-entered');
-      this.setAttribute('data-closed', '');
       this.addEventListener('transitionend', this._onTransitionEnd, {
         once: true,
       });
@@ -119,8 +119,10 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
   private _onTransitionEnd = () => {
     if (this._state === TransitionState.Entering) {
       this._transitionTo(TransitionState.Entered);
+      this.removeAttribute('data-enter');
     } else if (this._state === TransitionState.Leaving) {
       this._transitionTo(TransitionState.Left);
+      this.removeAttribute('data-leave');
     }
   };
 }

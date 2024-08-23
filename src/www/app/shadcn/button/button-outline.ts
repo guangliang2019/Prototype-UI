@@ -2,7 +2,7 @@ import { Div, h } from '@/utils/dom';
 import { DocCode } from '@/www/components/doc-component';
 import '@/shadcn';
 
-export default class ButtonOutline extends DocCode {
+export default class ShadcnButtonOutline extends DocCode {
   protected _code = 'Code component is in development';
 
   protected _preview = () => {
@@ -10,4 +10,4 @@ export default class ButtonOutline extends DocCode {
   };
 }
 
-customElements.define('button-outline', ButtonOutline);
+customElements.define('shadcn-button-outline', ShadcnButtonOutline);

@@ -2,7 +2,7 @@ import { Div, h } from '@/utils/dom';
 import { DocCode } from '@/www/components/doc-component';
 import '@/shadcn';
 
-export default class ButtonDestructive extends DocCode {
+export default class ShadcnButtonDestructive extends DocCode {
   protected _code = 'Code component is in development';
 
   protected _preview = () => {
@@ -10,4 +10,4 @@ export default class ButtonDestructive extends DocCode {
   };
 }
 
-customElements.define('button-destructive', ButtonDestructive);
+customElements.define('shadcn-button-destructive', ShadcnButtonDestructive);

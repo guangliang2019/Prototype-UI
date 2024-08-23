@@ -73,12 +73,18 @@ export default class PrototypeButton<T extends Object>
     if (e.key === 'Enter') {
       // 触发一瞬间的 active 与 inactive 事件
       this._handleActive();
-      this.onClick();
+      this._handleClick();
       this._handleInactive();
     }
   };
 
+  private _handleClick = () => {
+    if (this.disabled) return;
+    this.onClick();
+  };
+
   connectedCallback() {
+    this.addEventListener('click', this._handleClick);
     this.tabIndex = 0;
     // 键盘交互时，按下 Enter 键触发点击事件，同时也会立即触发 active 与 inactive 事件
     this.addEventListener('keydown', this._handleEnterKeyDown);
@@ -98,6 +104,7 @@ export default class PrototypeButton<T extends Object>
   }
 
   disconectedCallback() {
+    this.removeEventListener('click', this._handleClick);
     // 移除所有监听事件
     this.removeEventListener('keydown', this._handleEnterKeyDown);
 

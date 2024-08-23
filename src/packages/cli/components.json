@@ -1,0 +1,26 @@
+{
+  "common": {
+    "context": {
+      "dependencies": []
+    },
+    "click-outside": {
+      "dependencies": []
+    }
+  },
+  "prototype": {
+    "button": {
+      "dependencies": ["common/context"]
+    },
+    "tab": {
+      "dependencies": ["common/context"]
+    },
+    "transition": {
+      "dependencies": []
+    }
+  },
+  "shadcn": {
+    "button": {
+      "dependencies": ["prototype/button"]
+    }
+  }
+}

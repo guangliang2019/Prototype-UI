@@ -1,7 +1,9 @@
 import { Div, h, Main, PrototypeTab, PrototypeTabContent } from '@/utils/dom';
 import '@/www/components';
+import '@/prototype';
 import './docs';
 import './shadcn';
+import './prototype';
 
 export default class AppRoot extends HTMLElement {
   connectedCallback() {
@@ -24,10 +26,10 @@ export default class AppRoot extends HTMLElement {
           PrototypeTabContent({ value: 'docs' }, [
             PrototypeTab(
               {
-                'default-value': 'Introduction',
+                'default-value': 'docs-introduction',
                 class: 'container flex-1 items-start',
               },
-              [h('website-aside'), h('doc-introduction'), h('shadcn-docs')]
+              [h('website-aside'), h('doc-introduction'), h('shadcn-docs'), h('prototype-docs')]
             ),
           ]),
           PrototypeTabContent({ style: 'display: none', value: 'components' }, ['components']),
