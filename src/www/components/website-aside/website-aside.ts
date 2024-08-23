@@ -8,27 +8,27 @@ class WebsiteAside extends HTMLElement {
       'Getting Started': [
         {
           title: 'Introduction',
-          value: 'Introduction',
+          value: 'docs-introduction',
         },
       ],
       'Shadcn UI': [
         {
           title: 'Button',
-          value: 'Button',
+          value: 'shadcn-button',
         },
         {
           title: 'Tab',
-          value: 'Tab',
+          value: 'shadcn-tab',
         },
       ],
       'Prototype UI': [
         {
           title: 'Tab',
-          value: 'Prototype Tab',
+          value: 'prototype-tab',
         },
         {
           title: 'Transition',
-          value: 'Prototype Transition',
+          value: 'prototype-transition',
         },
       ],
     };

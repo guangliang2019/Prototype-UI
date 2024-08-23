@@ -7,6 +7,10 @@ export default class ShadcnButton<T extends Object = {}>
 {
   private _iconOnly = SHADCN_BUTTON_DEFAULT_PROPS['iconOnly'];
   private _variant = SHADCN_BUTTON_DEFAULT_PROPS['variant'];
+  // 用户添加的 class 属性
+  private _class = '';
+  // 组件自身的 class 属性
+  private _computedClass = '';
 
   static get observedAttributes() {
     return [...super.observedAttributes, 'variant', 'icon-only'];
@@ -15,13 +19,14 @@ export default class ShadcnButton<T extends Object = {}>
   attributeChangedCallback(name: string, oldValue: any, newValue: any) {
     super.attributeChangedCallback(name, oldValue, newValue);
     const mapping: Record<string, any> = {
+      'variant': () => (this._variant = newValue),
       'icon-only': () => (this._iconOnly = newValue !== null),
     };
 
     mapping[name]?.();
 
-    // 响应式属性变化进行重新渲染，onClick 变化不会重新渲染
-    if (oldValue !== newValue) {
+    // 响应式属性变化进行重新渲染 (初始化时不会触发), onClick 变化不会重新渲染,
+    if (oldValue !== newValue && oldValue !== null) {
       if (name === 'variant' || name === 'icon-only' || name === 'disabled') {
         this._render();
       }
@@ -29,7 +34,9 @@ export default class ShadcnButton<T extends Object = {}>
   }
 
   connectedCallback() {
+    this._class = this.className || '';
     super.connectedCallback();
+
     this._variant =
       (this.getAttribute('variant') as ShacnButtonProps['variant']) ||
       SHADCN_BUTTON_DEFAULT_PROPS['variant'];
@@ -46,9 +53,9 @@ export default class ShadcnButton<T extends Object = {}>
     let fontCls = 'text-sm font-medium';
     let animationCls = 'transition-colors';
     let disabledCls = 'disabled:pointer-events-none disabled:opacity-50';
-    let colorCls = 'bg-secondary text-secondary-foreground  hover:bg-secondary/80';
     let focusCls = 'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring';
     let shadowCls = 'shadow-sm';
+    let colorCls = 'bg-secondary text-secondary-foreground  hover:bg-secondary/80';
     let borderCls = '';
     let extraCls = '';
 
@@ -75,7 +82,8 @@ export default class ShadcnButton<T extends Object = {}>
         break;
     }
     // prettier-ignore
-    this.className = [basicCls, flexCls, shapeCls, sizeCls, cursorCls, fontCls, animationCls, disabledCls, colorCls, focusCls, shadowCls, borderCls, extraCls].join(' ');
+    this._computedClass = [basicCls, flexCls, shapeCls, sizeCls, cursorCls, fontCls, animationCls, disabledCls, focusCls, shadowCls, colorCls, borderCls, extraCls].join(' ').trimEnd();
+    this.className = [this._computedClass, this._class].join(' ').trimEnd();
   }
 }
 

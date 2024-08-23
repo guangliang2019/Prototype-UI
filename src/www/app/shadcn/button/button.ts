@@ -8,9 +8,10 @@ import './button-link';
 import './button-destructive';
 import './button-ghost';
 
-export default class ButtonDoc extends DocComponent {
+export default class ShadcnButtonDoc extends DocComponent {
   protected _doc: Doc = {
     title: 'Button',
+    id: 'shadcn-button',
     desc: 'Displays a button or a component that looks like a button.',
     route: ['Shadcn', 'button'],
     links: [],
@@ -21,7 +22,7 @@ export default class ButtonDoc extends DocComponent {
           {
             type: 'code',
             key: '',
-            content: 'button-basic',
+            content: 'shadcn-button-basic',
           },
         ],
       },
@@ -32,37 +33,37 @@ export default class ButtonDoc extends DocComponent {
             title: 'Primary',
             type: 'code',
             key: 'primary',
-            content: 'button-primary',
+            content: 'shadcn-button-primary',
           },
           {
             title: 'Secondary',
             type: 'code',
             key: 'secondary',
-            content: 'button-secondary',
+            content: 'shadcn-button-secondary',
           },
           {
             title: 'Outline',
             type: 'code',
             key: 'outline',
-            content: 'button-outline',
+            content: 'shadcn-button-outline',
           },
           {
             title: 'Ghost',
             type: 'code',
             key: 'ghost',
-            content: 'button-ghost',
+            content: 'shadcn-button-ghost',
           },
           {
             title: 'Link',
             type: 'code',
             key: 'link',
-            content: 'button-link',
+            content: 'shadcn-button-link',
           },
           {
             title: 'Destructive',
             type: 'code',
             key: 'destructive',
-            content: 'button-destructive',
+            content: 'shadcn-button-destructive',
           },
         ],
       },
@@ -70,4 +71,4 @@ export default class ButtonDoc extends DocComponent {
   };
 }
 
-customElements.define('button-doc', ButtonDoc);
+customElements.define('shadcn-button-doc', ShadcnButtonDoc);
