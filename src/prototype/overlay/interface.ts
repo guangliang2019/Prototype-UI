@@ -8,10 +8,7 @@ export interface OverlayProps {
   unmount?: boolean;
 }
 
-export interface OverlayContext {
-  show: (content: HTMLElement, target?: HTMLElement, dx?: number, dy?: number) => HTMLElement;
-  close: (overlay: HTMLElement) => void;
-}
+export interface OverlayContext {}
 
 export interface ShowOverlayEventDetail {
   overlayKey: string;

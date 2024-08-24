@@ -28,13 +28,10 @@ export default class PrototypeOverlay
   }
 
   // Overlay 本身位置与编写位置相同，但是 content 会在实际渲染时「投放」到目标位置
-  show(content: HTMLElement, className?: string) {
+  show(content: HTMLElement) {
     this._content = content;
     this._content.style.position = 'absolute';
-    this._content.className = className ?? '';
     this._closestRelative.appendChild(this._content);
-    console.log(this.target, document.body.querySelector(this.target!), 'target');
-    console.log(this._closestRelative, 'closestRelative');
 
     const overlayShowEvent = new CustomEvent<ShowOverlayEventDetail>('overlay-show', {
       bubbles: true,
