@@ -4,10 +4,7 @@
  * @date 2024-08-13
  */
 
-import ContextConsumer, {
-  requestContextSymbol,
-  setConsumerContextSymbol,
-} from './contextConsumer';
+import ContextConsumer, { requestContextSymbol, setConsumerContextSymbol } from './contextConsumer';
 import ContextProvider from './contextProvider';
 
 /**
@@ -157,5 +154,9 @@ export default class ContextManager {
     entry.consumersSet.forEach((consumer) => {
       consumer[setConsumerContextSymbol](value);
     });
+  }
+
+  getConsumers<T extends Object>(provider: ContextProvider<T>): ContextConsumer<T>[] {
+    return Array.from(this._providerEntryMap.get(provider.key)?.get(provider)?.consumersSet || []);
   }
 }
