@@ -20,19 +20,21 @@ export default class AppRoot extends HTMLElement {
 
   private _render() {
     const content = Div({ id: 'app' }, [
-      PrototypeTab({ 'default-value': 'docs' }, [
-        h('website-nav'),
-        Main({ class: 'flex-1 flex justify-center' }, [
-          PrototypeTabContent({ value: 'docs' }, [
-            PrototypeTab(
-              {
-                'default-value': 'docs-introduction',
-                class: 'container flex-1 items-start',
-              },
-              [h('website-aside'), h('doc-introduction'), h('shadcn-docs'), h('prototype-docs')]
-            ),
+      h('prototype-overlay-provider', {}, [
+        PrototypeTab({ 'default-value': 'docs' }, [
+          h('website-nav'),
+          Main({ class: 'flex-1 flex justify-center' }, [
+            PrototypeTabContent({ value: 'docs' }, [
+              PrototypeTab(
+                {
+                  'default-value': 'docs-introduction',
+                  class: 'container flex-1 items-start',
+                },
+                [h('website-aside'), h('doc-introduction'), h('shadcn-docs'), h('prototype-docs')]
+              ),
+            ]),
+            PrototypeTabContent({ style: 'display: none', value: 'components' }, ['components']),
           ]),
-          PrototypeTabContent({ style: 'display: none', value: 'components' }, ['components']),
         ]),
       ]),
     ]);
