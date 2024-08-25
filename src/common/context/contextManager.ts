@@ -114,30 +114,30 @@ export default class ContextManager {
   }
 
   /**
-   * 从 Provider 开始递归搜索 DOM 子树中的所有适用的 Consumer
+   * 从 Provider 开始迭代搜索子树中的所有适用的 Consumer
    * @param provider Provider Web Component 实例
    * @returns 适用的 Consumer 数组
    */
   private _findConsumers<T extends Object>(provider: ContextProvider<T>): ContextConsumer<T>[] {
     const consumers: ContextConsumer<T>[] = [];
+    const queue: Element[] = [provider];
 
-    const search = (node: Element | null) => {
-      if (!node) return;
-      // 如果遇到相同 key 的 Provider，则停止该分支的搜索
+    while (queue.length) {
+      const node = queue.shift();
+      if (!node) continue;
+
+      // 如果遇到相同 key 的 Provider，并且不是自己，停止该分支搜索
       if (node instanceof ContextProvider && node.key === provider.key && node !== provider) {
-        return;
+        continue;
       }
 
       if (node instanceof ContextConsumer && node.key === provider.key) {
         consumers.push(node);
-        return;
       }
 
-      // 继续递归搜索子节点
-      Array.from(node.children).forEach((child) => search(child));
-    };
+      Array.from(node.children).forEach((child) => queue.push(child));
+    }
 
-    search(provider);
     return consumers;
   }
 
