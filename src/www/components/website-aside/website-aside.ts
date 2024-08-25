@@ -30,6 +30,10 @@ class WebsiteAside extends HTMLElement {
           title: 'Transition',
           value: 'prototype-transition',
         },
+        {
+          title: 'Select',
+          value: 'prototype-select',
+        },
       ],
     };
   }

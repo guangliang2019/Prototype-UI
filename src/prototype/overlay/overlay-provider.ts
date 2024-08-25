@@ -18,7 +18,7 @@ export default class PrototypeOverlayProvider
   // TODO: 让 overlay 在 show 的时候事件中带上一个 close 时会销毁的引用，然后通过 weakmap 来维护，比遍历性能更好
   private _handleOverlayShow(event: CustomEvent<ShowOverlayEventDetail>) {
     const { overlayKey, overlay } = event.detail;
-    const consumers = ContextManager.getInstance().getConsumers(this) as PrototypeOverlay[];
+    const consumers = ContextManager.getInstance().getConsumers(this) as PrototypeOverlay<{}>[];
     for (const consumer of consumers) {
       if (
         // 必须是开着的

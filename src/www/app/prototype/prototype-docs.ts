@@ -1,5 +1,6 @@
 import { h } from '@/utils/dom';
 import './tansition';
+import './select';
 
 export default class PrototypeDoc extends HTMLElement {
   connectedCallback() {
@@ -11,6 +12,7 @@ export default class PrototypeDoc extends HTMLElement {
 
     fragment.appendChild(h('button-doc'));
     fragment.appendChild(h('transition-doc'));
+    fragment.appendChild(h('select-doc'));
 
     this.appendChild(fragment);
     this.className = 'w-full';

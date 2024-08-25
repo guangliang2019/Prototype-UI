@@ -12,5 +12,5 @@ export interface OverlayContext {}
 
 export interface ShowOverlayEventDetail {
   overlayKey: string;
-  overlay: PrototypeOverlay;
+  overlay: PrototypeOverlay<any>;
 }
