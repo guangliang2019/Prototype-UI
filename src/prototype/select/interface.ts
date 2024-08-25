@@ -1,5 +1,3 @@
-import { PrototypeOverlay } from '../overlay';
-
 export interface SelectProps {
   defaultValue?: string;
 }

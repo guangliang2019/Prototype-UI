@@ -20,6 +20,10 @@ class WebsiteAside extends HTMLElement {
           title: 'Tab',
           value: 'shadcn-tab',
         },
+        {
+          title: 'Select',
+          value: 'shadcn-select',
+        },
       ],
       'Prototype UI': [
         {
