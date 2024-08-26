@@ -1,9 +1,11 @@
 import { Div, h } from '@/utils/dom';
 import { DocCode } from '@/www/components/doc-component';
 import '@/shadcn';
+import { HighlightRule } from '@/www/components/doc-component';
 
 export default class ShadcnSelectBasic extends DocCode {
   protected _code = 'Code component is in development';
+  protected _highlightRules: HighlightRule[] = [];
 
   protected _preview = () => {
     const select = h('shadcn-select', { 'default-value': 'Option 2' }, [

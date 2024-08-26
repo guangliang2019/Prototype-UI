@@ -1,10 +1,12 @@
 import PrototypeOverlay from '@/prototype/overlay/overlay';
 import { ShadcnButton } from '@/shadcn';
 import { Div, h } from '@/utils/dom';
-import { DocCode } from '@/www/components/doc-component';
+import { DocCode, HighlightRule } from '@/www/components/doc-component';
 
 class OverlayTest extends DocCode {
   protected _code = 'Code component is in development';
+  protected _highlightRules: HighlightRule[] = [];
+
   protected _preview = () => {
     const button = h('shadcn-button', {}, ['Toggle Overlay']) as ShadcnButton;
     const overlay = h('prototype-overlay', { style: 'top: 20px' }, [
@@ -25,4 +27,3 @@ class OverlayTest extends DocCode {
 }
 
 customElements.define('overlay-test', OverlayTest);
-
