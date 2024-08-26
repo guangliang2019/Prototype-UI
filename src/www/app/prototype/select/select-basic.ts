@@ -1,8 +1,9 @@
 import { Div, h } from '@/utils/dom';
-import { DocCode } from '@/www/components/doc-component';
+import { DocCode, HighlightRule } from '@/www/components/doc-component';
 
 export default class SelectBasic extends DocCode {
   protected _code = 'Code component is in development';
+  protected _highlightRules: HighlightRule[] = [];
 
   protected _preview = () => {
     const select = h('prototype-select', { 'default-value': 'Option 2' }, [

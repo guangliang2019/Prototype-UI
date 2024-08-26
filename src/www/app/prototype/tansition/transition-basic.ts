@@ -1,11 +1,29 @@
 import { Div, h } from '@/utils/dom';
-import { DocCode } from '@/www/components/doc-component';
+import { DocCode, HighlightRule } from '@/www/components/doc-component';
 import '@/shadcn';
 import { ShadcnButton } from '@/shadcn';
 import PrototypeTransition from '@/prototype/transition/transition';
+import { HIGHLIGHT_RULE } from '@/utils/regex';
 
 export default class TransitionBasic extends DocCode {
-  protected _code = 'Code component is in development';
+  protected _code = `
+<prototype-transition id="transition" class="opacity-[0.95] size-[6.25rem] block rounded-xl bg-primary shadow-lg transition duration-[400ms] data-[closed]:scale-50 data-[closed]:rotate-[-120deg] data-[closed]:opacity-0 data-[leave]:duration-[200ms] data-[leave]:ease-in-out data-[leave]:data-[closed]:scale-95 data-[leave]:data-[closed]:rotate-[0deg]">
+</prototype-transition>
+<shadcn-button id="button" class="mt-10">Toggle Transition</shadcn-button>
+
+<script>
+  const button = document.getElementById('button');
+  const transition = document.getElementById('transition');
+  button?.onClick = () => {
+    transition.show = !transition.show;
+  }
+</script>`;
+  protected _highlightRules: HighlightRule[] = [
+    HIGHLIGHT_RULE.htmlTagName,
+    HIGHLIGHT_RULE.shadcnTagName,
+    HIGHLIGHT_RULE.upperCamelCase,
+    HIGHLIGHT_RULE.prototypeTagName,
+  ];
 
   protected _preview = () => {
     const toggleButton = h('shadcn-button', { class: 'mt-10' }, [

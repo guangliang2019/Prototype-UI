@@ -1,6 +1,8 @@
-import { Div, h } from '@/utils/dom';
+import { Div, h, Span } from '@/utils/dom';
 import { DocContext } from '../interface';
 import { ContextConsumer } from '@/common';
+import { HighlightRule } from './interface';
+import { splitByHighlightRules } from '@/utils/regex';
 
 export default abstract class DocCode extends ContextConsumer<DocContext> {
   protected _key = 'doc';
@@ -13,10 +15,35 @@ export default abstract class DocCode extends ContextConsumer<DocContext> {
    * 代码块的代码内容
    */
   protected abstract _code: string;
+  protected abstract _highlightRules: HighlightRule[];
 
   connectedCallback() {
     super.connectedCallback();
     this._render();
+  }
+
+  private _renderCodeBlock() {
+    const codeBlock = h(
+      'pre',
+      // prettier-ignore
+      { class: 'mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-950 py-4 dark:bg-zinc-900' },
+      [
+        h(
+          'code',
+          { class: 'flex flex-col relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm max-w-[calc(100vw-960px-6rem)]' },
+          this._code.trim().split('\n').map((line) =>
+            Span(
+              { class: 'px-4 py-0.5 w-full inline-block min-h-4' },
+              splitByHighlightRules(line, this._highlightRules).map((item) =>
+                Span({ class: item.className || 'text-muted-foreground' }, [item.text])
+              )
+            )
+          )
+        ),
+      ]
+    );
+
+    return codeBlock;
   }
 
   private _render() {
@@ -52,7 +79,7 @@ export default abstract class DocCode extends ContextConsumer<DocContext> {
             ]
           ),
         ]),
-        h('doc-tab-content', { value: 'Code', style: 'display: none' }, [this._code]),
+        h('doc-tab-content', { value: 'Code', style: 'display: none' }, [this._renderCodeBlock()]),
       ]),
     ]);
 
