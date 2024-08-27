@@ -37,8 +37,9 @@ export default abstract class ContextProvider<T extends Object>
   }
 
   setContext(value: Partial<T>, notify = true) {
-    this._contextValue = { ...this._contextValue, ...value };
-    if (notify) ContextManager.getInstance().updateContext(this, value);
+    Object.assign(this._contextValue, value);
+    if (notify)
+      ContextManager.getInstance().updateContext<T>(this, this._contextValue, Object.keys(value));
   }
 
   private handleRequestContext(event: CustomEvent<RequestContextEventDetail<T>>) {
@@ -46,7 +47,11 @@ export default abstract class ContextProvider<T extends Object>
     if (this._key === key) {
       event.stopPropagation(); // 阻止事件传播到外部 provider
       ContextManager.getInstance().addConsumer(this, consumer);
-      ContextManager.getInstance().updateContext(this, this._contextValue);
+      ContextManager.getInstance().updateContext(
+        this,
+        this._contextValue,
+        Object.keys(this._contextValue)
+      );
     }
   }
 }

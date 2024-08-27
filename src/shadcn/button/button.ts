@@ -1,5 +1,6 @@
 import { PrototypeButton } from '@/prototype/button';
 import { ShacnButtonProps, SHADCN_BUTTON_DEFAULT_PROPS } from './interface';
+import { CONFIG } from '../_config';
 
 export default class ShadcnButton<T extends Object = {}>
   extends PrototypeButton<T>
@@ -87,4 +88,4 @@ export default class ShadcnButton<T extends Object = {}>
   }
 }
 
-customElements.define('shadcn-button', ShadcnButton);
+customElements.define(`${CONFIG.shadcn.prefix}-button`, ShadcnButton);

@@ -147,12 +147,12 @@ export default class ContextManager {
    * @param value 新的 context 值
    * @returns
    */
-  updateContext<T extends Object>(provider: ContextProvider<T>, value: Partial<T>) {
+  updateContext<T extends Object>(provider: ContextProvider<T>, value: T, changedKeys: string[]) {
     const entry = this._providerEntryMap.get(provider.key)?.get(provider);
     if (!entry) return;
 
     entry.consumersSet.forEach((consumer) => {
-      consumer[setConsumerContextSymbol](value);
+      consumer[setConsumerContextSymbol](value, changedKeys);
     });
   }
 

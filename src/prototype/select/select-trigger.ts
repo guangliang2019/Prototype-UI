@@ -6,11 +6,10 @@ export default class PrototypeSelectTrigger extends PrototypeButton<SelectContex
 
   connectedCallback() {
     super.connectedCallback();
-    this._contextValue.setContext({
-      focus: this.focus.bind(this),
-    });
+    this._contextValue.focus = this.focus.bind(this);
 
     this.onClick = () => {
+      console.log(this._contextValue);
       this._contextValue.selecting ? this._contextValue.close() : this._contextValue.show();
     };
   }

@@ -36,8 +36,9 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
           value: this._value,
         });
       },
-      setContext: this.setContext.bind(this),
+      // setContext: this.setContext.bind(this),
     });
+    console.log(this._contextValue);
   }
 }
 
