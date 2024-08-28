@@ -14,18 +14,13 @@ export default class PrototypeDialog extends ContextProvider<DialogContext> impl
     if (value === this._visible) return;
     this._visible = value;
     if (this._visible) {
-      this._show();
+      this._contextValue.show();
       this.setAttribute('visible', '');
     } else {
-      this._close();
+      this._contextValue.close();
       this.removeAttribute('visible');
     }
   }
-
-  // prettier-ignore
-  private _show = () => { throw new Error('PrototypeDialog: _show 未初始化'); };
-  // prettier-ignore
-  private _close = () => { throw new Error('PrototypeDialog: _close 未初始化'); };
   // prettier-ignore
   get show() { return () => (this.visible = true); }
   // prettier-ignore
@@ -50,3 +45,5 @@ export default class PrototypeDialog extends ContextProvider<DialogContext> impl
     mapping[name]?.();
   }
 }
+
+customElements.define('prototype-dialog', PrototypeDialog);

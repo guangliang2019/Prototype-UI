@@ -21,10 +21,12 @@ export default class PrototypeOverlay<T extends Object>
     while (this.firstChild) {
       this._content.appendChild(this.firstChild);
     }
-    this.target = this.getAttribute('target') ?? undefined;
+    if (!this._target) {
+      this.target = this.getAttribute('target') ?? undefined;
+      // Overlay 默认以自己的位置作为目标插入位置，如果有 target 则以 target 为准
+      this._target = this.target ? document.querySelector(this.target) || document.body : this;
+    }
 
-    // Overlay 默认以自己的位置作为目标插入位置，如果有 target 则以 target 为准
-    this._target = this.target ? document.querySelector(this.target) || document.body : this;
     // 找到 target 最近的 relative 父元素
     this._closestRelative = this._target === this ? this : this.findClosestRelative(this._target);
 

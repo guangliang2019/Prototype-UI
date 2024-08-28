@@ -8,7 +8,6 @@ export default class PrototypeSelectContent extends PrototypeOverlay<SelectConte
     super.connectedCallback();
     this._contextValue.show = this.show.bind(this);
     this._contextValue.close = this.close.bind(this);
-    console.log(this._contextValue);
   }
 }
 
