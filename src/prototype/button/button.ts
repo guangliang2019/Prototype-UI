@@ -1,8 +1,8 @@
-import { ContextConsumer } from '@/common';
 import { ButtonProps } from './interface';
+import { PrototypeTrigger } from '../trigger';
 
 export default class PrototypeButton<T extends Object>
-  extends ContextConsumer<T>
+  extends PrototypeTrigger<T>
   implements ButtonProps
 {
   protected _key = 'prototype-button';
@@ -84,10 +84,11 @@ export default class PrototypeButton<T extends Object>
   };
 
   connectedCallback() {
+    super.connectedCallback();
     this.addEventListener('click', this._handleClick);
     this.tabIndex = 0;
     // 键盘交互时，按下 Enter 键触发点击事件，同时也会立即触发 active 与 inactive 事件
-    this.addEventListener('keydown', this._handleEnterKeyDown);
+    this.addEventListener('keydown', this._handleEnterKeyDown as EventListener);
     // 鼠标交互时，鼠标进入和离开时触发
     this.addEventListener('mouseenter', this._handleMouseEnter);
     this.addEventListener('mouseleave', this._handleMouseLeave);
@@ -106,7 +107,7 @@ export default class PrototypeButton<T extends Object>
   disconectedCallback() {
     this.removeEventListener('click', this._handleClick);
     // 移除所有监听事件
-    this.removeEventListener('keydown', this._handleEnterKeyDown);
+    this.removeEventListener('keydown', this._handleEnterKeyDown as EventListener);
 
     this.removeEventListener('mouseenter', this._handleMouseEnter);
     this.removeEventListener('mouseleave', this._handleMouseLeave);
