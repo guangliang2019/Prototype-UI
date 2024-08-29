@@ -15,7 +15,7 @@ export default abstract class ContextConsumer<T extends Object>
   protected _contextValue = {} as T;
   protected abstract _key: string;
 
-  onContextChange: (value: T) => void = () => {};
+  onContextChange: (value: T, changedKeys?: string[]) => void = () => {};
 
   // prettier-ignore
   get contextValue() { return this._contextValue; }
@@ -32,9 +32,9 @@ export default abstract class ContextConsumer<T extends Object>
     this[requestContextSymbol]();
   }
 
-  [setConsumerContextSymbol](value: Partial<T>) {
-    this._contextValue = { ...this._contextValue, ...value };
-    this.onContextChange(this._contextValue);
+  [setConsumerContextSymbol](value: T, changedKeys: string[]) {
+    this._contextValue = value;
+    this.onContextChange(this._contextValue, changedKeys);
   }
 
   [requestContextSymbol]() {

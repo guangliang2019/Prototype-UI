@@ -1,8 +1,8 @@
-import { ContextConsumer } from '@/common';
 import { TabContext, TabTrigerProps } from './interface';
+import { PrototypeTrigger } from '../trigger';
 
 export default class PrototypeTabTrigger
-  extends ContextConsumer<TabContext>
+  extends PrototypeTrigger<TabContext>
   implements TabTrigerProps
 {
   protected _key = 'prototype-tab';
@@ -30,7 +30,7 @@ export default class PrototypeTabTrigger
     };
 
     this.addEventListener('click', this._handleClick);
-    this.addEventListener('keydown', this._handleKeydown);
+    this.addEventListener('keydown', this._handleKeydown as EventListener);
 
     // 初始化默认选中状态
     if (this._value === this.contextValue.defaultValue) {
@@ -38,9 +38,13 @@ export default class PrototypeTabTrigger
     }
   }
 
+  attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
+    super.attributeChangedCallback(name, oldValue, newValue);
+  }
+
   disconectedCallback() {
     this.removeEventListener('click', this._handleClick);
-    this.removeEventListener('keydown', this._handleKeydown);
+    this.removeEventListener('keydown', this._handleKeydown as EventListener);
     this._contextValue.tabs.splice(this._contextValue.tabs.indexOf(this._value), 1);
     this._contextValue.tabRefs.splice(this._contextValue.tabRefs.indexOf(this), 1);
   }
@@ -52,11 +56,15 @@ export default class PrototypeTabTrigger
     const prevIndex =
       (currentIndex - 1 + this.contextValue.tabs.length) % this.contextValue.tabs.length;
 
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown')
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault();
       this.contextValue.changeTab(this.contextValue.tabs[nextIndex], true);
+    }
 
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp')
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault();
       this.contextValue.changeTab(this.contextValue.tabs[prevIndex], true);
+    }
   };
 }
 

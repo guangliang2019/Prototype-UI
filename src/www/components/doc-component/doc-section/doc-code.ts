@@ -30,15 +30,21 @@ export default abstract class DocCode extends ContextConsumer<DocContext> {
       [
         h(
           'code',
-          { class: 'flex flex-col relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm max-w-[calc(100vw-960px-6rem)]' },
-          this._code.trim().split('\n').map((line) =>
-            Span(
-              { class: 'px-4 py-0.5 w-full inline-block min-h-4' },
-              splitByHighlightRules(line, this._highlightRules).map((item) =>
-                Span({ class: item.className || 'text-muted-foreground' }, [item.text])
+          {
+            class:
+              'flex flex-col relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm max-w-[calc(100vw-960px-6rem)]',
+          },
+          this._code
+            .trim()
+            .split('\n')
+            .map((line) =>
+              Span(
+                { class: 'px-4 py-0.5 w-full inline-block min-h-4' },
+                splitByHighlightRules(line, this._highlightRules).map((item) =>
+                  Span({ class: item.className || 'text-muted-foreground' }, [item.text])
+                )
               )
             )
-          )
         ),
       ]
     );

@@ -25,6 +25,4 @@ export interface SelectContext {
   changeValue: (value: string, focus?: boolean) => void;
 
   selecting: boolean;
-
-  setContext: (value: Partial<SelectContext>, notify?: boolean) => void;
 }
