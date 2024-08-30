@@ -4,6 +4,6 @@ export interface DialogProps {
 
 export interface DialogContext {
   visible: boolean;
-  show: () => void;
+  oepn: () => void;
   close: () => void;
 }

@@ -19,15 +19,15 @@ enum TransitionState {
 export default class PrototypeTransition extends HTMLElement implements TransitionProps {
   private _state: TransitionState = TransitionState.Idle;
 
-  private _show = DEFAULT_TRANSITION_PROPS['show'];
+  private _open = DEFAULT_TRANSITION_PROPS['oepn'];
   // prettier-ignore
-  get show() { return this._show; }
-  set show(value: boolean) {
-    const oldValue = this._show;
-    this._show = value;
+  get oepn() { return this._open; }
+  set oepn(value: boolean) {
+    const oldValue = this._open;
+    this._open = value;
     if (oldValue !== value) {
-      this.toggleAttribute('show', value);
-      this.show
+      this.toggleAttribute('oepn', value);
+      this.oepn
         ? this._transitionTo(TransitionState.Entering)
         : this._transitionTo(TransitionState.Leaving);
     }
@@ -42,20 +42,20 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
   afterLeave?: () => void = DEFAULT_TRANSITION_PROPS['afterLeave'];
 
   static get observedAttributes() {
-    return ['show', 'unmount', 'appear'];
+    return ['oepn', 'unmount', 'appear'];
   }
 
   connectedCallback() {
-    if (this.appear && this.show) {
+    if (this.appear && this.oepn) {
       this._transitionTo(TransitionState.Entering);
     }
   }
 
   attributeChangedCallback(name: string, oldValue: any, newValue: any) {
     const mapping: Record<string, any> = {
-      'show': () => {
-        this.show = newValue !== null;
-        this.show
+      'oepn': () => {
+        this.oepn = newValue !== null;
+        this.oepn
           ? this._transitionTo(TransitionState.Entering)
           : this._transitionTo(TransitionState.Leaving);
       },

@@ -19,7 +19,7 @@ class OverlayTest extends DocCode {
     overlay2.appendChild(content);
 
     button.onClick = () => {
-      overlay2.getAttribute('data-show') === null ? overlay2.show() : overlay2.close();
+      overlay2.getAttribute('data-oepn') === null ? overlay2.oepn() : overlay2.close();
     };
 
     return Div({}, [button, overlay2]);

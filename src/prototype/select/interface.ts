@@ -17,7 +17,7 @@ export interface SelectContext {
   focused: boolean;
   focus: () => void;
 
-  show: () => void;
+  oepn: () => void;
   close: () => void;
 
   options: string[];

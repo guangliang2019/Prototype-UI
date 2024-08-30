@@ -9,7 +9,7 @@ export default class PrototypeSelectTrigger extends PrototypeButton<SelectContex
     this._contextValue.focus = this.focus.bind(this);
 
     this.onClick = () =>
-      this._contextValue.selecting ? this._contextValue.close() : this._contextValue.show();
+      this._contextValue.selecting ? this._contextValue.close() : this._contextValue.oepn();
   }
 }
 

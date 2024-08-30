@@ -6,7 +6,7 @@ export default class PrototypeSelectContent extends PrototypeOverlay<SelectConte
 
   connectedCallback() {
     super.connectedCallback();
-    this._contextValue.show = this.show.bind(this);
+    this._contextValue.oepn = this.oepn.bind(this);
     this._contextValue.close = this.close.bind(this);
   }
 }

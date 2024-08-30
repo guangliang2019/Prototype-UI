@@ -1,5 +1,5 @@
 export interface TransitionProps {
-  show?: boolean;
+  oepn?: boolean;
   unmount?: boolean;
   appear?: boolean;
   beforeEnter?: () => void;
@@ -9,7 +9,7 @@ export interface TransitionProps {
 }
 
 export const DEFAULT_TRANSITION_PROPS = {
-  show: true,
+  oepn: true,
   unmount: false,
   appear: false,
   beforeEnter: undefined,

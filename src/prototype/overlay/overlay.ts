@@ -1,5 +1,5 @@
 import { ContextConsumer } from '@/common';
-import { OverlayProps, ShowOverlayEventDetail } from './interface';
+import { OverlayProps, OpenOverlayEventDetail } from './interface';
 
 export default class PrototypeOverlay<T extends Object>
   extends ContextConsumer<T>
@@ -30,14 +30,14 @@ export default class PrototypeOverlay<T extends Object>
     // 找到 target 最近的 relative 父元素
     this._closestRelative = this._target === this ? this : this.findClosestRelative(this._target);
 
-    // TODO: autoShow
+    // TODO: autoOpen
   }
 
   // Overlay 本身位置与编写位置相同，但是 content 会在实际渲染时「投放」到目标位置
-  show() {
+  oepn() {
     this._closestRelative.appendChild(this._content);
 
-    const overlayShowEvent = new CustomEvent<ShowOverlayEventDetail>('overlay-show', {
+    const overlayOpenEvent = new CustomEvent<OpenOverlayEventDetail>('overlay-oepn', {
       bubbles: true,
       composed: true,
       detail: {
@@ -45,12 +45,12 @@ export default class PrototypeOverlay<T extends Object>
         overlay: this,
       },
     });
-    this.setAttribute('data-show', '');
-    this.dispatchEvent(overlayShowEvent);
+    this.setAttribute('data-oepn', '');
+    this.dispatchEvent(overlayOpenEvent);
   }
 
   close() {
-    this.removeAttribute('data-show');
+    this.removeAttribute('data-oepn');
     this._closestRelative.removeChild(this._content!);
   }
 
