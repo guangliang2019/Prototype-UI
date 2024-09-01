@@ -14,10 +14,12 @@ export interface SelectContext {
   index: number;
   value: string;
 
+  width: number;
+
   focused: boolean;
   focus: () => void;
 
-  oepn: () => void;
+  open: () => void;
   close: () => void;
 
   options: string[];

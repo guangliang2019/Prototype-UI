@@ -1,5 +1,5 @@
-class LucideChevronRight extends HTMLElement {
-  connectCallback() {
+export default class LucideChevronRight extends HTMLElement {
+  connectedCallback() {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 24 24');
     svg.setAttribute('fill', 'none');

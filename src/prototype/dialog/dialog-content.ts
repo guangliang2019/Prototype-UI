@@ -7,7 +7,7 @@ export default class PrototypeDialogContent extends PrototypeOverlay<DialogConte
 
   connectedCallback() {
     super.connectedCallback();
-    this._contextValue.oepn = this.oepn.bind(this);
+    this._contextValue.open = this.open.bind(this);
     this._contextValue.close = this.close.bind(this);
   }
 }

@@ -11,7 +11,7 @@ export default class SelectBasic extends DocCode {
       h(
         'prototype-select-content',
         {
-          class: 'top-10 flex flex-col items-center justify-center',
+          class: 'flex flex-col items-center justify-center',
         },
         [
           h('prototype-select-item', { value: 'Option 1' }, ['Option 1']),

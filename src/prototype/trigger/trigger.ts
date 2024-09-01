@@ -35,7 +35,9 @@ export default class PrototypeTrigger<T extends Object> extends ContextConsumer<
   }
 
   removeEventListener(...args: Parameters<HTMLElement['removeEventListener']>): void {
-    this._target!.removeEventListener(...args);
+    this._target === this
+      ? super.removeEventListener(...args)
+      : this._target!.removeEventListener(...args);
   }
 
   dispatchEvent(event: Event): boolean {
@@ -47,8 +49,10 @@ export default class PrototypeTrigger<T extends Object> extends ContextConsumer<
     return false;
   }
 
-  focus = (options?: FocusOptions) =>
+  focus = (options?: FocusOptions) => {
     this._target === this ? super.focus(options) : this._target?.focus(options);
+  };
+
   blur = () => (this._target === this ? super.blur : this._target?.blur());
 
   connectedCallback() {

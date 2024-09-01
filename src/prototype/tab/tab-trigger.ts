@@ -42,7 +42,7 @@ export default class PrototypeTabTrigger
     super.attributeChangedCallback(name, oldValue, newValue);
   }
 
-  disconectedCallback() {
+  disconnectedCallback() {
     this.removeEventListener('click', this._handleClick);
     this.removeEventListener('keydown', this._handleKeydown as EventListener);
     this._contextValue.tabs.splice(this._contextValue.tabs.indexOf(this._value), 1);

@@ -1,6 +1,6 @@
 export interface TooltipContext {
   visible: boolean;
-  oepn: () => void;
+  open: () => void;
   close: () => void;
 
   openDelay: number;
