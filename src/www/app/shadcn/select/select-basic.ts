@@ -9,11 +9,11 @@ export default class ShadcnSelectBasic extends DocCode {
 
   protected _preview = () => {
     const select = h('shadcn-select', { 'default-value': 'Option 2' }, [
-      h('shadcn-select-trigger', {}, ['Selected: ', h('shadcn-select-value', {})]),
+      h('shadcn-select-trigger', { class: 'w-[180px]' }, [h('shadcn-select-value', {})]),
       h(
         'shadcn-select-content',
         {
-          class: 'top-10 flex flex-col items-center justify-center',
+          class: 'flex flex-col items-center justify-center',
         },
         [
           h('shadcn-select-item', { value: 'Option 1' }, ['Option 1']),

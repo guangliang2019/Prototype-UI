@@ -10,7 +10,7 @@ export interface OverlayProps {
 
 export interface OverlayContext {}
 
-export interface ShowOverlayEventDetail {
+export interface OpenOverlayEventDetail {
   overlayKey: string;
   overlay: PrototypeOverlay<any>;
 }

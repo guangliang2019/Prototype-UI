@@ -15,7 +15,7 @@ export default class TransitionBasic extends DocCode {
   const button = document.getElementById('button');
   const transition = document.getElementById('transition');
   button?.onClick = () => {
-    transition.show = !transition.show;
+    transition.open = !transition.open;
   }
 </script>`;
   protected _highlightRules: HighlightRule[] = [
@@ -35,7 +35,7 @@ export default class TransitionBasic extends DocCode {
         'opacity-[0.95] size-[6.25rem] block rounded-xl bg-primary shadow-lg transition duration-[400ms] data-[closed]:scale-50 data-[closed]:rotate-[-120deg] data-[closed]:opacity-0 data-[leave]:duration-[200ms] data-[leave]:ease-in-out data-[leave]:data-[closed]:scale-95 data-[leave]:data-[closed]:rotate-[0deg]',
     }) as PrototypeTransition;
     toggleButton.onClick = () => {
-      transitionItem.show = !transitionItem.show;
+      transitionItem.open = !transitionItem.open;
     };
 
     const fragment = document.createDocumentFragment();

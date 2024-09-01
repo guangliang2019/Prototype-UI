@@ -104,7 +104,7 @@ export default class PrototypeButton<T extends Object>
     if (this.autoFocus) this.focus();
   }
 
-  disconectedCallback() {
+  disconnectedCallback() {
     this.removeEventListener('click', this._handleClick);
     // 移除所有监听事件
     this.removeEventListener('keydown', this._handleEnterKeyDown as EventListener);

@@ -5,6 +5,8 @@ import './docs';
 import './shadcn';
 import './prototype';
 
+import '@/lucide/chevrons-up-down';
+
 export default class AppRoot extends HTMLElement {
   connectedCallback() {
     const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';

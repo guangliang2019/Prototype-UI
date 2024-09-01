@@ -1,5 +1,5 @@
 import { ContextConsumer } from '@/common';
-import { OverlayProps, ShowOverlayEventDetail } from './interface';
+import { OverlayProps, OpenOverlayEventDetail } from './interface';
 
 export default class PrototypeOverlay<T extends Object>
   extends ContextConsumer<T>
@@ -30,14 +30,14 @@ export default class PrototypeOverlay<T extends Object>
     // 找到 target 最近的 relative 父元素
     this._closestRelative = this._target === this ? this : this.findClosestRelative(this._target);
 
-    // TODO: autoShow
+    // TODO: autoOpen
   }
 
   // Overlay 本身位置与编写位置相同，但是 content 会在实际渲染时「投放」到目标位置
-  show() {
+  open() {
     this._closestRelative.appendChild(this._content);
 
-    const overlayShowEvent = new CustomEvent<ShowOverlayEventDetail>('overlay-show', {
+    const overlayOpenEvent = new CustomEvent<OpenOverlayEventDetail>('overlay-open', {
       bubbles: true,
       composed: true,
       detail: {
@@ -45,12 +45,12 @@ export default class PrototypeOverlay<T extends Object>
         overlay: this,
       },
     });
-    this.setAttribute('data-show', '');
-    this.dispatchEvent(overlayShowEvent);
+    this.setAttribute('data-open', '');
+    this.dispatchEvent(overlayOpenEvent);
   }
 
   close() {
-    this.removeAttribute('data-show');
+    this.removeAttribute('data-open');
     this._closestRelative.removeChild(this._content!);
   }
 
@@ -64,15 +64,11 @@ export default class PrototypeOverlay<T extends Object>
       // 将类应用到_content，同时移除组件自身的类
       this._content.className = newValue;
       this.className = ''; // 保持组件自身的class为空或设置为默认值
-    } else if (
-      name === 'style' &&
-      newValue !== 'position: relative; width: 0px; height: 0px;' &&
-      oldValue !== newValue
-    ) {
+    } else if (name === 'style' && newValue !== 'position: relative;' && oldValue !== newValue) {
       // 将样式应用到_content，同时清除组件自身的样式
       this._content.style.cssText = newValue;
       this._content.style.position = 'absolute';
-      this.style.cssText = 'position: relative; width: 0px; height: 0px;'; // 仅保持组件本身的position样式
+      this.style.cssText = 'position: relative;'; // 仅保持组件本身的position样式
     }
   }
 

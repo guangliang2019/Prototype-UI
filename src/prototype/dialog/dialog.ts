@@ -14,7 +14,7 @@ export default class PrototypeDialog extends ContextProvider<DialogContext> impl
     if (value === this._visible) return;
     this._visible = value;
     if (this._visible) {
-      this._contextValue.show();
+      this._contextValue.open();
       this.setAttribute('visible', '');
     } else {
       this._contextValue.close();
@@ -22,7 +22,7 @@ export default class PrototypeDialog extends ContextProvider<DialogContext> impl
     }
   }
   // prettier-ignore
-  get show() { return () => (this.visible = true); }
+  get open() { return () => (this.visible = true); }
   // prettier-ignore
   get close() { return () => (this.visible = false); }
 
@@ -38,7 +38,7 @@ export default class PrototypeDialog extends ContextProvider<DialogContext> impl
     const mapping: Record<string, any> = {
       'visible': () => {
         this.visible = newValue !== null;
-        this.visible && oldValue !== newValue ? this.show() : this.close();
+        this.visible && oldValue !== newValue ? this.open() : this.close();
       },
     };
 

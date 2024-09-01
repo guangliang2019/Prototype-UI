@@ -13,7 +13,7 @@ import { dfsFindElement } from '@/utils/dom';
  * Trigger 组件，能够有效解决 Trigger 嵌套时的事件冲突问题
  * Trigger 组件会代理各种 DOM 事件和监听，并移交给 _target
  *
- * _target 的寻找规则：Trigger 子树中第一个不是 Trigger 的元素，Trigger 没有子元素时以自身为 _target
+ * _target 的寻找规则：多层嵌套的 Trigger，最内层的一个 Trigger 为 _target
  *
  * 在连接进 DOM 之前，需要添加的 EventListener 会被暂存，在 connectedCallback 时为 _target 添加
  * 同理，在连接进 DOM 之前，dispatchEvent 会被暂存，在 connectedCallback 时触发
@@ -35,7 +35,9 @@ export default class PrototypeTrigger<T extends Object> extends ContextConsumer<
   }
 
   removeEventListener(...args: Parameters<HTMLElement['removeEventListener']>): void {
-    this._target!.removeEventListener(...args);
+    this._target === this
+      ? super.removeEventListener(...args)
+      : this._target!.removeEventListener(...args);
   }
 
   dispatchEvent(event: Event): boolean {
@@ -47,8 +49,10 @@ export default class PrototypeTrigger<T extends Object> extends ContextConsumer<
     return false;
   }
 
-  focus = (options?: FocusOptions) =>
+  focus = (options?: FocusOptions) => {
     this._target === this ? super.focus(options) : this._target?.focus(options);
+  };
+
   blur = () => (this._target === this ? super.blur : this._target?.blur());
 
   connectedCallback() {
@@ -56,17 +60,22 @@ export default class PrototypeTrigger<T extends Object> extends ContextConsumer<
     if (this.children.length > 1) {
       throw new Error('Trigger 组件最多只允许有一个子元素。');
     }
-    const target = dfsFindElement(
-      this,
-      (el) => !(el instanceof PrototypeTrigger) || el.children.length === 0
-    ) as HTMLElement;
+    // 寻找最内层的 Trigger
+    const target = dfsFindElement(this, (el) => {
+      if (!(el instanceof PrototypeTrigger)) return false;
+      const children = el.children;
+      for (let i = 0; i < children.length; i++) {
+        if (children[i] instanceof PrototypeTrigger) return false;
+      }
+      return true;
+    }) as HTMLElement;
 
     this._target = target;
 
     this._pendingEventListeners.forEach((args) => this.addEventListener(...args));
     this._pendingDispatchEvents.forEach((event) => this.dispatchEvent(event));
 
-    this.tabIndex = -1;
+    this._target === this ? (this.tabIndex = 0) : (this.tabIndex = -1);
   }
 
   static get observedAttributes(): string[] {
