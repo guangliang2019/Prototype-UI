@@ -26,6 +26,7 @@ export default class PrototypeSelectItem
     this.onClick = () => {
       this._contextValue.changeValue(this.value, true);
       this._contextValue.close();
+      this._contextValue.selecting = false;
     };
 
     this.onContextChange = (context) => {

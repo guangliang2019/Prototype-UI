@@ -19,11 +19,11 @@ export default class ClickOutside extends HTMLElement implements ClickOutsidePro
 
   connectedCallback() {
     this._handleClickOutside = this._handleClickOutside.bind(this);
-    window.addEventListener('click', this._handleClickOutside);
+    window.addEventListener('mousedown', this._handleClickOutside);
   }
 
   disconnectedCallback() {
-    window.removeEventListener('click', this._handleClickOutside);
+    window.removeEventListener('mousedown', this._handleClickOutside);
   }
 
   private _handleClickOutside(event: MouseEvent) {

@@ -7,6 +7,7 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
   private _index: number = -1;
   private _value: string = '';
   private _options: string[] = [];
+  private _selecting: boolean = false;
 
   constructor() {
     super();
@@ -25,6 +26,7 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
       index: this._index,
       value: this._value,
       options: this._options,
+      selecting: this._selecting,
       changeValue: (value, focus = false) => {
         this._value = value;
         this._index = this._options.indexOf(value);

@@ -1,18 +1,25 @@
 import { ContextConsumer } from '@/common';
 import { OverlayProps, OpenOverlayEventDetail } from './interface';
 
+import clickOutside from '@/common/click-outside';
+
 export default class PrototypeOverlay<T extends Object>
   extends ContextConsumer<T>
   implements OverlayProps
 {
   protected _key = 'prototype-overlay';
-  protected _content: HTMLElement = document.createElement('div');
+  protected _content = document.createElement('click-outside') as clickOutside;
   protected _target?: HTMLElement;
   protected _closestRelative: HTMLElement = this;
 
   target?: string = undefined;
   overlayKey: string = '__default__';
   unmount: boolean = false;
+
+  private _opened: boolean = false;
+  private _justOpened: boolean = false;
+
+  onClickOutside: (event: MouseEvent) => void = (_: MouseEvent) => {};
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -31,10 +38,21 @@ export default class PrototypeOverlay<T extends Object>
     this._closestRelative = this._target === this ? this : this.findClosestRelative(this._target);
 
     // TODO: autoOpen
+    this._content.onClickOutside = (e) => {
+      if (this._justOpened) {
+        this._justOpened = false;
+        return;
+      }
+      this._opened ? this.onClickOutside(e) : null;
+    };
   }
 
   // Overlay 本身位置与编写位置相同，但是 content 会在实际渲染时「投放」到目标位置
   open() {
+    if (this._opened) return;
+    this._opened = true;
+    this._justOpened = true;
+
     this._closestRelative.appendChild(this._content);
 
     const overlayOpenEvent = new CustomEvent<OpenOverlayEventDetail>('overlay-open', {
@@ -50,6 +68,9 @@ export default class PrototypeOverlay<T extends Object>
   }
 
   close() {
+    if (!this._opened) return;
+    this._opened = false;
+
     this.removeAttribute('data-open');
     this._closestRelative.removeChild(this._content!);
   }

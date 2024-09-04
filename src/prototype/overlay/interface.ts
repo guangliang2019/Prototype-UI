@@ -6,6 +6,7 @@ export interface OverlayProps {
   target?: string;
   overlayKey?: string;
   unmount?: boolean;
+  onClickOutside?: (event: MouseEvent) => void;
 }
 
 export interface OverlayContext {}
