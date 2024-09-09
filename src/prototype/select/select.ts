@@ -20,6 +20,7 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
     super.connectedCallback();
     this._defaultValue = this.getAttribute('default-value') || '';
     this._value = this._defaultValue;
+    this.setAttribute('data-state', 'close');
 
     this.setContext({
       defaultValue: this._defaultValue,
@@ -38,6 +39,7 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
           value: this._value,
         });
       },
+      rootEl: this,
     });
   }
 }
