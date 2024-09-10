@@ -12,8 +12,16 @@ export default class PrototypeSelectContent extends PrototypeOverlay<SelectConte
 
   open() {
     this.style.width = this._contextValue.width + 'px';
+    this._contextValue.selecting = true;
+    this._contextValue.rootEl.setAttribute('data-state', 'open');
     super.open();
   }
+
+  onClickOutside = (_: MouseEvent) => {
+    this.close();
+    this._contextValue.rootEl.setAttribute('data-state', 'close');
+    this._contextValue.selecting = false;
+  };
 }
 
 customElements.define('prototype-select-content', PrototypeSelectContent);

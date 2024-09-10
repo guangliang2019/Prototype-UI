@@ -11,7 +11,7 @@ export default class ShadcnSelectContent extends PrototypeSelectContent {
 
   private _render() {
     const flexCls = 'flex flex-col items-start';
-    const positionCls = 'relative z-50';
+    const positionCls = 'relative z-50 top-1';
     const sizeCls = 'max-h-96 min-w-[8rem] p-1';
     const shapeCls = 'rounded-md shadow-md';
     const borderCls = 'border';
