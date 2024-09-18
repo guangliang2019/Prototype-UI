@@ -1,3 +1,5 @@
+import './style.css';
+
 export { default as ShadcnSelect } from './select';
 export { default as ShadcnSelectTrigger } from './select-trigger';
 export { default as ShadcnSelectContent } from './select-content';

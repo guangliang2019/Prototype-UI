@@ -1,3 +1,5 @@
+import { binarySearch } from './search';
+
 type Props = {
   [key: string]: any;
   children?: (Node | string)[];
@@ -118,4 +120,45 @@ export function PrototypeTabTrigger(props: Props = {}, children: (Node | string)
 
 export function PrototypeTabIndicator(props: Props = {}, children: (Node | string)[] = []) {
   return h('prototype-tab-indicator', props, children) as HTMLElement;
+}
+
+/**
+ * 比较两个 DOM 节点的位置。
+ * @param a - 第一个 DOM 节点
+ * @param b - 第二个 DOM 节点
+ * @returns 负数表示 a 在 b 前，0 表示相同，正数表示 a 在 b 后
+ */
+function compareDOM(a: Node, b: Node): number {
+  const position = a.compareDocumentPosition(b);
+  if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+    return -1; // a 在 b 前
+  } else if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+    return 1; // a 在 b 后
+  }
+  return 0; // a 和 b 相同
+}
+
+/**
+ * 将 DOM 元素插入到已排序的 DOM 数组中的正确位置。
+ * @param domArray - 已排序的 DOM 数组
+ * @param domElement - 要插入的 DOM 元素
+ */
+export function insertDOMInSortedArray(domArray: Node[], domElement: Node): void {
+  const index = binarySearch(domArray, domElement, compareDOM);
+  domArray.splice(index, 0, domElement);
+}
+
+/**
+ * 从已排序的 DOM 数组中删除指定的 DOM 元素。
+ * @param domArray - 已排序的 DOM 数组
+ * @param domElement - 要删除的 DOM 元素
+ * @returns 如果找到并删除了元素，则返回 true；如果未找到元素，则返回 false。
+ */
+export function removeDOMFromSortedArray(domArray: Node[], domElement: Node): boolean {
+  const index = binarySearch(domArray, domElement, compareDOM);
+  if (index < domArray.length && domArray[index] === domElement) {
+    domArray.splice(index, 1);
+    return true;
+  }
+  return false;
 }
