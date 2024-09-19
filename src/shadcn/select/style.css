@@ -1,0 +1,7 @@
+.focus\:text-accent-foreground:focus {
+  color: hsl(var(--accent-foreground));
+}
+
+.focus\:bg-accent:focus {
+  background-color: hsl(var(--accent));
+}

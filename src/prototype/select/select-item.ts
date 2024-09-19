@@ -17,6 +17,8 @@ export default class PrototypeSelectItem
 
   connectedCallback() {
     super.connectedCallback();
+    this.tabIndex = -1;
+
     this.value = this.getAttribute('value') || '';
     if (this._contextValue.defaultValue === this.value) this.setAttribute('data-selected', '');
 
