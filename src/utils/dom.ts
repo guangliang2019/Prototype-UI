@@ -128,7 +128,7 @@ export function PrototypeTabIndicator(props: Props = {}, children: (Node | strin
  * @param b - 第二个 DOM 节点
  * @returns 负数表示 a 在 b 前，0 表示相同，正数表示 a 在 b 后
  */
-function compareDOM(a: Node, b: Node): number {
+export function compareDOM(a: Node, b: Node): number {
   const position = a.compareDocumentPosition(b);
   if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
     return -1; // a 在 b 前

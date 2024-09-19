@@ -1,5 +1,7 @@
 import { TabContext, TabTrigerProps } from './interface';
 import { PrototypeTrigger } from '../trigger';
+import { binarySearch } from '@/utils/search';
+import { compareDOM, insertDOMInSortedArray } from '@/utils/dom';
 
 export default class PrototypeTabTrigger
   extends PrototypeTrigger<TabContext>
@@ -16,8 +18,9 @@ export default class PrototypeTabTrigger
     super.connectedCallback();
     this.style.cursor = 'pointer';
     this._value = this.getAttribute('value') || '';
-    this._contextValue.tabs.push(this._value);
-    this._contextValue.tabRefs.push(this);
+    const insertIndex = binarySearch(this._contextValue.tabRefs, this, compareDOM);
+    this._contextValue.tabRefs.splice(insertIndex, 0, this);
+    this._contextValue.tabs.splice(insertIndex, 0, this._value);
 
     this.onContextChange = (value) => {
       if (value.tabValue === this._value) {
@@ -45,8 +48,11 @@ export default class PrototypeTabTrigger
   disconnectedCallback() {
     this.removeEventListener('click', this._handleClick);
     this.removeEventListener('keydown', this._handleKeydown as EventListener);
-    this._contextValue.tabs.splice(this._contextValue.tabs.indexOf(this._value), 1);
-    this._contextValue.tabRefs.splice(this._contextValue.tabRefs.indexOf(this), 1);
+
+    const removeIndex = binarySearch(this._contextValue.tabRefs, this, compareDOM);
+
+    this._contextValue.tabs.splice(removeIndex, 1);
+    this._contextValue.tabRefs.splice(removeIndex, 1);
   }
 
   private _handleClick = () => this.contextValue.changeTab(this._value);

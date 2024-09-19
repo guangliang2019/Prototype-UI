@@ -1,18 +1,20 @@
 import { ContextProvider } from '@/common';
 import { SelectContext } from './interface';
+import PrototypeSelectItem from './select-item';
 
 export default class PrototypeSelect extends ContextProvider<SelectContext> {
   protected _key = 'prototype-select';
   private _defaultValue: string = '';
   private _index: number = -1;
   private _value: string = '';
-  private _options: string[] = [];
+  private _items: string[] = [];
   private _selecting: boolean = false;
+  private _itemRefs: PrototypeSelectItem[] = [];
 
   constructor() {
     super();
     this.setContext({
-      options: [],
+      items: [],
     });
   }
 
@@ -26,11 +28,11 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
       defaultValue: this._defaultValue,
       index: this._index,
       value: this._value,
-      options: this._options,
+      items: this._items,
       selecting: this._selecting,
       changeValue: (value, focus = false) => {
         this._value = value;
-        this._index = this._options.indexOf(value);
+        this._index = this._items.indexOf(value);
         if (focus) {
           this._contextValue.focus();
         }
@@ -39,7 +41,8 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
           value: this._value,
         });
       },
-      rootEl: this,
+      itemsRefs: this._itemRefs,
+      rootRef: this,
     });
   }
 }

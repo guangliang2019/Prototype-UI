@@ -1,4 +1,5 @@
 import PrototypeSelect from './select';
+import PrototypeSelectItem from './select-item';
 
 export interface SelectProps {
   defaultValue?: string;
@@ -24,11 +25,12 @@ export interface SelectContext {
   open: () => void;
   close: () => void;
 
-  options: string[];
+  items: string[];
   defaultValue: string;
   changeValue: (value: string, focus?: boolean) => void;
 
   selecting: boolean;
 
-  rootEl: PrototypeSelect;
+  rootRef: PrototypeSelect;
+  itemsRefs: PrototypeSelectItem[];
 }
