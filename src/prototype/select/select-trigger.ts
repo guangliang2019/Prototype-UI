@@ -4,26 +4,19 @@ import { PrototypeTrigger } from '../trigger';
 export default class PrototypeSelectTrigger extends PrototypeTrigger<SelectContext> {
   protected _key = 'prototype-select';
 
-  private _justOpend = false;
-
   private _handleMouseDown = () => {
     this._contextValue.width = this.offsetWidth;
     this._contextValue.selecting ? this._contextValue.close() : this._contextValue.open();
-    this._justOpend = true;
   };
 
   private _handleFocus = () => {
     this._contextValue.width = this.offsetWidth;
     this._contextValue.open();
-    this._justOpend = true;
-  };
 
-  private _handleBlur = () => {
-    if (this._justOpend) {
-      this._justOpend = false;
-      return;
+    const index = this._contextValue.items.indexOf(this._contextValue.value);
+    if (index !== -1) {
+      this._contextValue.itemsRefs[index].focus();
     }
-    this._contextValue.close();
   };
 
   connectedCallback() {
