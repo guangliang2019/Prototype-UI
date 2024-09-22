@@ -3,7 +3,8 @@ import { SelectContext } from './interface';
 import PrototypeSelectItem from './select-item';
 
 export default class PrototypeSelect extends ContextProvider<SelectContext> {
-  protected _key = 'prototype-select';
+  protected _providerKey = 'prototype-select';
+  protected _consumerKey = 'prototype-select';
   private _defaultValue: string = '';
   private _index: number = -1;
   private _value: string = '';
@@ -34,7 +35,7 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
         this._value = value;
         this._index = this._items.indexOf(value);
         if (focus) {
-          this._contextValue.focus();
+          this._provideValue.focus();
         }
         this.setContext({
           index: this._index,

@@ -8,11 +8,12 @@ export interface RequestContextEventDetail<T extends Object> {
 export interface ContextConsumerProps<T> {
   onContextChange: (value: T) => void;
   readonly contextValue: T;
-  readonly key: string;
+  readonly consumerKey: string;
 }
 
-export interface ContextProviderProps<T> {
-  readonly key: string;
-  readonly contextValue: T;
+export interface ContextProviderProps<T, U> {
+  readonly providerKey: string;
+  readonly provideValue: T;
+  readonly contextValue: U;
   setContext: (value: T) => void;
 }

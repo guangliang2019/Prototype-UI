@@ -2,7 +2,7 @@ import { SelectContext } from './interface';
 import { PrototypeTrigger } from '../trigger';
 
 export default class PrototypeSelectTrigger extends PrototypeTrigger<SelectContext> {
-  protected _key = 'prototype-select';
+  protected _consumerKey = 'prototype-select';
 
   private _handleMouseDown = () => {
     this._contextValue.width = this.offsetWidth;

@@ -2,7 +2,8 @@ import { ContextProvider } from '@/common';
 import { DialogContext, DialogProps } from './interface';
 
 export default class PrototypeDialog extends ContextProvider<DialogContext> implements DialogProps {
-  protected _key = 'prototype-dialog';
+  protected _providerKey = 'prototype-dialog';
+  protected _consumerKey = "prototype-dialog";
 
   /**
    * 是否显示弹窗, 该属性为响应式属性
@@ -14,10 +15,10 @@ export default class PrototypeDialog extends ContextProvider<DialogContext> impl
     if (value === this._visible) return;
     this._visible = value;
     if (this._visible) {
-      this._contextValue.open();
+      this._provideValue.open();
       this.setAttribute('visible', '');
     } else {
-      this._contextValue.close();
+      this._provideValue.close();
       this.removeAttribute('visible');
     }
   }

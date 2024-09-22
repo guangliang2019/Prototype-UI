@@ -7,7 +7,7 @@ export default class PrototypeSelectItem
   extends PrototypeButton<SelectContext>
   implements SelectItemProps
 {
-  protected _key = 'prototype-select';
+  protected _consumerKey = 'prototype-select';
   private _value = '';
   get value(): string {
     return this._value;

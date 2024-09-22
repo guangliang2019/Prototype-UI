@@ -3,7 +3,7 @@ import { Div } from '@/utils/dom';
 import { DocContext } from './interface';
 
 class DocBreadcrumb extends ContextConsumer<DocContext> {
-  protected _key = 'doc';
+  protected _consumerKey = 'doc';
   private svg: Document | null = null;
 
   connectedCallback() {

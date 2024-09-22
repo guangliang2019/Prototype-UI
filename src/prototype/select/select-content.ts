@@ -2,7 +2,7 @@ import { PrototypeOverlay } from '../overlay';
 import { SelectContext } from './interface';
 
 export default class PrototypeSelectContent extends PrototypeOverlay<SelectContext> {
-  protected _key = 'prototype-select';
+  protected _consumerKey = 'prototype-select';
 
   connectedCallback() {
     super.connectedCallback();
