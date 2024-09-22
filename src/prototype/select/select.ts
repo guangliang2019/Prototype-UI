@@ -1,8 +1,9 @@
 import { ContextProvider } from '@/common';
 import { SelectContext } from './interface';
 import PrototypeSelectItem from './select-item';
+import { FormItemContext } from '../form/interface';
 
-export default class PrototypeSelect extends ContextProvider<SelectContext> {
+export default class PrototypeSelect extends ContextProvider<SelectContext, FormItemContext> {
   protected _providerKey = 'prototype-select';
   protected _consumerKey = 'prototype-form-item';
   private _defaultValue: string = '';
@@ -19,11 +20,18 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
     });
   }
 
+  private _handleFormAction = () => {
+    if (this._contextValue.key) {
+      this._contextValue.changeFormItemValue(this._value);
+    }
+  };
+
   connectedCallback() {
     super.connectedCallback();
     this._defaultValue = this.getAttribute('default-value') || '';
     this._value = this._defaultValue;
     this.setAttribute('data-state', 'close');
+    this._handleFormAction();
 
     this.setContext({
       defaultValue: this._defaultValue,
@@ -41,6 +49,7 @@ export default class PrototypeSelect extends ContextProvider<SelectContext> {
           index: this._index,
           value: this._value,
         });
+        this._handleFormAction();
       },
       itemsRefs: this._itemRefs,
       rootRef: this,

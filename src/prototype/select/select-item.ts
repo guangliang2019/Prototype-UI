@@ -54,6 +54,8 @@ export default class PrototypeSelectItem
     this._value = this.getAttribute('value') || '';
     if (this._contextValue.defaultValue === this.value) this.setAttribute('data-selected', '');
 
+
+
     const insertIndex = binarySearch(this._contextValue.itemsRefs, this, compareDOM);
     this._contextValue.itemsRefs.splice(insertIndex, 0, this);
     this._contextValue.items.splice(insertIndex, 0, this._value);

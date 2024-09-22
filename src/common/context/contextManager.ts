@@ -51,7 +51,8 @@ export default class ContextManager {
     // 将搜索到的 consumer 与新 provider 关联起来，取消旧 provider 的关联
     consumers.forEach((consumer) => {
       // 如果当前 consumer 过去关联了 provider，则取消关联
-      if (this._consumerEntryMap.get(provider.providerKey)?.get(consumer)) this._removeConsumer(consumer);
+      if (this._consumerEntryMap.get(provider.providerKey)?.get(consumer))
+        this._removeConsumer(consumer);
       this.addConsumer(provider, consumer);
       // 触发 Consumer 的 request-context
       consumer[requestContextSymbol]();
@@ -132,7 +133,11 @@ export default class ContextManager {
       if (!node) continue;
 
       // 如果遇到相同 key 的 Provider，并且不是自己，停止该分支搜索
-      if (node instanceof ContextProvider && node.consumerKey === provider.providerKey && node !== provider) {
+      if (
+        node instanceof ContextProvider &&
+        node.providerKey === provider.providerKey &&
+        node !== provider
+      ) {
         continue;
       }
 
@@ -168,6 +173,8 @@ export default class ContextManager {
   getConsumers<T extends Object, U extends Object>(
     provider: ContextProvider<T, U>
   ): ContextConsumer<T>[] {
-    return Array.from(this._providerEntryMap.get(provider.providerKey)?.get(provider)?.consumersSet || []);
+    return Array.from(
+      this._providerEntryMap.get(provider.providerKey)?.get(provider)?.consumersSet || []
+    );
   }
 }
