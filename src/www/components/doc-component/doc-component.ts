@@ -5,6 +5,7 @@ import { Doc, DocContext } from './interface';
 export default abstract class DocComponent extends ContextProvider<DocContext> {
   protected abstract _doc: Doc;
   protected _providerKey = 'doc';
+  protected _consumerKey = "doc";
 
   connectedCallback() {
     super.connectedCallback();

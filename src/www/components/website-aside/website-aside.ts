@@ -38,6 +38,10 @@ class WebsiteAside extends HTMLElement {
           title: 'Select',
           value: 'prototype-select',
         },
+        {
+          title: 'Form',
+          value: 'prototype-form',
+        },
       ],
     };
   }

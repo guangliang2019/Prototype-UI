@@ -4,7 +4,7 @@ import PrototypeSelectItem from './select-item';
 
 export default class PrototypeSelect extends ContextProvider<SelectContext> {
   protected _providerKey = 'prototype-select';
-  protected _consumerKey = 'prototype-select';
+  protected _consumerKey = 'prototype-form-item';
   private _defaultValue: string = '';
   private _index: number = -1;
   private _value: string = '';
