@@ -7,7 +7,7 @@ export default class PrototypeOverlayProvider
   extends ContextProvider<OverlayContext>
   implements OverlayProviderProps
 {
-  protected _key = 'prototype-overlay';
+  protected _consumerKey = 'prototype-overlay';
 
   connectedCallback(): void {
     super.connectedCallback();

@@ -2,7 +2,9 @@ import { ContextProvider } from '@/common';
 import { TabContext, TabProps } from './interface';
 
 export default class PrototypeTab extends ContextProvider<TabContext> implements TabProps {
-  protected _key = 'prototype-tab';
+  protected _consumerKey = 'prototype-tab';
+  protected _providerKey = 'prototype-tab';
+
   private _defaultValue = '';
   // prettier-ignore
   get defaultValue(): string { return this._defaultValue; }

@@ -7,7 +7,7 @@ export default class PrototypeTabTrigger
   extends PrototypeTrigger<TabContext>
   implements TabTrigerProps
 {
-  protected _key = 'prototype-tab';
+  protected _consumerKey = 'prototype-tab';
   private _value = '';
 
   get value(): string {

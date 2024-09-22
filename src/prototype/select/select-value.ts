@@ -5,7 +5,7 @@ export default class PrototypeSelectValue
   extends ContextConsumer<SelectContext>
   implements SelectValueProps
 {
-  protected _key = 'prototype-select';
+  protected _consumerKey = 'prototype-select';
 
   protected _content: HTMLElement = document.createElement('span');
 

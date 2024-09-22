@@ -19,7 +19,7 @@ import { dfsFindElement } from '@/utils/dom';
  * 同理，在连接进 DOM 之前，dispatchEvent 会被暂存，在 connectedCallback 时触发
  */
 export default class PrototypeTrigger<T extends Object> extends ContextConsumer<T> {
-  protected _key = 'prototype-trigger';
+  protected _consumerKey = 'prototype-trigger';
   protected _target?: HTMLElement;
   protected _pendingEventListeners: Parameters<HTMLElement['addEventListener']>[] = [];
   protected _pendingDispatchEvents: Event[] = [];

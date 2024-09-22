@@ -6,7 +6,7 @@ import {
 } from '@/prototype/tab';
 
 class DocTab extends PrototypeTab {
-  protected _key = 'doc-tab';
+  protected _providerKey = 'doc-tab';
 
   connectedCallback() {
     super.connectedCallback();
@@ -15,11 +15,11 @@ class DocTab extends PrototypeTab {
 }
 
 class DocTabContent extends PrototypeTabContent {
-  protected _key = 'doc-tab';
+  protected _consumerKey = 'doc-tab';
 }
 
 class DocTabTrigger extends PrototypeTabTrigger {
-  protected _key = 'doc-tab';
+  protected _consumerKey = 'doc-tab';
 
   connectedCallback() {
     super.connectedCallback();
@@ -30,7 +30,7 @@ class DocTabTrigger extends PrototypeTabTrigger {
 }
 
 class DocTabIndicator extends PrototypeTabIndicator {
-  protected _key = 'doc-tab';
+  protected _consumerKey = 'doc-tab';
 
   private _getOffsetRight(element: HTMLElement) {
     const el = element;

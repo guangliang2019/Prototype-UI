@@ -4,20 +4,21 @@
  * @date 2024-08-13
  */
 
+import ContextConsumer from './contextConsumer';
 import ContextManager from './contextManager';
 import type { ContextProviderProps, RequestContextEventDetail } from './interface';
 
-export default abstract class ContextProvider<T extends Object>
-  extends HTMLElement
-  implements ContextProviderProps<T>
+export default abstract class ContextProvider<T extends Object, U extends Object = {}>
+  extends ContextConsumer<U>
+  implements ContextProviderProps<T, U>
 {
-  protected abstract _key: string;
-  protected _contextValue: T = {} as T;
+  protected abstract _providerKey: string;
+  protected _provideValue: T = {} as T;
 
   // prettier-ignore
-  get contextValue() { return this._contextValue; }
+  get provideValue() { return this._provideValue; }
   // prettier-ignore
-  get key() { return this._key; }
+  get providerKey() { return this._providerKey; }
 
   constructor() {
     super();
@@ -25,8 +26,6 @@ export default abstract class ContextProvider<T extends Object>
   }
 
   connectedCallback() {
-    // 仅在单独使用时从属性中读取 key，其余时间当作基类使用，有子类直接赋值 key
-    if (this.tagName === 'CONTEXT-PROVIDER') this._key = this.getAttribute('key') || '';
     this.addEventListener('request-context', this.handleRequestContext as EventListener);
     ContextManager.getInstance().addProvider(this);
   }
@@ -37,20 +36,20 @@ export default abstract class ContextProvider<T extends Object>
   }
 
   setContext(value: Partial<T>, notify = true) {
-    Object.assign(this._contextValue, value);
+    Object.assign(this._provideValue, value);
     if (notify)
-      ContextManager.getInstance().updateContext<T>(this, this._contextValue, Object.keys(value));
+      ContextManager.getInstance().updateContext<T, U>(this, this._provideValue, Object.keys(value));
   }
 
   private handleRequestContext(event: CustomEvent<RequestContextEventDetail<T>>) {
     const { key, consumer } = event.detail;
-    if (this._key === key) {
+    if (this._providerKey === key) {
       event.stopPropagation(); // 阻止事件传播到外部 provider
       ContextManager.getInstance().addConsumer(this, consumer);
       ContextManager.getInstance().updateContext(
         this,
-        this._contextValue,
-        Object.keys(this._contextValue)
+        this._provideValue,
+        Object.keys(this._provideValue)
       );
     }
   }

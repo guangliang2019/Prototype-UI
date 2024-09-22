@@ -13,14 +13,14 @@ export default abstract class ContextConsumer<T extends Object>
   implements ContextConsumerProps<T>
 {
   protected _contextValue = {} as T;
-  protected abstract _key: string;
+  protected abstract _consumerKey: string;
 
   onContextChange: (value: T, changedKeys?: string[]) => void = () => {};
 
   // prettier-ignore
   get contextValue() { return this._contextValue; }
   // prettier-ignore
-  get key() { return this._key; }
+  get consumerKey() { return this._consumerKey; }
 
   static get observedAttributes() {
     return ['onContextChange'];
@@ -28,7 +28,7 @@ export default abstract class ContextConsumer<T extends Object>
 
   connectedCallback() {
     // 仅在单独使用时从属性中读取 key，其余时间当作基类使用，有子类直接赋值 key
-    if (this.tagName === 'CONTEXT-CONSUMER') this._key = this.getAttribute('key') || '';
+    if (this.tagName === 'CONTEXT-CONSUMER') this._consumerKey = this.getAttribute('key') || '';
     this[requestContextSymbol]();
   }
 
@@ -42,7 +42,7 @@ export default abstract class ContextConsumer<T extends Object>
       bubbles: true,
       composed: true,
       detail: {
-        key: this.key,
+        key: this._consumerKey,
         consumer: this,
       },
     });

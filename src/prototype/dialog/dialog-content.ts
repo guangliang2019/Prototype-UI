@@ -2,7 +2,7 @@ import { PrototypeOverlay } from '../overlay';
 import { DialogContext } from './interface';
 
 export default class PrototypeDialogContent extends PrototypeOverlay<DialogContext> {
-  protected _key = 'prototype-dialog';
+  protected _consumerKey = 'prototype-dialog';
   protected _target = document.body;
 
   connectedCallback() {

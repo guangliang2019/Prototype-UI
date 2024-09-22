@@ -5,7 +5,7 @@ export default class PrototypeTabContent
   extends ContextConsumer<TabContext>
   implements TabContentProps
 {
-  protected _key = 'prototype-tab';
+  protected _consumerKey = 'prototype-tab';
   private _value = '';
   // prettier-ignore
   get value(): string { return this._value; }

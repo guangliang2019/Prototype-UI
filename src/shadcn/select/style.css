@@ -5,3 +5,7 @@
 .focus\:bg-accent:focus {
   background-color: hsl(var(--accent));
 }
+
+.bg-popover {
+  background-color: hsl(var(--popover));
+}
