@@ -1,5 +1,5 @@
 import { h } from '@/utils/dom';
-import './tansition';
+import './transition';
 import './select';
 import './form'
 

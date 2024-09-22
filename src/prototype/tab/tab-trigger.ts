@@ -1,11 +1,11 @@
-import { TabContext, TabTrigerProps } from './interface';
+import { TabContext, TabTriggerProps } from './interface';
 import { PrototypeTrigger } from '../trigger';
 import { binarySearch } from '@/utils/search';
-import { compareDOM, insertDOMInSortedArray } from '@/utils/dom';
+import { compareDOM } from '@/utils/dom';
 
 export default class PrototypeTabTrigger
   extends PrototypeTrigger<TabContext>
-  implements TabTrigerProps
+  implements TabTriggerProps
 {
   protected _consumerKey = 'prototype-tab';
   private _value = '';

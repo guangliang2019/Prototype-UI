@@ -2,7 +2,7 @@ export interface TabProps {
   readonly defaultValue?: string;
 }
 
-export interface TabTrigerProps {
+export interface TabTriggerProps {
   readonly value: string;
 }
 

@@ -7,15 +7,11 @@ export default class FormBasic extends DocCode {
   protected _code = `<prototype-form>
   <prototype-form-item key="email">
     <prototype-form-label>Email</prototype-form-label>
-    <prototype-form-control>
-      <prototype-input type="text" />
-    </prototype-form-control>
+    <prototype-input type="text" />
   </prototype-form-item>
   <prototype-form-item key="password">
     <prototype-form-label>Password</prototype-form-label>
-    <prototype-form-control>
-      <prototype-input type="password" />
-    </prototype-form-control>
+    <prototype-input type="password" />
   </prototype-form-item>
   <prototype-form-submit>
     <prototype-button>Submit</prototype-button>
@@ -60,11 +56,11 @@ export default class FormBasic extends DocCode {
     const form = h('prototype-form', {}, [
       h('prototype-form-item', { key: 'email', class: 'mt-2' }, [
         h('prototype-form-label', {}, ['Email']),
-        h('prototype-form-control', {}, [userSelect]),
+        userSelect,
       ]),
       h('prototype-form-item', { key: 'password', class: 'mt-2' }, [
         h('prototype-form-label', {}, ['Password']),
-        h('prototype-form-control', {}, [passwordSelect]),
+        passwordSelect,
       ]),
       h('prototype-form-submit', {}, [
         h('shadcn-button', { class: 'mt-4', variant: 'primary' }, ['Submit']),
@@ -74,6 +70,12 @@ export default class FormBasic extends DocCode {
     form.validators = {
       same: (data) => {
         if (data.email === 'User 2' && data.password === 'Password 2') {
+          return true;
+        }
+        if (data.email === 'User 1' && data.password === 'Password 1') {
+          return true;
+        }
+        if (data.email === 'User 3' && data.password === 'Password 3') {
           return true;
         }
         return false;

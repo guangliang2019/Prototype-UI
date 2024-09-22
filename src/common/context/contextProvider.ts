@@ -38,12 +38,16 @@ export default abstract class ContextProvider<T extends Object, U extends Object
   setContext(value: Partial<T>, notify = true) {
     Object.assign(this._provideValue, value);
     if (notify)
-      ContextManager.getInstance().updateContext<T, U>(this, this._provideValue, Object.keys(value));
+      ContextManager.getInstance().updateContext<T, U>(
+        this,
+        this._provideValue,
+        Object.keys(value)
+      );
   }
 
   private handleRequestContext(event: CustomEvent<RequestContextEventDetail<T>>) {
     const { key, consumer } = event.detail;
-    if (this._providerKey === key) {
+    if (this._providerKey === key && this !== (consumer as unknown as typeof this)) {
       event.stopPropagation(); // 阻止事件传播到外部 provider
       ContextManager.getInstance().addConsumer(this, consumer);
       ContextManager.getInstance().updateContext(
