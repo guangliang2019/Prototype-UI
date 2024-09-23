@@ -42,14 +42,16 @@ export default class PrototypeSelect extends ContextProvider<SelectContext, Form
       changeValue: (value, focus = false) => {
         this._value = value;
         this._index = this._items.indexOf(value);
-        if (focus) {
-          this._provideValue.focus();
-        }
+
         this.setContext({
           index: this._index,
           value: this._value,
         });
         this._handleFormAction();
+        if (focus) {
+          this._provideValue.focus();
+        }
+        this._provideValue.close();
       },
       itemsRefs: this._itemRefs,
       rootRef: this,

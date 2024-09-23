@@ -27,8 +27,6 @@ export default abstract class ContextConsumer<T extends Object>
   }
 
   connectedCallback() {
-    // 仅在单独使用时从属性中读取 key，其余时间当作基类使用，有子类直接赋值 key
-    if (this.tagName === 'CONTEXT-CONSUMER') this._consumerKey = this.getAttribute('key') || '';
     this[requestContextSymbol]();
   }
 
@@ -37,6 +35,7 @@ export default abstract class ContextConsumer<T extends Object>
     this.onContextChange(this._contextValue, changedKeys);
   }
 
+  // 依托于冒泡机制, 沿 DOM 树, 向根部传递请求上下文的事件, 寻找 provider 并等待回复
   [requestContextSymbol]() {
     const requestContextEvent = new CustomEvent<RequestContextEventDetail<T>>('request-context', {
       bubbles: true,

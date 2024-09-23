@@ -39,7 +39,6 @@ export default class PrototypeSelectItem
     if (event.key === 'Enter') {
       event.preventDefault();
       this.contextValue.changeValue(this._value, true);
-      this.contextValue.close();
     }
 
     if (event.key === 'Tab') {
@@ -54,8 +53,6 @@ export default class PrototypeSelectItem
     this._value = this.getAttribute('value') || '';
     if (this._contextValue.defaultValue === this.value) this.setAttribute('data-selected', '');
 
-
-
     const insertIndex = binarySearch(this._contextValue.itemsRefs, this, compareDOM);
     this._contextValue.itemsRefs.splice(insertIndex, 0, this);
     this._contextValue.items.splice(insertIndex, 0, this._value);
@@ -67,8 +64,6 @@ export default class PrototypeSelectItem
 
     this.onClick = () => {
       this._contextValue.changeValue(this.value, true);
-      this._contextValue.close();
-      this._contextValue.selecting = false;
     };
 
     this.onContextChange = (context) => {

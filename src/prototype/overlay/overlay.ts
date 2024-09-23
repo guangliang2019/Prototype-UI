@@ -17,7 +17,6 @@ export default class PrototypeOverlay<T extends Object>
   unmount: boolean = false;
 
   private _opened: boolean = false;
-  private _justOpened: boolean = false;
 
   onClickOutside: (event: MouseEvent) => void = (_: MouseEvent) => {};
 
@@ -39,10 +38,6 @@ export default class PrototypeOverlay<T extends Object>
 
     // TODO: autoOpen
     this._content.onClickOutside = (e) => {
-      if (this._justOpened) {
-        this._justOpened = false;
-        return;
-      }
       this._opened ? this.onClickOutside(e) : null;
     };
   }
@@ -51,8 +46,6 @@ export default class PrototypeOverlay<T extends Object>
   open() {
     if (this._opened) return;
     this._opened = true;
-    this._justOpened = true;
-
     this._closestRelative.appendChild(this._content);
 
     const overlayOpenEvent = new CustomEvent<OpenOverlayEventDetail>('overlay-open', {

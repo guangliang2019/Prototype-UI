@@ -47,6 +47,7 @@ export default abstract class ContextProvider<T extends Object, U extends Object
 
   private handleRequestContext(event: CustomEvent<RequestContextEventDetail<T>>) {
     const { key, consumer } = event.detail;
+    // 如果该上下文请求事件来自除自身外的其他 consumer, 则响应该事件并打断其传播
     if (this._providerKey === key && this !== (consumer as unknown as typeof this)) {
       event.stopPropagation(); // 阻止事件传播到外部 provider
       ContextManager.getInstance().addConsumer(this, consumer);

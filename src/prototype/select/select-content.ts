@@ -11,16 +11,23 @@ export default class PrototypeSelectContent extends PrototypeOverlay<SelectConte
   }
 
   open() {
+    if (this._contextValue.selecting) return;
     this.style.width = this._contextValue.width + 'px';
     this._contextValue.selecting = true;
     this._contextValue.rootRef.setAttribute('data-state', 'open');
     super.open();
   }
 
-  onClickOutside = (_: MouseEvent) => {
-    this.close();
+  close() {
+    if (!this._contextValue.selecting) return;
+    super.close();
     this._contextValue.rootRef.setAttribute('data-state', 'close');
     this._contextValue.selecting = false;
+  }
+
+  onClickOutside = (e: MouseEvent) => {
+    if (e.target === this._contextValue.triggerRef) return;
+    this.close();
   };
 }
 

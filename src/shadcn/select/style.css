@@ -9,3 +9,20 @@
 .bg-popover {
   background-color: hsl(var(--popover));
 }
+
+.popover-animated-in {
+  opacity: 0;
+  transform: translateY(-0.5rem) scale(0.95);
+  animation: popoverAnimatedIn 0.08s forwards ease-in;
+}
+
+@keyframes popoverAnimatedIn {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
