@@ -1,5 +1,6 @@
 import PrototypeSelect from './select';
 import PrototypeSelectItem from './select-item';
+import PrototypeSelectTrigger from './select-trigger';
 
 export interface SelectProps {
   defaultValue?: string;
@@ -32,5 +33,6 @@ export interface SelectContext {
   selecting: boolean;
 
   rootRef: PrototypeSelect;
+  triggerRef: PrototypeSelectTrigger;
   itemsRefs: PrototypeSelectItem[];
 }

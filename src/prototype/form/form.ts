@@ -27,9 +27,7 @@ export default class PrototypeForm<T extends Object>
       },
       changeData: (key, value) => {
         this.data[key] = value;
-        console.log(this.data);
         this.provideValue.validate();
-        console.log(this.provideValue.validate());
       },
     });
   }

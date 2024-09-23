@@ -60,7 +60,7 @@ export default class FormBasic extends DocCode {
       ]),
       h('prototype-form-item', { key: 'password', class: 'mt-2' }, [
         h('prototype-form-label', {}, ['Password']),
-        passwordSelect,
+        h('div', {}, [passwordSelect]),
       ]),
       h('prototype-form-submit', {}, [
         h('shadcn-button', { class: 'mt-4', variant: 'primary' }, ['Submit']),
