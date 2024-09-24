@@ -18,7 +18,7 @@ import { dfsFindElement } from '@/utils/dom';
  * 在连接进 DOM 之前，需要添加的 EventListener 会被暂存，在 connectedCallback 时为 _target 添加
  * 同理，在连接进 DOM 之前，dispatchEvent 会被暂存，在 connectedCallback 时触发
  */
-export default class PrototypeTrigger<T extends Object> extends ContextConsumer<T> {
+export default abstract class Trigger<T extends Object> extends ContextConsumer<T> {
   protected _consumerKey = 'prototype-trigger';
   protected _target?: HTMLElement;
   protected _pendingEventListeners: Parameters<HTMLElement['addEventListener']>[] = [];
@@ -62,10 +62,10 @@ export default class PrototypeTrigger<T extends Object> extends ContextConsumer<
     }
     // 寻找最内层的 Trigger
     const target = dfsFindElement(this, (el) => {
-      if (!(el instanceof PrototypeTrigger)) return false;
+      if (!(el instanceof Trigger)) return false;
       const children = el.children;
       for (let i = 0; i < children.length; i++) {
-        if (children[i] instanceof PrototypeTrigger) return false;
+        if (children[i] instanceof Trigger) return false;
       }
       return true;
     }) as HTMLElement;

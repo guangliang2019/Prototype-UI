@@ -1,8 +1,8 @@
 import { ButtonProps } from './interface';
-import { PrototypeTrigger } from '../trigger';
+import { Trigger } from '../../common/trigger';
 
 export default class PrototypeButton<T extends Object>
-  extends PrototypeTrigger<T>
+  extends Trigger<T>
   implements ButtonProps
 {
   protected _consumerKey = 'prototype-form';

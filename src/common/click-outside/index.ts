@@ -1,2 +1,2 @@
-export { default } from './click-outside';
+export { default as ClickOutside } from './click-outside';
 
