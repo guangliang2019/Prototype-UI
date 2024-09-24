@@ -1,7 +1,7 @@
-import { PrototypeTrigger } from '../trigger';
+import { Trigger } from '../../common/trigger';
 import { DialogContext } from './interface';
 
-export default class PrototypeDialogTrigger extends PrototypeTrigger<DialogContext> {
+export default class PrototypeDialogTrigger extends Trigger<DialogContext> {
   protected _consumerKey = 'prototype-dialog';
 }
 
