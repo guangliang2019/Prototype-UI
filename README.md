@@ -2,7 +2,7 @@
 
 ## Overview
 
-Prototype UI is a headless UI library powered by Web Components, drawing inspiration from shadcn/ui. Rather than traditional package distribution, this project uniquely integrates reusable component source code, complete with comments and documentation, directly into your project directory via the CLI.
+Prototype UI is a headless UI library built with Web Components, offering a novel approach to component integration. Inspired by shadcn/ui, it bypasses traditional package management by directly incorporating component source code into your project via a CLI. This provides unparalleled customization and control, allowing you to tailor the components directly within your codebase while maintaining a lightweight footprint. 
 
 Website: [https://prototype-ui.dev](https://prototype-ui.dev)
 
@@ -13,13 +13,21 @@ Website: [https://prototype-ui.dev](https://prototype-ui.dev)
 - **Accessibility**: Committed to the latest accessibility standards, ensuring usability for all users.
 - **Lightweight**: The entire library contributes less than 10 KB to your project, emphasizing efficiency and performance.
 
+## Installation (Working in Progress)
+
+```bash
+npx prototype-ui init
+# Or for a specific theme:
+npx prototype-ui/shadcn init
+```
+
 ## Note
 
 The code is provided "as is" for maximum flexibility in use and integration into various projects.
 
 ## Contributing
 
-Contributions are encouraged. Although the Web Components ecosystem may not be as extensive as those for frameworks like React, Vue, or Lit, Prototype UI strives to emulate best practices from these established communities. We convert and reimplement functionalities from these frameworks into Web Components, diligently crediting original developers and their contributions.
+Contributions are welcome and encouraged. Although the Web Components ecosystem may not be as extensive as those for frameworks like React, Vue, or Lit, Prototype UI strives to emulate best practices from these established communities. We convert and reimplement functionalities from these frameworks into Web Components, diligently crediting original developers and their contributions.
 
 ## Development
 
@@ -27,4 +35,4 @@ Run the project locally with `npm run dev`. For optimal performance, Node versio
 
 ## Guangliang's Note
 
-While the library employs a CLI-based approach for adding source code directly, an alternative method involves using a script tag to import the entire library. This method is also highly efficient, with the total projected output size expected to be under 30 KB.
+For smaller projects or situations where CLI integration isn't ideal, you can include the entire Prototype UI library via a script tag. This method is also efficient (projected output size under 30KB) and provides a quick way to get started.  However, it offers less granular control over individual components.  See the documentation for details on script tag integration.
