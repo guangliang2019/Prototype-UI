@@ -1,9 +1,9 @@
-import { Div, h } from '@/utils/dom';
+import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
 import '@/shadcn';
 import { ShadcnButton } from '@/shadcn';
 import PrototypeTransition from '@/prototype/transition/transition';
-import { HIGHLIGHT_RULE } from '@/utils/regex';
+import { HIGHLIGHT_RULE } from '@/www/utils/regex';
 
 export default class TransitionBasic extends DocCode {
   protected _code = `

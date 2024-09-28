@@ -1,4 +1,4 @@
-import { Div, h } from '@/utils/dom';
+import { Div, h } from '@/www/utils/dom';
 import { DocCode } from '@/www/components/doc-component';
 import '@/shadcn';
 import { HighlightRule } from '@/www/components/doc-component';

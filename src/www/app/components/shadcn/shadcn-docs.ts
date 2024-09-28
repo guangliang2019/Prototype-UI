@@ -1,4 +1,4 @@
-import { h } from '@/utils/dom';
+import { h } from '@/www/utils/dom';
 
 export default class ShadcnDoc extends HTMLElement {
   connectedCallback() {

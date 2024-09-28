@@ -1,7 +1,7 @@
 import { TabContext, TabTriggerProps } from './interface';
 import { Trigger } from '../../common/trigger';
-import { binarySearch } from '@/utils/search';
-import { compareDOM } from '@/utils/dom';
+import { binarySearch } from '@/www/utils/search';
+import { compareDOM } from '@/www/utils/dom';
 
 export default class PrototypeTabTrigger
   extends Trigger<TabContext>

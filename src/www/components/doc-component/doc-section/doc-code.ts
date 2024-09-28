@@ -1,8 +1,8 @@
-import { Div, h, Span } from '@/utils/dom';
+import { Div, h, Span } from '@/www/utils/dom';
 import { DocContext } from '../interface';
 import { ContextConsumer } from '@/common';
 import { HighlightRule } from './interface';
-import { splitByHighlightRules } from '@/utils/regex';
+import { splitByHighlightRules } from '@/www/utils/regex';
 
 export default abstract class DocCode extends ContextConsumer<DocContext> {
   protected _consumerKey = 'doc';

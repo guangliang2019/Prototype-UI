@@ -1,4 +1,4 @@
-import { Div, h } from '@/utils/dom';
+import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
 
 export default class SelectBasic extends DocCode {
