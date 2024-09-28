@@ -1,4 +1,4 @@
-import { PrototypeTabTrigger } from '@/utils/dom';
+import { PrototypeTabTrigger } from '@/www/utils/dom';
 
 class WebsiteAsideItem extends HTMLElement {
   private _title = '';

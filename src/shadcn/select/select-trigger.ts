@@ -1,6 +1,6 @@
 import { PrototypeSelectTrigger } from '@/prototype/select';
 import './select-arrow';
-import { h } from '@/utils/dom';
+import { h } from '@/www/utils/dom';
 export default class ShadcnSelectTrigger extends PrototypeSelectTrigger {
   // 用户添加的 class 属性
   private _class = '';

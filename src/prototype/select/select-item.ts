@@ -1,7 +1,7 @@
 import { SelectContext, SelectItemProps } from './interface';
 import { PrototypeButton } from '../button';
-import { binarySearch } from '@/utils/search';
-import { compareDOM } from '@/utils/dom';
+import { binarySearch } from '@/www/utils/search';
+import { compareDOM } from '@/www/utils/dom';
 
 export default class PrototypeSelectItem
   extends PrototypeButton<SelectContext>

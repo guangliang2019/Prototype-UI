@@ -1,4 +1,4 @@
-import { h } from '@/utils/dom';
+import { h } from '@/www/utils/dom';
 import './transition';
 import './select';
 import './form'

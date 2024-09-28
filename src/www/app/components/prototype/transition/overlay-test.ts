@@ -1,8 +1,8 @@
 import PrototypeOverlay from '@/prototype/overlay/overlay';
 import { ShadcnButton } from '@/shadcn';
-import { Div, h } from '@/utils/dom';
+import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
-import { HIGHLIGHT_RULE } from '@/utils/regex';
+import { HIGHLIGHT_RULE } from '@/www/utils/regex';
 
 class OverlayTest extends DocCode {
   protected _code = `

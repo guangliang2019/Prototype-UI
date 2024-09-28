@@ -1,6 +1,6 @@
 import { PrototypeForm } from '@/prototype/form';
-import { Div, h } from '@/utils/dom';
-import { HIGHLIGHT_RULE } from '@/utils/regex';
+import { Div, h } from '@/www/utils/dom';
+import { HIGHLIGHT_RULE } from '@/www/utils/regex';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
 
 export default class FormBasic extends DocCode {

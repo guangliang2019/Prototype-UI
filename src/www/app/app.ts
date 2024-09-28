@@ -1,9 +1,9 @@
-import { Div, h, Main, PrototypeTab, PrototypeTabContent } from '@/utils/dom';
+import { Div, h, Main, PrototypeTab, PrototypeTabContent } from '@/www/utils/dom';
 import '@/www/components';
 import '@/prototype';
 import './docs';
-import './shadcn';
-import './prototype';
+import './components/shadcn';
+import './components/prototype';
 
 import '@/lucide/chevrons-up-down';
 

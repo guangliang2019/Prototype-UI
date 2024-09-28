@@ -7,7 +7,7 @@
  */
 
 import { ContextConsumer } from '@/common';
-import { dfsFindElement } from '@/utils/dom';
+import { dfsFindElement } from '@/www/utils/dom';
 
 /**
  * Trigger 组件，能够有效解决 Trigger 嵌套时的事件冲突问题

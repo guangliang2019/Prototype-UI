@@ -1,5 +1,5 @@
 import { ContextConsumer } from '@/common';
-import { Div } from '@/utils/dom';
+import { Div } from '@/www/utils/dom';
 import { DocContext } from './interface';
 
 class DocBreadcrumb extends ContextConsumer<DocContext> {

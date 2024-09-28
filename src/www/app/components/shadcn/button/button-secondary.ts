@@ -1,7 +1,7 @@
-import { Div, h } from '@/utils/dom';
+import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
 import '@/shadcn';
-import { HIGHLIGHT_RULE } from '@/utils/regex';
+import { HIGHLIGHT_RULE } from '@/www/utils/regex';
 
 export default class ShadcnButtonSecondary extends DocCode {
   protected _code = '<shadcn-button>Secondary</shadcn-button>';
