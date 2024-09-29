@@ -1,10 +1,8 @@
 import { ContextConsumer } from '@/common';
-import { SelectContext, SelectValueProps } from './interface';
+import { PrototypeSelectContext, SelectValueProps } from './interface';
 
 export default class PrototypeSelectValue
-  extends ContextConsumer<{
-    'prototype-select': SelectContext;
-  }>
+  extends ContextConsumer<PrototypeSelectContext>
   implements SelectValueProps
 {
   protected _consumerKeys = new Set(['prototype-select' as const]);
@@ -27,7 +25,7 @@ export default class PrototypeSelectValue
 
   protected _render() {
     if (this.firstChild) this.removeChild(this._content);
-    const contextValue = this._contextValues['prototype-select'] as SelectContext;
+    const contextValue = this._contextValues['prototype-select'];
     this._content = this.renderValue(contextValue.value);
     this.appendChild(this._content);
   }

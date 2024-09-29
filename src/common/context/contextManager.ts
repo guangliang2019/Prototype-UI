@@ -139,10 +139,7 @@ export default class ContextManager {
     while (queue.length) {
       const node = queue.shift();
       const keyFlag = keyFlags.shift();
-      if (!keyFlag) {
-        console.error('ContextManager: keyFlag is undefined, 这是个系统问题');
-        throw new Error('ContextManager: keyFlag is undefined, 这是个系统问题');
-      }
+      if (!keyFlag) throw new Error('ContextManager: keyFlag is undefined, 这是个系统问题');
       if (!node || keyFlag.size === 0) continue;
 
       // 如果遇到相同 key 的 Provider，并且不是自己，

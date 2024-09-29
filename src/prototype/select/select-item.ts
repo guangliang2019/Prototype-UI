@@ -1,12 +1,10 @@
-import { SelectContext, SelectItemProps } from './interface';
+import { PrototypeSelectContext, SelectItemProps } from './interface';
 import { PrototypeButton } from '../button';
 import { binarySearch } from '@/www/utils/search';
 import { compareDOM } from '@/www/utils/dom';
 
 export default class PrototypeSelectItem
-  extends PrototypeButton<{
-    'prototype-select': SelectContext;
-  }>
+  extends PrototypeButton<PrototypeSelectContext>
   implements SelectItemProps
 {
   protected _consumerKeys = new Set(['prototype-select'] as const);

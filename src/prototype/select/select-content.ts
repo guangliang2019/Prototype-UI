@@ -1,9 +1,7 @@
 import { PrototypeOverlay } from '../overlay';
-import { SelectContext } from './interface';
+import { PrototypeSelectContext } from './interface';
 
-export default class PrototypeSelectContent extends PrototypeOverlay<{
-  'prototype-select': SelectContext;
-}> {
+export default class PrototypeSelectContent extends PrototypeOverlay<PrototypeSelectContext> {
   protected _consumerKeys = new Set(['prototype-select'] as const);
 
   connectedCallback() {

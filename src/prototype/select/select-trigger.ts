@@ -1,9 +1,7 @@
-import { SelectContext } from './interface';
+import { PrototypeSelectContext } from './interface';
 import { Trigger } from '../../common/trigger';
 
-export default class PrototypeSelectTrigger extends Trigger<{
-  'prototype-select': SelectContext;
-}> {
+export default class PrototypeSelectTrigger extends Trigger<PrototypeSelectContext> {
   protected _consumerKeys = new Set(['prototype-select'] as const);
 
   private _handleMouseDown = () => {
