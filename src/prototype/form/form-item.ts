@@ -2,11 +2,15 @@ import { ContextProvider } from '@/common';
 import { FormContext, FormItemContext } from './interface';
 
 export default class PrototypeFormItem<T extends Object> extends ContextProvider<
-  FormItemContext,
-  FormContext<T>
+  {
+    'prototype-form-item': FormItemContext;
+  },
+  {
+    'prototype-form': FormContext<T>;
+  }
 > {
-  protected _consumerKey = 'prototype-form';
-  protected _providerKey = 'prototype-form-item';
+  protected _consumerKeys = new Set(['prototype-form'] as const);
+  protected _providerKeys = new Set(['prototype-form-item'] as const);
 
   private _key = '';
 
@@ -15,10 +19,10 @@ export default class PrototypeFormItem<T extends Object> extends ContextProvider
 
     this._key = this.getAttribute('key') || '';
 
-    this.setContext({
+    this.setContext('prototype-form-item', {
       key: this._key,
       changeFormItemValue: (value: any) => {
-        this._contextValue.changeData(this._key as keyof T, value);
+        this._contextValues['prototype-form'].changeData(this._key as keyof T, value);
       },
     });
   }

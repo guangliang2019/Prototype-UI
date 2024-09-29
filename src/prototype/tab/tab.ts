@@ -1,9 +1,13 @@
 import { ContextProvider } from '@/common';
 import { TabContext, TabProps } from './interface';
 
-export default class PrototypeTab extends ContextProvider<TabContext> implements TabProps {
-  protected _consumerKey = 'prototype-tab';
-  protected _providerKey = 'prototype-tab';
+export default class PrototypeTab
+  extends ContextProvider<{
+    'prototype-tab': TabContext;
+  }>
+  implements TabProps
+{
+  protected _providerKeys = new Set(['prototype-tab'] as const);
 
   private _defaultValue = '';
   // prettier-ignore
@@ -18,7 +22,7 @@ export default class PrototypeTab extends ContextProvider<TabContext> implements
     super.connectedCallback();
     this._defaultValue = this.getAttribute('default-value') || '';
     this._index = this._tabs.indexOf(this._defaultValue);
-    this.setContext({
+    this.setContext('prototype-tab', {
       tabValue: this._tabValue,
       tabs: this._tabs,
       tabRefs: this._tabRefs,
@@ -26,7 +30,7 @@ export default class PrototypeTab extends ContextProvider<TabContext> implements
       defaultValue: this._defaultValue,
       changeTab: (value, focus = false) => {
         this._index = this._tabs.indexOf(value);
-        this.setContext({ index: this._index, tabValue: value });
+        this.setContext('prototype-tab', { index: this._index, tabValue: value });
         if (focus) {
           const targetIndex = this._tabs.findIndex((tab) => tab === value);
           if (targetIndex !== -1) this._tabRefs[targetIndex].focus();

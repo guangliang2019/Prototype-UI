@@ -2,8 +2,10 @@ import { ContextConsumer } from '@/common';
 import { Div } from '@/www/utils/dom';
 import { DocContext } from './interface';
 
-class DocBreadcrumb extends ContextConsumer<DocContext> {
-  protected _consumerKey = 'doc';
+class DocBreadcrumb extends ContextConsumer<{
+  doc: DocContext;
+}> {
+  protected _consumerKeys = new Set(['doc'] as const);
   private svg: Document | null = null;
 
   connectedCallback() {
@@ -25,7 +27,7 @@ class DocBreadcrumb extends ContextConsumer<DocContext> {
     const svgElement = this.svg.documentElement.querySelector('svg');
     const fragment = document.createDocumentFragment();
 
-    const routes = this._contextValue.doc.route;
+    const routes = this._contextValues['doc'].doc.route;
     for (let i = 0; i < routes.length; i++) {
       const route = routes[i];
       if (i < routes.length - 1) {

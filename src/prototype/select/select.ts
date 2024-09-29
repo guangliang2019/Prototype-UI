@@ -3,9 +3,16 @@ import { SelectContext } from './interface';
 import PrototypeSelectItem from './select-item';
 import { FormItemContext } from '../form/interface';
 
-export default class PrototypeSelect extends ContextProvider<SelectContext, FormItemContext> {
-  protected _providerKey = 'prototype-select';
-  protected _consumerKey = 'prototype-form-item';
+export default class PrototypeSelect extends ContextProvider<
+  {
+    'prototype-select': SelectContext;
+  },
+  {
+    'prototype-form-item': FormItemContext;
+  }
+> {
+  protected _providerKeys = new Set(['prototype-select'] as const);
+  protected _consumerKeys = new Set(['prototype-form-item'] as const);
   private _defaultValue: string = '';
   private _index: number = -1;
   private _value: string = '';
@@ -15,14 +22,14 @@ export default class PrototypeSelect extends ContextProvider<SelectContext, Form
 
   constructor() {
     super();
-    this.setContext({
+    this.setContext('prototype-select', {
       items: [],
     });
   }
 
   private _handleFormAction = () => {
-    if (this._contextValue.key) {
-      this._contextValue.changeFormItemValue(this._value);
+    if (this._contextValues['prototype-form-item']) {
+      this._contextValues['prototype-form-item'].changeFormItemValue(this._value);
     }
   };
 
@@ -33,7 +40,7 @@ export default class PrototypeSelect extends ContextProvider<SelectContext, Form
     this.setAttribute('data-state', 'close');
     this._handleFormAction();
 
-    this.setContext({
+    this.setContext('prototype-select', {
       defaultValue: this._defaultValue,
       index: this._index,
       value: this._value,
@@ -43,15 +50,15 @@ export default class PrototypeSelect extends ContextProvider<SelectContext, Form
         this._value = value;
         this._index = this._items.indexOf(value);
 
-        this.setContext({
+        this.setContext('prototype-select', {
           index: this._index,
           value: this._value,
         });
         this._handleFormAction();
         if (focus) {
-          this._provideValue.focus();
+          this._provideValues['prototype-select'].focus();
         }
-        this._provideValue.close();
+        this._provideValues['prototype-select'].close();
       },
       itemsRefs: this._itemRefs,
       rootRef: this,

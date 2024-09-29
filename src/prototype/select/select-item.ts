@@ -4,10 +4,12 @@ import { binarySearch } from '@/www/utils/search';
 import { compareDOM } from '@/www/utils/dom';
 
 export default class PrototypeSelectItem
-  extends PrototypeButton<SelectContext>
+  extends PrototypeButton<{
+    'prototype-select': SelectContext;
+  }>
   implements SelectItemProps
 {
-  protected _consumerKey = 'prototype-select';
+  protected _consumerKeys = new Set(['prototype-select'] as const);
   private _value = '';
   get value(): string {
     return this._value;
@@ -21,41 +23,42 @@ export default class PrototypeSelectItem
   };
 
   private _handleKeydown = (event: KeyboardEvent) => {
-    const currentIndex = this.contextValue.items.indexOf(this._value);
-    const nextIndex = (currentIndex + 1) % this.contextValue.items.length;
-    const prevIndex =
-      (currentIndex - 1 + this.contextValue.items.length) % this.contextValue.items.length;
+    const context = this._contextValues['prototype-select'];
+    const currentIndex = context.items.indexOf(this._value);
+    const nextIndex = (currentIndex + 1) % context.items.length;
+    const prevIndex = (currentIndex - 1 + context.items.length) % context.items.length;
 
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault();
-      this.contextValue.itemsRefs[nextIndex].focus();
+      context.itemsRefs[nextIndex].focus();
     }
 
     if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault();
-      this.contextValue.itemsRefs[prevIndex].focus();
+      context.itemsRefs[prevIndex].focus();
     }
 
     if (event.key === 'Enter') {
       event.preventDefault();
-      this.contextValue.changeValue(this._value, true);
+      context.changeValue(this._value, true);
     }
 
     if (event.key === 'Tab') {
-      this.contextValue.close();
+      context.close();
     }
   };
 
   connectedCallback() {
     super.connectedCallback();
     this.tabIndex = -1;
+    const context = this._contextValues['prototype-select'];
 
     this._value = this.getAttribute('value') || '';
-    if (this._contextValue.defaultValue === this.value) this.setAttribute('data-selected', '');
+    if (context.defaultValue === this.value) this.setAttribute('data-selected', '');
 
-    const insertIndex = binarySearch(this._contextValue.itemsRefs, this, compareDOM);
-    this._contextValue.itemsRefs.splice(insertIndex, 0, this);
-    this._contextValue.items.splice(insertIndex, 0, this._value);
+    const insertIndex = binarySearch(context.itemsRefs, this, compareDOM);
+    context.itemsRefs.splice(insertIndex, 0, this);
+    context.items.splice(insertIndex, 0, this._value);
 
     this.addEventListener('mouseenter', this._handleSelectItemMouseEnter);
     this.addEventListener('mouseleave', this._handleSelectItemMouseLeave);
@@ -63,10 +66,11 @@ export default class PrototypeSelectItem
     this.addEventListener('keydown', this._handleKeydown as EventListener);
 
     this.onClick = () => {
-      this._contextValue.changeValue(this.value, true);
+      context.changeValue(this.value, true);
     };
 
-    this.onContextChange = (context) => {
+    this.onContextChange = (key, context) => {
+      if (key !== 'prototype-select') return;
       if (this.value === context.value) {
         this.setAttribute('data-selected', '');
       } else {
@@ -81,9 +85,11 @@ export default class PrototypeSelectItem
 
     this.removeEventListener('keydown', this._handleKeydown as EventListener);
 
-    const removeIndex = binarySearch(this._contextValue.itemsRefs, this, compareDOM);
-    this._contextValue.items.splice(removeIndex, 1);
-    this._contextValue.itemsRefs.splice(removeIndex, 1);
+    const context = this._contextValues['prototype-select'];
+
+    const removeIndex = binarySearch(context.itemsRefs, this, compareDOM);
+    context.items.splice(removeIndex, 1);
+    context.itemsRefs.splice(removeIndex, 1);
 
     super.disconnectedCallback();
   }

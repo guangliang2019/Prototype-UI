@@ -18,8 +18,10 @@ import { dfsFindElement } from '@/www/utils/dom';
  * 在连接进 DOM 之前，需要添加的 EventListener 会被暂存，在 connectedCallback 时为 _target 添加
  * 同理，在连接进 DOM 之前，dispatchEvent 会被暂存，在 connectedCallback 时触发
  */
-export default abstract class Trigger<T extends Object> extends ContextConsumer<T> {
-  protected _consumerKey = 'prototype-trigger';
+export default abstract class Trigger<
+  T extends Record<string, Object> = {}
+> extends ContextConsumer<T> {
+  protected _consumerKeys = new Set(['prototype-trigger']);
   protected _target?: HTMLElement;
   protected _pendingEventListeners: Parameters<HTMLElement['addEventListener']>[] = [];
   protected _pendingDispatchEvents: Event[] = [];

@@ -8,43 +8,43 @@ import type { ContextConsumerProps, RequestContextEventDetail } from './interfac
 export const setConsumerContextSymbol = Symbol('setConsumerContext');
 export const requestContextSymbol = Symbol('requestContext');
 
-export default abstract class ContextConsumer<T extends Object>
+export default abstract class ContextConsumer<T extends Record<string, Object>>
   extends HTMLElement
   implements ContextConsumerProps<T>
 {
-  protected _contextValue = {} as T;
-  protected abstract _consumerKey: string;
+  protected _contextValues = {} as T;
+  protected abstract _consumerKeys: Set<keyof T>;
 
-  onContextChange: (value: T, changedKeys?: string[]) => void = () => {};
+  onContextChange: ContextConsumerProps<T>['onContextChange'] = () => {};
 
   // prettier-ignore
-  get contextValue() { return this._contextValue; }
+  get contextValues() { return this._contextValues; }
   // prettier-ignore
-  get consumerKey() { return this._consumerKey; }
+  get consumerKeys() { return this._consumerKeys; }
 
   static get observedAttributes() {
     return ['onContextChange'];
   }
-
   connectedCallback() {
-    this[requestContextSymbol]();
+    this.consumerKeys.forEach(this[requestContextSymbol]);
   }
 
-  [setConsumerContextSymbol](value: T, changedKeys: string[]) {
-    this._contextValue = value;
-    this.onContextChange(this._contextValue, changedKeys);
+  [setConsumerContextSymbol]<K extends keyof T>(key: K, value: T[K], changedKeys: (keyof T[K])[]) {
+    if (this._contextValues[key] === undefined) this._contextValues[key] = {} as T[K];
+    this._contextValues[key] = value;
+    this.onContextChange(key, this._contextValues[key], changedKeys);
   }
 
   // 依托于冒泡机制, 沿 DOM 树, 向根部传递请求上下文的事件, 寻找 provider 并等待回复
-  [requestContextSymbol]() {
+  [requestContextSymbol] = (key: keyof T) => {
     const requestContextEvent = new CustomEvent<RequestContextEventDetail<T>>('request-context', {
       bubbles: true,
       composed: true,
       detail: {
-        key: this._consumerKey,
+        key: key,
         consumer: this,
       },
     });
     this.dispatchEvent(requestContextEvent);
-  }
+  };
 }

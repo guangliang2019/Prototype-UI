@@ -1,11 +1,11 @@
 import { ButtonProps } from './interface';
 import { Trigger } from '../../common/trigger';
 
-export default class PrototypeButton<T extends Object>
+export default class PrototypeButton<T extends Record<string, Object> = {}>
   extends Trigger<T>
   implements ButtonProps
 {
-  protected _consumerKey = 'prototype-form';
+  protected _consumerKeys = new Set(['prototype-form']);
   /**
    * disable，响应式属性，有自定义的 getter 与 setter
    */
@@ -132,4 +132,4 @@ export default class PrototypeButton<T extends Object>
   }
 }
 
-customElements.define('prototype-button', PrototypeButton<{}>);
+customElements.define('prototype-button', PrototypeButton);

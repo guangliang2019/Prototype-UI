@@ -2,11 +2,13 @@ import { ContextProvider } from '@/common';
 import { FormContext, PrototypeFormProps } from './interface';
 
 export default class PrototypeForm<T extends Object>
-  extends ContextProvider<FormContext<T>>
+  extends ContextProvider<{
+    'prototype-form': FormContext<T>;
+  }>
   implements PrototypeFormProps<T>
 {
-  protected _providerKey = 'prototype-form';
-  protected _consumerKey = 'prototype';
+  protected _providerKeys = new Set(['prototype-form'] as const);
+  protected _consumerKeys = new Set([]);
 
   submit: (data: T) => void = () => {};
   data: T = {} as T;
@@ -15,7 +17,7 @@ export default class PrototypeForm<T extends Object>
   connectedCallback() {
     super.connectedCallback();
 
-    this.setContext({
+    this.setContext('prototype-form', {
       data: this.data,
       submit: () => {},
       validate: () => {
@@ -27,7 +29,7 @@ export default class PrototypeForm<T extends Object>
       },
       changeData: (key, value) => {
         this.data[key] = value;
-        this.provideValue.validate();
+        this.provideValues['prototype-form'].validate();
       },
     });
   }
