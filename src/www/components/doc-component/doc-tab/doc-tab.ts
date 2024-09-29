@@ -6,21 +6,15 @@ import {
 } from '@/prototype/tab';
 
 class DocTab extends PrototypeTab {
-  protected _providerKey = 'doc-tab';
-
   connectedCallback() {
     super.connectedCallback();
     this.className = 'relative mr-auto w-full';
   }
 }
 
-class DocTabContent extends PrototypeTabContent {
-  protected _consumerKey = 'doc-tab';
-}
+class DocTabContent extends PrototypeTabContent {}
 
 class DocTabTrigger extends PrototypeTabTrigger {
-  protected _consumerKey = 'doc-tab';
-
   connectedCallback() {
     super.connectedCallback();
     this.style.transition = 'all 0.09s ease-in-out';
@@ -30,8 +24,6 @@ class DocTabTrigger extends PrototypeTabTrigger {
 }
 
 class DocTabIndicator extends PrototypeTabIndicator {
-  protected _consumerKey = 'doc-tab';
-
   private _getOffsetRight(element: HTMLElement) {
     const el = element;
     const right = el.parentElement!.offsetWidth - (el.offsetWidth + el.offsetLeft);
@@ -40,14 +32,14 @@ class DocTabIndicator extends PrototypeTabIndicator {
 
   private _currentTabIndex = 0;
   private __resizeObserver = new ResizeObserver((_) => {
-    this.onTabResize(this.contextValue);
+    this.onTabResize(this.contextValues['prototype-tab']);
   });
 
   private _leadingDebounce<T extends (...args: any[]) => void>(
     func: T,
     delay: number
   ): (...funcArgs: Parameters<T>) => void {
-    let timerId: NodeJS.Timeout | null = null;
+    let timerId: number | null = null;
     let leadingCall = false; // 标记是否为首次调用
 
     return function (...args: Parameters<T>): void {

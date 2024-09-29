@@ -2,10 +2,12 @@ import { ContextConsumer } from '@/common';
 import { TabContext, TabContentProps } from './interface';
 
 export default class PrototypeTabContent
-  extends ContextConsumer<TabContext>
+  extends ContextConsumer<{
+    'prototype-tab': TabContext;
+  }>
   implements TabContentProps
 {
-  protected _consumerKey = 'prototype-tab';
+  protected _consumerKeys = new Set(['prototype-tab'] as const);
   private _value = '';
   // prettier-ignore
   get value(): string { return this._value; }
@@ -13,7 +15,8 @@ export default class PrototypeTabContent
   connectedCallback() {
     super.connectedCallback();
     this._value = this.getAttribute('value') || '';
-    this.onContextChange = (value) => {
+    this.onContextChange = (key, value) => {
+      if (key !== 'prototype-tab') return;
       if (value.tabValue === this._value) this.style.display = 'unset';
       if (value.tabValue !== this._value) this.style.display = 'none';
     };

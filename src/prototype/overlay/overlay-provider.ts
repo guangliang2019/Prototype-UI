@@ -4,11 +4,16 @@ import ContextManager from '@/common/context/contextManager';
 import PrototypeOverlay from './overlay';
 
 export default class PrototypeOverlayProvider
-  extends ContextProvider<OverlayContext>
+  extends ContextProvider<
+    {
+      'prototype-overlay': OverlayContext;
+    },
+    any
+  >
   implements OverlayProviderProps
 {
-  protected _providerKey = 'prototype-overlay';
-  protected _consumerKey = 'prototype-overlay';
+  protected _providerKeys = new Set(['prototype-overlay'] as const);
+  protected _consumerKeys = new Set([]);
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -19,9 +24,10 @@ export default class PrototypeOverlayProvider
   // TODO: 让 overlay 在 open 的时候事件中带上一个 close 时会销毁的引用，然后通过 weakmap 来维护，比遍历性能更好
   private _handleOverlayOpen(event: CustomEvent<OpenOverlayEventDetail>) {
     const { overlayKey, overlay } = event.detail;
-    const consumers = ContextManager.getInstance().getConsumers(this) as PrototypeOverlay<{}>[];
+    const consumers = ContextManager.getInstance().getConsumers('prototype-overlay', this);
     for (const consumer of consumers) {
       if (
+        consumer instanceof PrototypeOverlay &&
         // 必须是开着的
         consumer.getAttribute('data-open') !== null &&
         // overlayKey 相同

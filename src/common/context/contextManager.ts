@@ -29,33 +29,36 @@ export default class ContextManager {
     return ContextManager._instance;
   }
 
-  private _providerEntryMap: Map<string, ProviderEntry> = new Map();
-  private _consumerEntryMap: Map<string, ConsumerEntry> = new Map();
+  private _providerEntryMap: Map<keyof any, ProviderEntry> = new Map();
+  private _consumerEntryMap: Map<keyof any, ConsumerEntry> = new Map();
 
   /**
    * 向 ContextManager 添加一个新的 Provider, 主动搜索其可以关联的 Consumer，并更新 Consumer 的数据，该行为需要在 Provider 创建时触发
    * @param provider Provider Web Component 实例
    */
-  addProvider<T extends Object, U extends Object>(provider: ContextProvider<T, U>) {
-    if (!this._providerEntryMap.has(provider.providerKey)) {
-      this._providerEntryMap.set(provider.providerKey, new WeakMap());
-    }
+  addProvider<T extends Record<string, Object>>(provider: ContextProvider<T, any>) {
+    provider.providerKeys.forEach((key) => {
+      if (!this._providerEntryMap.has(key)) {
+        this._providerEntryMap.set(key, new WeakMap());
+      }
 
-    this._providerEntryMap
-      .get(provider.providerKey)
-      ?.set(provider, { consumersWeakSet: new WeakSet(), consumersSet: new Set() });
+      this._providerEntryMap
+        .get(key)
+        ?.set(provider, { consumersWeakSet: new WeakSet(), consumersSet: new Set() });
+    });
 
-    // 搜索子树中所有适用的 consumer
-    const consumers = this._findConsumers(provider);
+    // 对所有 key, 搜索子树中所有适用的 consumer
+    const consumersRecord = this._findConsumers(provider);
     // 变更 _consumerEntryMap 和 _providerEntryMap
     // 将搜索到的 consumer 与新 provider 关联起来，取消旧 provider 的关联
-    consumers.forEach((consumer) => {
-      // 如果当前 consumer 过去关联了 provider，则取消关联
-      if (this._consumerEntryMap.get(provider.providerKey)?.get(consumer))
-        this._removeConsumer(consumer);
-      this.addConsumer(provider, consumer);
-      // 触发 Consumer 的 request-context
-      consumer[requestContextSymbol]();
+    provider.providerKeys.forEach((key) => {
+      consumersRecord[key].forEach((consumer) => {
+        // 如果当前 consumer 过去关联了 provider，则取消关联
+        if (this._consumerEntryMap.get(key)?.get(consumer)) this._removeConsumer(consumer);
+        this.addConsumer(key, provider, consumer);
+        // 触发 Consumer 的 request-context
+        consumer[requestContextSymbol](key);
+      });
     });
   }
 
@@ -63,18 +66,20 @@ export default class ContextManager {
    * 删除一个 Provider, 通知其关联的 Consumer 重新触发 request-context，该行为需要在 Provider 被销毁时触发
    * @param provider Provider Web Component 实例
    */
-  removeProvider<T extends Object, U extends Object>(provider: ContextProvider<T, U>) {
-    // 通知所有 consumer，需要重新寻找新的 provider
-    const entry = this._providerEntryMap.get(provider.providerKey)?.get(provider);
-    if (!entry) return;
+  removeProvider<T extends Record<string, Object>>(provider: ContextProvider<T, any>) {
+    provider.providerKeys.forEach((key) => {
+      // 通知所有 consumer，需要重新寻找新的 provider
+      const entry = this._providerEntryMap.get(key)?.get(provider);
+      if (!entry) return;
 
-    const { consumersSet } = entry;
-    consumersSet.forEach((consumer) => {
-      this._removeConsumer(consumer);
-      consumer[requestContextSymbol]();
+      const { consumersSet } = entry;
+      consumersSet.forEach((consumer) => {
+        this._removeConsumer(consumer);
+        consumer[requestContextSymbol](key);
+      });
+
+      this._providerEntryMap.get(key)?.delete(provider);
     });
-
-    this._providerEntryMap.get(provider.providerKey)?.delete(provider);
   }
 
   /**
@@ -82,39 +87,38 @@ export default class ContextManager {
    * @param provider Provider Web Component 实例
    * @param consumer Consumer Web Component 实例
    */
-  addConsumer<T extends Object, U extends Object>(
-    provider: ContextProvider<T, U>,
-    consumer: ContextConsumer<T>
-  ) {
-    if (!this._providerEntryMap.get(provider.providerKey)?.get(provider)) {
+  addConsumer(key: keyof any, provider: ContextProvider<any, any>, consumer: ContextConsumer<any>) {
+    if (!this._providerEntryMap.get(key)?.get(provider)) {
       throw new Error(`ContextManager: No provider found for consumer: ${String(consumer)}`);
     }
-    if (!this._consumerEntryMap.has(provider.providerKey)) {
-      this._consumerEntryMap.set(provider.providerKey, new WeakMap());
+    if (!this._consumerEntryMap.has(key)) {
+      this._consumerEntryMap.set(key, new WeakMap());
     }
 
-    const entry = this._providerEntryMap.get(provider.providerKey)!.get(provider)!;
+    const entry = this._providerEntryMap.get(key)!.get(provider)!;
     entry.consumersWeakSet.add(consumer);
     entry.consumersSet.add(consumer);
 
-    this._consumerEntryMap.get(provider.providerKey)!.set(consumer, provider);
+    this._consumerEntryMap.get(key)!.set(consumer, provider);
   }
 
   /**
    * 删除一个 Consumer, 该行为需要在 Consumer 被销毁时触发
    * @param consumer Consumer Web Component 实例
    */
-  private _removeConsumer<T extends Object>(consumer: ContextConsumer<T>) {
-    const existingProvider = this._consumerEntryMap.get(consumer.consumerKey)?.get(consumer);
+  private _removeConsumer<T extends Record<string, Object>>(consumer: ContextConsumer<T>) {
+    consumer.consumerKeys.forEach((key) => {
+      const existingProvider = this._consumerEntryMap.get(key)?.get(consumer);
 
-    // 检查该 Consumer 是否已有 Provider，如果有，则从旧 Provider 中移除
-    if (existingProvider) {
-      const entry = this._providerEntryMap.get(consumer.consumerKey)?.get(existingProvider);
-      if (entry) {
-        entry.consumersWeakSet.delete(consumer);
-        entry.consumersSet.delete(consumer);
+      // 检查该 Consumer 是否已有 Provider，如果有，则从旧 Provider 中移除
+      if (existingProvider) {
+        const entry = this._providerEntryMap.get(key)?.get(existingProvider);
+        if (entry) {
+          entry.consumersWeakSet.delete(consumer);
+          entry.consumersSet.delete(consumer);
+        }
       }
-    }
+    });
   }
 
   /**
@@ -122,33 +126,49 @@ export default class ContextManager {
    * @param provider Provider Web Component 实例
    * @returns 适用的 Consumer 数组
    */
-  private _findConsumers<T extends Object, U extends Object>(
-    provider: ContextProvider<T, U>
-  ): ContextConsumer<T>[] {
-    const consumers: ContextConsumer<T>[] = [];
+  private _findConsumers<T extends Record<string, Object>>(
+    provider: ContextProvider<T, any>
+  ): Record<keyof T, ContextConsumer<any>[]> {
+    const consumersRecord = {} as Record<keyof T, ContextConsumer<any>[]>;
+    provider.providerKeys.forEach((key) => {
+      consumersRecord[key] = [];
+    });
     const queue: Element[] = [provider];
+    const keyFlags: Set<keyof T>[] = [provider.providerKeys];
 
     while (queue.length) {
       const node = queue.shift();
-      if (!node) continue;
+      const keyFlag = keyFlags.shift();
+      if (!keyFlag) {
+        console.error('ContextManager: keyFlag is undefined, 这是个系统问题');
+        throw new Error('ContextManager: keyFlag is undefined, 这是个系统问题');
+      }
+      if (!node || keyFlag.size === 0) continue;
 
-      // 如果遇到相同 key 的 Provider，并且不是自己，停止该分支搜索
-      if (
-        node instanceof ContextProvider &&
-        node.providerKey === provider.providerKey &&
-        node !== provider
-      ) {
-        continue;
+      // 如果遇到相同 key 的 Provider，并且不是自己，
+      // 该分支的 keyFlag 减少当前 key，若 KeyFlag size 为 0，则停止搜索
+      if (node instanceof ContextProvider && node !== provider) {
+        keyFlag.forEach((key) => {
+          if (node.providerKeys.has(key)) keyFlag.delete(key);
+        });
+        if (keyFlag.size === 0) continue;
       }
 
-      if (node instanceof ContextConsumer && node.consumerKey === provider.providerKey) {
-        consumers.push(node);
+      if (node instanceof ContextConsumer) {
+        keyFlag.forEach((key) => {
+          if (node.consumerKeys.has(key)) {
+            consumersRecord[key].push(node);
+          }
+        });
       }
 
-      Array.from(node.children).forEach((child) => queue.push(child));
+      Array.from(node.children).forEach((child) => {
+        keyFlags.push(new Set(keyFlag));
+        queue.push(child);
+      });
     }
 
-    return consumers;
+    return consumersRecord;
   }
 
   /**
@@ -157,24 +177,21 @@ export default class ContextManager {
    * @param value 新的 context 值
    * @returns
    */
-  updateContext<T extends Object, U extends Object>(
-    provider: ContextProvider<T, U>,
-    value: T,
-    changedKeys: string[]
+  updateContext<T extends Record<string, Object>, K extends keyof T>(
+    key: K,
+    provider: ContextProvider<T, any>,
+    value: T[K],
+    changedKeys: (keyof T[K])[]
   ) {
-    const entry = this._providerEntryMap.get(provider.providerKey)?.get(provider);
+    const entry = this._providerEntryMap.get(key)?.get(provider);
     if (!entry) return;
 
     entry.consumersSet.forEach((consumer) => {
-      consumer[setConsumerContextSymbol](value, changedKeys);
+      consumer[setConsumerContextSymbol](key, value, changedKeys);
     });
   }
 
-  getConsumers<T extends Object, U extends Object>(
-    provider: ContextProvider<T, U>
-  ): ContextConsumer<T>[] {
-    return Array.from(
-      this._providerEntryMap.get(provider.providerKey)?.get(provider)?.consumersSet || []
-    );
+  getConsumers(key: keyof any, provider: ContextProvider<any, any>): ContextConsumer<any>[] {
+    return Array.from(this._providerEntryMap.get(key)?.get(provider)?.consumersSet || []);
   }
 }

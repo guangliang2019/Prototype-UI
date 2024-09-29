@@ -1,14 +1,12 @@
-import { ContextConsumer } from '@/common';
+import { ClickOutside, ContextConsumer } from '@/common';
 import { OverlayProps, OpenOverlayEventDetail } from './interface';
 
-import clickOutside from '@/common/click-outside';
-
-export default class PrototypeOverlay<T extends Object>
+export default class PrototypeOverlay<T extends Record<string, Object> = {}>
   extends ContextConsumer<T>
   implements OverlayProps
 {
-  protected _consumerKey = 'prototype-overlay';
-  protected _content = document.createElement('click-outside') as clickOutside;
+  protected _consumerKeys = new Set(['prototype-overlay']);
+  protected _content = document.createElement('click-outside') as ClickOutside;
   protected _target?: HTMLElement;
   protected _closestRelative: HTMLElement = this;
 

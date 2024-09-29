@@ -4,10 +4,12 @@ import { binarySearch } from '@/www/utils/search';
 import { compareDOM } from '@/www/utils/dom';
 
 export default class PrototypeTabTrigger
-  extends Trigger<TabContext>
+  extends Trigger<{
+    'prototype-tab': TabContext;
+  }>
   implements TabTriggerProps
 {
-  protected _consumerKey = 'prototype-tab';
+  protected _consumerKeys = new Set(['prototype-tab'] as const);
   private _value = '';
 
   get value(): string {
@@ -18,11 +20,13 @@ export default class PrototypeTabTrigger
     super.connectedCallback();
     this.style.cursor = 'pointer';
     this._value = this.getAttribute('value') || '';
-    const insertIndex = binarySearch(this._contextValue.tabRefs, this, compareDOM);
-    this._contextValue.tabRefs.splice(insertIndex, 0, this);
-    this._contextValue.tabs.splice(insertIndex, 0, this._value);
+    const context = this._contextValues['prototype-tab'];
+    const insertIndex = binarySearch(context.tabRefs, this, compareDOM);
+    context.tabRefs.splice(insertIndex, 0, this);
+    context.tabs.splice(insertIndex, 0, this._value);
 
-    this.onContextChange = (value) => {
+    this.onContextChange = (key, value) => {
+      if (key !== 'prototype-tab') return;
       if (value.tabValue === this._value) {
         this.tabIndex = 0;
         this.setAttribute('data-selected', '');
@@ -36,8 +40,8 @@ export default class PrototypeTabTrigger
     this.addEventListener('keydown', this._handleKeydown as EventListener);
 
     // 初始化默认选中状态
-    if (this._value === this.contextValue.defaultValue) {
-      this.contextValue.changeTab(this._value);
+    if (this._value === this.contextValues['prototype-tab'].defaultValue) {
+      this.contextValues['prototype-tab'].changeTab(this._value);
     }
   }
 
@@ -49,27 +53,28 @@ export default class PrototypeTabTrigger
     this.removeEventListener('click', this._handleClick);
     this.removeEventListener('keydown', this._handleKeydown as EventListener);
 
-    const removeIndex = binarySearch(this._contextValue.tabRefs, this, compareDOM);
+    const context = this._contextValues['prototype-tab'];
+    const removeIndex = binarySearch(context.tabRefs, this, compareDOM);
 
-    this._contextValue.tabs.splice(removeIndex, 1);
-    this._contextValue.tabRefs.splice(removeIndex, 1);
+    context.tabs.splice(removeIndex, 1);
+    context.tabRefs.splice(removeIndex, 1);
   }
 
-  private _handleClick = () => this.contextValue.changeTab(this._value);
+  private _handleClick = () => this._contextValues['prototype-tab'].changeTab(this._value);
   private _handleKeydown = (event: KeyboardEvent) => {
-    const currentIndex = this.contextValue.tabs.indexOf(this._value);
-    const nextIndex = (currentIndex + 1) % this.contextValue.tabs.length;
-    const prevIndex =
-      (currentIndex - 1 + this.contextValue.tabs.length) % this.contextValue.tabs.length;
+    const context = this._contextValues['prototype-tab'];
+    const currentIndex = context.tabs.indexOf(this._value);
+    const nextIndex = (currentIndex + 1) % context.tabs.length;
+    const prevIndex = (currentIndex - 1 + context.tabs.length) % context.tabs.length;
 
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault();
-      this.contextValue.changeTab(this.contextValue.tabs[nextIndex], true);
+      context.changeTab(context.tabs[nextIndex], true);
     }
 
     if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault();
-      this.contextValue.changeTab(this.contextValue.tabs[prevIndex], true);
+      context.changeTab(context.tabs[prevIndex], true);
     }
   };
 }

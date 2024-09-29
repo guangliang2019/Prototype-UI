@@ -2,14 +2,15 @@ import { ContextProvider } from '@/common';
 import { A, Div, h, Main, P, PrototypeTabContent, Span } from '@/www/utils/dom';
 import { Doc, DocContext } from './interface';
 
-export default abstract class DocComponent extends ContextProvider<DocContext> {
+export default abstract class DocComponent extends ContextProvider<{
+  'doc': DocContext;
+}> {
   protected abstract _doc: Doc;
-  protected _providerKey = 'doc';
-  protected _consumerKey = "doc";
+  protected _providerKeys = new Set(['doc'] as const);
 
   connectedCallback() {
     super.connectedCallback();
-    this.setContext({
+    this.setContext('doc', {
       doc: this._doc,
     });
     this._render();

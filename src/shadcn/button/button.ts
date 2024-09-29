@@ -1,10 +1,10 @@
 import { PrototypeButton } from '@/prototype/button';
-import { ShacnButtonProps, SHADCN_BUTTON_DEFAULT_PROPS } from './interface';
+import { ShadcnButtonProps, SHADCN_BUTTON_DEFAULT_PROPS } from './interface';
 import { CONFIG } from '../_config';
 
-export default class ShadcnButton<T extends Object = {}>
+export default class ShadcnButton<T extends Record<string, Object> = {}>
   extends PrototypeButton<T>
-  implements ShacnButtonProps
+  implements ShadcnButtonProps
 {
   private _iconOnly = SHADCN_BUTTON_DEFAULT_PROPS['iconOnly'];
   private _variant = SHADCN_BUTTON_DEFAULT_PROPS['variant'];
@@ -39,7 +39,7 @@ export default class ShadcnButton<T extends Object = {}>
     super.connectedCallback();
 
     this._variant =
-      (this.getAttribute('variant') as ShacnButtonProps['variant']) ||
+      (this.getAttribute('variant') as ShadcnButtonProps['variant']) ||
       SHADCN_BUTTON_DEFAULT_PROPS['variant'];
     this._iconOnly = this.hasAttribute('icon-only');
     this._render();
