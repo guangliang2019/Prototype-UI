@@ -3,11 +3,11 @@ import { PrototypeButton } from '../button';
 import { binarySearch } from '@/www/utils/search';
 import { compareDOM } from '@/www/utils/dom';
 
-export default class PrototypeSelectItem
-  extends PrototypeButton<PrototypeSelectContext>
+export default class PrototypeSelectItem<T extends PrototypeSelectContext = PrototypeSelectContext>
+  extends PrototypeButton<T>
   implements SelectItemProps
 {
-  protected _consumerKeys = new Set(['prototype-select'] as const);
+  protected _consumerKeys = new Set(['prototype-select']);
   private _value = '';
   get value(): string {
     return this._value;
@@ -18,6 +18,15 @@ export default class PrototypeSelectItem
   };
   private _handleSelectItemMouseLeave = () => {
     this.blur();
+  };
+  private _handlePrototypeSelectContextChange = (
+    context: PrototypeSelectContext['prototype-select']
+  ) => {
+    if (this.value === context.value) {
+      this.setAttribute('data-selected', '');
+    } else {
+      this.removeAttribute('data-selected');
+    }
   };
 
   private _handleKeydown = (event: KeyboardEvent) => {
@@ -57,23 +66,17 @@ export default class PrototypeSelectItem
     const insertIndex = binarySearch(context.itemsRefs, this, compareDOM);
     context.itemsRefs.splice(insertIndex, 0, this);
     context.items.splice(insertIndex, 0, this._value);
-
+    // Event Listeners
     this.addEventListener('mouseenter', this._handleSelectItemMouseEnter);
     this.addEventListener('mouseleave', this._handleSelectItemMouseLeave);
 
     this.addEventListener('keydown', this._handleKeydown as EventListener);
 
+    // Context Listeners
+    this.addContextListener('prototype-select', this._handlePrototypeSelectContextChange);
+
     this.onClick = () => {
       context.changeValue(this.value, true);
-    };
-
-    this.onContextChange = (key, context) => {
-      if (key !== 'prototype-select') return;
-      if (this.value === context.value) {
-        this.setAttribute('data-selected', '');
-      } else {
-        this.removeAttribute('data-selected');
-      }
     };
   }
 
@@ -82,6 +85,8 @@ export default class PrototypeSelectItem
     this.removeEventListener('mouseleave', this._handleSelectItemMouseLeave);
 
     this.removeEventListener('keydown', this._handleKeydown as EventListener);
+
+    this.removeContextListener('prototype-select', this._handlePrototypeSelectContextChange);
 
     const context = this._contextValues['prototype-select'];
 

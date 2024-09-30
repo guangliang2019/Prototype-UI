@@ -1,6 +1,9 @@
 import { PrototypeSelectContent } from '@/prototype/select';
+import { ShadcnSelectContext } from './interface';
 
-export default class ShadcnSelectContent extends PrototypeSelectContent {
+export default class ShadcnSelectContent extends PrototypeSelectContent<ShadcnSelectContext> {
+  protected _consumerKeys = new Set(['shadcn-select', 'prototype-select']);
+
   private _class = '';
   private _computedClass = '';
 
@@ -16,7 +19,6 @@ export default class ShadcnSelectContent extends PrototypeSelectContent {
     const shapeCls = 'rounded-md shadow-md';
     const borderCls = 'border';
     const colorCls = 'bg-popover text-popover-foreground';
-    // prettier-ignore
     const otherCls = 'popover-animated-in overflow-hidden';
 
     // prettier-ignore

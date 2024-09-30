@@ -1,19 +1,27 @@
 import { ContextProvider } from '@/common';
-import { PrototypeSelectContext } from './interface';
+import { PrototypeSelectContext, PrototypeSelectProps } from './interface';
 import PrototypeSelectItem from './select-item';
 import { PrototypeFormItemContext } from '../form/interface';
 
 export default class PrototypeSelect<
-  T extends PrototypeSelectContext = PrototypeSelectContext
-> extends ContextProvider<T, PrototypeFormItemContext> {
-  protected _providerKeys = new Set(['prototype-select'] as const);
+    T extends Record<string, Object> & PrototypeSelectContext = PrototypeSelectContext
+  >
+  extends ContextProvider<T, PrototypeFormItemContext>
+  implements PrototypeSelectProps
+{
+  protected _providerKeys = new Set(['prototype-select']);
   protected _consumerKeys = new Set(['prototype-form-item'] as const);
   private _defaultValue: string = '';
+
+  get defaultValue(): string {
+    return this._defaultValue;
+  }
+
   private _index: number = -1;
   private _value: string = '';
   private _items: string[] = [];
   private _selecting: boolean = false;
-  private _itemRefs: PrototypeSelectItem[] = [];
+  private _itemRefs: PrototypeSelectItem<any>[] = [];
 
   constructor() {
     super();

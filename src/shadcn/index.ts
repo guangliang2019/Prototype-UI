@@ -5,4 +5,7 @@ export {
   ShadcnSelectItem,
   ShadcnSelectTrigger,
   ShadcnSelectValue,
+  ShadcnSelectArrow,
+  ShadcnSelectCheck,
 } from './select';
+export type { ShadcnSelectContext, ShadcnSelectProps } from './select';

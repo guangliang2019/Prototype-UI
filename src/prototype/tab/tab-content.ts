@@ -12,14 +12,20 @@ export default class PrototypeTabContent
   // prettier-ignore
   get value(): string { return this._value; }
 
+  private _handlePrototypeTabContextChange = (context: TabContext) => {
+    if (context.tabValue === this._value) this.style.display = 'unset';
+    if (context.tabValue !== this._value) this.style.display = 'none';
+  };
+
   connectedCallback() {
     super.connectedCallback();
     this._value = this.getAttribute('value') || '';
-    this.onContextChange = (key, value) => {
-      if (key !== 'prototype-tab') return;
-      if (value.tabValue === this._value) this.style.display = 'unset';
-      if (value.tabValue !== this._value) this.style.display = 'none';
-    };
+
+    this.addContextListener('prototype-tab', this._handlePrototypeTabContextChange);
+  }
+
+  disconnectedCallback() {
+    this.removeContextListener('prototype-tab', this._handlePrototypeTabContextChange);
   }
 }
 

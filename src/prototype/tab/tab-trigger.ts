@@ -16,6 +16,16 @@ export default class PrototypeTabTrigger
     return this._value;
   }
 
+  private _handlePrototypeTabContextChange = (context: TabContext) => {
+    if (context.tabValue === this._value) {
+      this.tabIndex = 0;
+      this.setAttribute('data-selected', '');
+    } else {
+      this.tabIndex = -1;
+      this.removeAttribute('data-selected');
+    }
+  };
+
   connectedCallback() {
     super.connectedCallback();
     this.style.cursor = 'pointer';
@@ -25,19 +35,10 @@ export default class PrototypeTabTrigger
     context.tabRefs.splice(insertIndex, 0, this);
     context.tabs.splice(insertIndex, 0, this._value);
 
-    this.onContextChange = (key, value) => {
-      if (key !== 'prototype-tab') return;
-      if (value.tabValue === this._value) {
-        this.tabIndex = 0;
-        this.setAttribute('data-selected', '');
-      } else {
-        this.tabIndex = -1;
-        this.removeAttribute('data-selected');
-      }
-    };
-
     this.addEventListener('click', this._handleClick);
     this.addEventListener('keydown', this._handleKeydown as EventListener);
+
+    this.addContextListener('prototype-tab', this._handlePrototypeTabContextChange);
 
     // 初始化默认选中状态
     if (this._value === this.contextValues['prototype-tab'].defaultValue) {
@@ -52,6 +53,8 @@ export default class PrototypeTabTrigger
   disconnectedCallback() {
     this.removeEventListener('click', this._handleClick);
     this.removeEventListener('keydown', this._handleKeydown as EventListener);
+
+    this.removeContextListener('prototype-tab', this._handlePrototypeTabContextChange);
 
     const context = this._contextValues['prototype-tab'];
     const removeIndex = binarySearch(context.tabRefs, this, compareDOM);

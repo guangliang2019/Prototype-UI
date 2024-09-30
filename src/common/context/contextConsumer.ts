@@ -15,16 +15,24 @@ export default abstract class ContextConsumer<T extends Record<string, Object>>
   protected _contextValues = {} as T;
   protected abstract _consumerKeys: Set<keyof T>;
 
-  onContextChange: ContextConsumerProps<T>['onContextChange'] = () => {};
+  // TODO: 明确这里的 any
+  private _contextListeners = new Map<keyof T, Set<any>>();
+
+  addContextListener: ContextConsumerProps<T>['addContextListener'] = (key, listener) => {
+    if (!this._contextListeners.has(key)) this._contextListeners.set(key, new Set());
+    this._contextListeners.get(key)!.add(listener);
+  };
+
+  removeContextListener: ContextConsumerProps<T>['removeContextListener'] = (key, listener) => {
+    if (!this._contextListeners.has(key)) return;
+    this._contextListeners.get(key)!.delete(listener);
+  };
 
   // prettier-ignore
   get contextValues() { return this._contextValues; }
   // prettier-ignore
   get consumerKeys() { return this._consumerKeys; }
 
-  static get observedAttributes() {
-    return ['onContextChange'];
-  }
   connectedCallback() {
     this.consumerKeys.forEach(this[requestContextSymbol]);
   }
@@ -32,7 +40,12 @@ export default abstract class ContextConsumer<T extends Record<string, Object>>
   [setConsumerContextSymbol]<K extends keyof T>(key: K, value: T[K], changedKeys: (keyof T[K])[]) {
     if (this._contextValues[key] === undefined) this._contextValues[key] = {} as T[K];
     this._contextValues[key] = value;
-    this.onContextChange(key, this._contextValues[key], changedKeys);
+
+    if (this._contextListeners.has(key)) {
+      this._contextListeners
+        .get(key)!
+        .forEach((listener) => listener(this._contextValues[key], changedKeys));
+    }
   }
 
   // 依托于冒泡机制, 沿 DOM 树, 向根部传递请求上下文的事件, 寻找 provider 并等待回复

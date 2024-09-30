@@ -63,7 +63,7 @@ export default abstract class ContextProvider<
         key,
         this,
         this._provideValues[key],
-        Object.keys(this._provideValues[key]) as (keyof TProvider[typeof key])[]
+        []
       );
     }
   }

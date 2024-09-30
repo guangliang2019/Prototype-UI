@@ -6,7 +6,14 @@ export interface RequestContextEventDetail<T extends Record<string, Object>> {
 }
 
 export interface ContextConsumerProps<T extends Record<string, Object>> {
-  onContextChange: <K extends keyof T>(key: K, value: T[K], changedKeys: (keyof T[K])[]) => void;
+  addContextListener: <K extends keyof T>(
+    key: K,
+    listener: (value: T[K], changedKeys: (keyof T[K])[]) => void
+  ) => void;
+  removeContextListener: <K extends keyof T>(
+    key: K,
+    listener: (value: T[K], changedKeys: (keyof T[K])[]) => void
+  ) => void;
   readonly contextValues: Object;
   readonly consumerKeys: Set<keyof T>;
 }
