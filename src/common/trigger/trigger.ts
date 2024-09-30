@@ -59,19 +59,20 @@ export default abstract class Trigger<
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.children.length > 1) {
-      throw new Error('Trigger 组件最多只允许有一个子元素。');
-    }
-    // 寻找最内层的 Trigger
+    // 如果子元素中有复数个 trigger，则以自己为 target
+    // 如果没有 trigger，也以自己为 target
+    // 如果恰好只有一个子元素是 trigger，则继续寻找最内层的 trigger
     const target = dfsFindElement(this, (el) => {
       if (!(el instanceof Trigger)) return false;
       const children = el.children;
+      const triggerChildren: Trigger[] = [];
       for (let i = 0; i < children.length; i++) {
-        if (children[i] instanceof Trigger) return false;
+        if (children[i] instanceof Trigger) triggerChildren.push(children[i] as Trigger);
       }
+      if (triggerChildren.length === 1) return false;
+
       return true;
     }) as HTMLElement;
-
     this._target = target;
 
     this._pendingEventListeners.forEach((args) => this.addEventListener(...args));

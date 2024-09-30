@@ -39,7 +39,7 @@ export default abstract class ContextProvider<
     ContextManager.getInstance().removeProvider(this);
   }
 
-  setContext<K extends keyof TProvider>(key: K, value: Partial<TProvider[K]>, notify = true) {
+  setContext<K extends keyof TProvider>(key: K, value: Partial<TProvider[K]>, notify = true): void {
     if (this._provideValues[key] === undefined) this._provideValues[key] = {} as TProvider[K];
     Object.assign(this._provideValues[key], value);
     if (notify)
@@ -63,7 +63,7 @@ export default abstract class ContextProvider<
         key,
         this,
         this._provideValues[key],
-        Object.keys(this._provideValues[key]) as (keyof TProvider[typeof key])[]
+        []
       );
     }
   }

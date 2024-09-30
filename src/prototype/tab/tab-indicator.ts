@@ -19,6 +19,14 @@ export default class PrototypeTabIndicator
 
   private _tabChangedFlag = false;
 
+  private _handlePrototypeTabContextChange = (context: TabContext) => {
+    if (this._currentTabRef) this._resizeObserver.unobserve(this._currentTabRef as HTMLElement);
+    this._tabChangedFlag = true;
+    this._currentTabRef = context.tabRefs[context.index];
+    if (this._currentTabRef) this._resizeObserver.observe(this._currentTabRef);
+    this.onTabChange(context);
+  };
+
   onTabChange: (context: TabContext) => void = () => {};
   onTabResize: (context: TabContext) => void = () => {};
 
@@ -30,14 +38,12 @@ export default class PrototypeTabIndicator
       this._resizeObserver.observe(this._currentTabRef);
     }
 
-    this.onContextChange = (key, value) => {
-      if (key !== 'prototype-tab') return;
-      if (this._currentTabRef) this._resizeObserver.unobserve(this._currentTabRef as HTMLElement);
-      this._tabChangedFlag = true;
-      this._currentTabRef = value.tabRefs[context.index];
-      if (this._currentTabRef) this._resizeObserver.observe(this._currentTabRef);
-      this.onTabChange(value);
-    };
+    this.addContextListener('prototype-tab', this._handlePrototypeTabContextChange);
+  }
+
+  disconnectedCallback() {
+    this._resizeObserver.unobserve(this._currentTabRef as HTMLElement);
+    this.removeContextListener('prototype-tab', this._handlePrototypeTabContextChange);
   }
 }
 

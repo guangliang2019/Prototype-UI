@@ -1,5 +1,17 @@
-export default class ShadcnSelectArrow extends HTMLElement {
+import { ContextConsumer } from '@/common';
+import { ShadcnSelectContext } from './interface';
+
+export default class ShadcnSelectArrow extends ContextConsumer<ShadcnSelectContext> {
+  protected _consumerKeys = new Set(['shadcn-select', 'prototype-select']);
+
   connectedCallback() {
+    super.connectedCallback();
+    this._contextValues['shadcn-select'].arrowRef = this;
+    if (this.children.length > 0 || this.textContent !== '') {
+      this._contextValues['shadcn-select'].updateRef('arrowRef', this);
+      return;
+    }
+    this.className = 'w-4 h-4 opacity-50';
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 24 24');
     svg.setAttribute('fill', 'none');
@@ -18,7 +30,7 @@ export default class ShadcnSelectArrow extends HTMLElement {
     const arrowDown = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     arrowDown.setAttribute('d', 'M8.5 9L12 5.5L15.5 9');
     arrowDown.setAttribute('stroke-width', '1.5');
-    
+
     svg.appendChild(arrowDown);
 
     this.appendChild(svg);

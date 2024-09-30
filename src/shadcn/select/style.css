@@ -26,3 +26,7 @@
     transform: translateY(0) scale(1);
   }
 }
+
+.data-\[selected\]\:visible[data-selected] {
+  visibility: visible;
+}

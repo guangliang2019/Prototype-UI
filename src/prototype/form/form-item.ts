@@ -1,13 +1,9 @@
 import { ContextProvider } from '@/common';
-import { FormContext, FormItemContext } from './interface';
+import { FormContext, PrototypeFormItemContext } from './interface';
 
 export default class PrototypeFormItem<T extends Object> extends ContextProvider<
-  {
-    'prototype-form-item': FormItemContext;
-  },
-  {
-    'prototype-form': FormContext<T>;
-  }
+  PrototypeFormItemContext,
+  FormContext<T>
 > {
   protected _consumerKeys = new Set(['prototype-form'] as const);
   protected _providerKeys = new Set(['prototype-form-item'] as const);

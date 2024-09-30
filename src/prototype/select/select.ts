@@ -1,30 +1,35 @@
 import { ContextProvider } from '@/common';
-import { SelectContext } from './interface';
+import { PrototypeSelectContext, PrototypeSelectProps } from './interface';
 import PrototypeSelectItem from './select-item';
-import { FormItemContext } from '../form/interface';
+import { PrototypeFormItemContext } from '../form/interface';
 
-export default class PrototypeSelect extends ContextProvider<
-  {
-    'prototype-select': SelectContext;
-  },
-  {
-    'prototype-form-item': FormItemContext;
-  }
-> {
-  protected _providerKeys = new Set(['prototype-select'] as const);
+export default class PrototypeSelect<
+    T extends Record<string, Object> & PrototypeSelectContext = PrototypeSelectContext
+  >
+  extends ContextProvider<T, PrototypeFormItemContext>
+  implements PrototypeSelectProps
+{
+  protected _providerKeys = new Set(['prototype-select']);
   protected _consumerKeys = new Set(['prototype-form-item'] as const);
   private _defaultValue: string = '';
+
+  get defaultValue(): string {
+    return this._defaultValue;
+  }
+
   private _index: number = -1;
   private _value: string = '';
   private _items: string[] = [];
   private _selecting: boolean = false;
-  private _itemRefs: PrototypeSelectItem[] = [];
+  private _itemRefs: PrototypeSelectItem<any>[] = [];
 
   constructor() {
     super();
-    this.setContext('prototype-select', {
+    const defaultContext: Partial<PrototypeSelectContext['prototype-select']> = {
       items: [],
-    });
+    };
+
+    this.setContext('prototype-select', defaultContext);
   }
 
   private _handleFormAction = () => {
@@ -53,7 +58,7 @@ export default class PrototypeSelect extends ContextProvider<
         this.setContext('prototype-select', {
           index: this._index,
           value: this._value,
-        });
+        } as Partial<PrototypeSelectContext['prototype-select']>);
         this._handleFormAction();
         if (focus) {
           this._provideValues['prototype-select'].focus();
@@ -62,7 +67,7 @@ export default class PrototypeSelect extends ContextProvider<
       },
       itemsRefs: this._itemRefs,
       rootRef: this,
-    });
+    } as Partial<PrototypeSelectContext['prototype-select']>);
   }
 }
 

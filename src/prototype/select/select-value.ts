@@ -1,13 +1,11 @@
 import { ContextConsumer } from '@/common';
-import { SelectContext, SelectValueProps } from './interface';
+import { PrototypeSelectContext, SelectValueProps } from './interface';
 
-export default class PrototypeSelectValue
-  extends ContextConsumer<{
-    'prototype-select': SelectContext;
-  }>
+export default class PrototypeSelectValue<T extends PrototypeSelectContext = PrototypeSelectContext>
+  extends ContextConsumer<T>
   implements SelectValueProps
 {
-  protected _consumerKeys = new Set(['prototype-select' as const]);
+  protected _consumerKeys = new Set(['prototype-select']);
 
   protected _content: HTMLElement = document.createElement('span');
 
@@ -17,17 +15,27 @@ export default class PrototypeSelectValue
     return span;
   };
 
+  private _handlePrototypeSelectContextChange = (
+    _: T['prototype-select'],
+    keys: (keyof T['prototype-select'])[]
+  ) => {
+    if (keys.includes('value')) this._render();
+  };
+
   connectedCallback() {
     super.connectedCallback();
+    this._contextValues['prototype-select'].valueRef = this;
     this._render();
-    this.onContextChange = () => {
-      this._render();
-    };
+    this.addContextListener('prototype-select', this._handlePrototypeSelectContextChange);
+  }
+
+  disconnectedCallback() {
+    this.removeContextListener('prototype-select', this._handlePrototypeSelectContextChange);
   }
 
   protected _render() {
     if (this.firstChild) this.removeChild(this._content);
-    const contextValue = this._contextValues['prototype-select'] as SelectContext;
+    const contextValue = this._contextValues['prototype-select'];
     this._content = this.renderValue(contextValue.value);
     this.appendChild(this._content);
   }

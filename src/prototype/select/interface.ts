@@ -1,8 +1,10 @@
 import PrototypeSelect from './select';
+import PrototypeSelectContent from './select-content';
 import PrototypeSelectItem from './select-item';
 import PrototypeSelectTrigger from './select-trigger';
+import PrototypeSelectValue from './select-value';
 
-export interface SelectProps {
+export interface PrototypeSelectProps {
   defaultValue?: string;
 }
 
@@ -14,25 +16,29 @@ export interface SelectValueProps {
   renderValue: (value: string) => HTMLElement | string;
 }
 
-export interface SelectContext {
-  index: number;
-  value: string;
+export interface PrototypeSelectContext extends Record<string, Object> {
+  'prototype-select': {
+    index: number;
+    value: string;
 
-  width: number;
+    width: number;
 
-  focused: boolean;
-  focus: () => void;
+    focused: boolean;
+    focus: () => void;
 
-  open: () => void;
-  close: () => void;
+    open: () => void;
+    close: () => void;
 
-  items: string[];
-  defaultValue: string;
-  changeValue: (value: string, focus?: boolean) => void;
+    items: string[];
+    defaultValue: string;
+    changeValue: (value: string, focus?: boolean) => void;
 
-  selecting: boolean;
+    selecting: boolean;
 
-  rootRef: PrototypeSelect;
-  triggerRef: PrototypeSelectTrigger;
-  itemsRefs: PrototypeSelectItem[];
+    rootRef: PrototypeSelect<any>;
+    triggerRef: PrototypeSelectTrigger<any>;
+    itemsRefs: PrototypeSelectItem<any>[];
+    valueRef: PrototypeSelectValue<any>;
+    contentRef: PrototypeSelectContent<any>;
+  };
 }
