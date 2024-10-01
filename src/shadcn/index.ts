@@ -9,3 +9,5 @@ export {
   ShadcnSelectCheck,
 } from './select';
 export type { ShadcnSelectContext, ShadcnSelectProps } from './select';
+
+export { ShadcnInput } from './input';

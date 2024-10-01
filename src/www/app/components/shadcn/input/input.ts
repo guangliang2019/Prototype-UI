@@ -1,13 +1,13 @@
 import { DocComponent } from '@/www/components/doc-component';
 import { Doc } from '@/www/components/doc-component';
-import './select-basic';
+import './input-basic';
 
-export default class ShadcnSelectDoc extends DocComponent {
+export default class ShadcnInputDoc extends DocComponent {
   protected _doc: Doc = {
-    title: 'Select',
-    id: 'shadcn-select',
+    title: 'Input',
+    id: 'shadcn-input',
     desc: 'Displays a select or a component that looks like a select.',
-    route: ['Shadcn', 'Select'],
+    route: ['Shadcn', 'Input'],
     links: [],
     sections: [
       {
@@ -16,7 +16,7 @@ export default class ShadcnSelectDoc extends DocComponent {
           {
             type: 'code',
             key: '',
-            content: 'shadcn-select-basic',
+            content: 'shadcn-input-basic',
           },
         ],
       },
@@ -24,4 +24,4 @@ export default class ShadcnSelectDoc extends DocComponent {
   };
 }
 
-customElements.define('shadcn-select-doc', ShadcnSelectDoc);
+customElements.define('shadcn-input-doc', ShadcnInputDoc);

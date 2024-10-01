@@ -13,7 +13,7 @@ export default class ShadcnButtonDoc extends DocComponent {
     title: 'Button',
     id: 'shadcn-button',
     desc: 'Displays a button or a component that looks like a button.',
-    route: ['Shadcn', 'button'],
+    route: ['Shadcn', 'Button'],
     links: [],
     sections: [
       {
