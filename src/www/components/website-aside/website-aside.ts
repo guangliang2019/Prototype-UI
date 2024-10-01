@@ -24,6 +24,10 @@ class WebsiteAside extends HTMLElement {
           title: 'Select',
           value: 'shadcn-select',
         },
+        {
+          title: 'Input',
+          value: 'shadcn-input',
+        },
       ],
       'Prototype UI': [
         {
