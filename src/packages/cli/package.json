@@ -1,9 +1,13 @@
 {
   "name": "cli",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "prototype-ui": "./dist/index.js"
   },
   "keywords": [],
   "author": "",
