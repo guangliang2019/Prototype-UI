@@ -1,5 +1,5 @@
 {
-  "name": "cli",
+  "name": "@prototype-ui/cli",
   "version": "0.0.0",
   "main": "index.js",
   "scripts": {
