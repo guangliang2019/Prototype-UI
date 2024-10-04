@@ -9,7 +9,7 @@ export default class ShadcnInputBasic extends DocCode {
 
   protected _preview = () => {
     return Div({ class: 'flex flex-col items-center justify-center' }, [
-      h('shadcn-input', { 'placeholder': 'Placeholder', 'type': 'password' }),
+      h('shadcn-input', { 'placeholder': 'Placeholder' }),
     ]);
   };
 }
