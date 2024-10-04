@@ -1,7 +1,7 @@
 import '@/prototype/tab';
 import { Aside, Div, h } from '@/www/utils/dom';
 class WebsiteAside extends HTMLElement {
-  private _index: Record<string, { title: string; value: string }[]> = {};
+  private _index: Record<string, { title: string; value: string; href: string }[]> = {};
   constructor() {
     super();
     this._index = {
@@ -9,42 +9,51 @@ class WebsiteAside extends HTMLElement {
         {
           title: 'Introduction',
           value: 'docs-introduction',
+          href: '/docs/introduction/',
         },
       ],
       'Shadcn UI': [
         {
           title: 'Button',
           value: 'shadcn-button',
+          href: '/shadcn/button/',
         },
         {
           title: 'Tab',
           value: 'shadcn-tab',
+          href: '/shadcn/tab/',
         },
         {
           title: 'Select',
           value: 'shadcn-select',
+          href: '/shadcn/select/',
         },
         {
           title: 'Input',
           value: 'shadcn-input',
+          href: '/shadcn/input/',
         },
       ],
       'Prototype UI': [
         {
           title: 'Tab',
           value: 'prototype-tab',
+          href: '/prototype/tab/',
         },
         {
           title: 'Transition',
           value: 'prototype-transition',
+          href: '/prototype/transition/',
         },
         {
           title: 'Select',
           value: 'prototype-select',
+          href: '/prototype/select/',
         },
         {
           title: 'Form',
           value: 'prototype-form',
+          href: '/prototype/form/',
         },
       ],
     };
@@ -91,7 +100,7 @@ class WebsiteAside extends HTMLElement {
     );
   }
 
-  private _renderItems(items: { title: string; value: string }[]) {
+  private _renderItems(items: { title: string; value: string; href: string }[]) {
     const fragment = document.createDocumentFragment();
 
     items.forEach((item) => {
@@ -99,6 +108,7 @@ class WebsiteAside extends HTMLElement {
         h('website-aside-item', {
           title: item.title,
           value: item.value,
+          href: item.href,
         })
       );
     });

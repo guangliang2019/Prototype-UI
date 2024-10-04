@@ -1,5 +1,6 @@
 export interface TabProps {
   readonly defaultValue?: string;
+  readonly changTab?: (value: string, focus?: boolean) => void;
 }
 
 export interface TabTriggerProps {

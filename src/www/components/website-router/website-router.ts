@@ -1,29 +1,31 @@
-interface RouteChange {
+export interface RouteChange {
   from: string;
   to: string;
   action: 'push' | 'replace' | 'back' | 'forward' | 'go';
 }
 
-class Router {
-  private static _instance: Router | null = null; // 静态实例
+export default class WebsiteRouter {
+  private static _instance: WebsiteRouter | null = null; // 静态实例
   private _currentPath: string;
   private _historyDepth: number;
   private _prevHistoryDepth: number;
+  private _guards: Array<(reason: RouteChange) => boolean | Promise<boolean>>; // 路由守卫队列
 
   // 私有化构造函数，防止外部实例化
   private constructor() {
     this._currentPath = window.location.pathname;
     this._historyDepth = window.history.length; // 初始化当前历史深度
     this._prevHistoryDepth = this._historyDepth;
+    this._guards = []; // 初始化守卫队列
     window.addEventListener('popstate', this.onPopState);
   }
 
-  // 获取 Router 的唯一实例
-  public static getInstance(): Router {
-    if (!Router._instance) {
-      Router._instance = new Router();
+  // 获取 WebsiteRouter 的唯一实例
+  public static getInstance(): WebsiteRouter {
+    if (!WebsiteRouter._instance) {
+      WebsiteRouter._instance = new WebsiteRouter();
     }
-    return Router._instance;
+    return WebsiteRouter._instance;
   }
 
   // 处理 'popstate' 事件
@@ -50,41 +52,56 @@ class Router {
       action,
     };
 
-    this.onLocationChange(reason);
+    this.runGuards(reason).then((canNavigate) => {
+      if (canNavigate) {
+        this.onLocationChange(reason);
+      } else {
+        // 如果守卫返回 false，则阻止路由变更
+        history.go(-1); // 回退到之前的路由
+      }
+    });
   };
 
   // push 方法用于添加新的历史条目
   public push(url: string, state?: any): void {
     const from = this._currentPath;
     const to = url;
-    history.pushState({ ...state, from, to }, '', url);
-    this._currentPath = to;
-    this._historyDepth++;
-    this._prevHistoryDepth = this._historyDepth;
-
     const reason: RouteChange = {
       from,
       to,
       action: 'push',
     };
 
-    this.onLocationChange(reason);
+    this.runGuards(reason).then((canNavigate) => {
+      if (canNavigate) {
+        console.log(from,to,url,state)
+        history.pushState({ ...state, from, to }, '', url);
+        this._currentPath = to;
+        this._historyDepth++;
+        this._prevHistoryDepth = this._historyDepth;
+
+        this.onLocationChange(reason);
+      }
+    });
   }
 
   // replace 方法用于替换当前历史条目
   public replace(url: string, state?: any): void {
     const from = this._currentPath;
     const to = url;
-    history.replaceState({ ...state, from, to }, '', url);
-    this._currentPath = to;
-
     const reason: RouteChange = {
       from,
       to,
       action: 'replace',
     };
 
-    this.onLocationChange(reason);
+    this.runGuards(reason).then((canNavigate) => {
+      if (canNavigate) {
+        history.replaceState({ ...state, from, to }, '', url);
+        this._currentPath = to;
+        this.onLocationChange(reason);
+      }
+    });
   }
 
   // go 方法用于前进或后退 n 步
@@ -108,27 +125,27 @@ class Router {
     window.open(url, '_blank');
   }
 
-  // 当路由变更时，触发此方法
-  private onLocationChange(reason: RouteChange): void {
-    console.log('Route change detected:');
-    console.log(`From: ${reason.from}`);
-    console.log(`To: ${reason.to}`);
-    console.log(`Action: ${reason.action}`);
+  // 添加路由守卫
+  public addGuard(guard: (reason: RouteChange) => boolean | Promise<boolean>): void {
+    this._guards.push(guard);
   }
+
+  // 移除路由守卫
+  public removeGuard(guard: (reason: RouteChange) => boolean | Promise<boolean>): void {
+    this._guards = this._guards.filter((g) => g !== guard);
+  }
+
+  // 依次执行守卫队列，决定是否继续路由变更
+  private async runGuards(reason: RouteChange): Promise<boolean> {
+    for (const guard of this._guards) {
+      const result = await guard(reason);
+      if (!result) {
+        return false; // 如果任一守卫返回 false，则阻止路由变更
+      }
+    }
+    return true; // 全部守卫通过，允许路由变更
+  }
+
+  // 当路由变更时，触发此方法
+  private onLocationChange(reason: RouteChange): void {}
 }
-
-// 使用单例模式调用 Router
-const router = Router.getInstance();
-
-// 使用 push 添加一个新的路径
-router.push('/about');
-
-// 使用 replace 替换当前路径
-router.replace('/contact');
-
-// 前进后退
-router.back();
-router.forward();
-
-// 在新窗口打开指定的链接
-router.open('https://example.com');

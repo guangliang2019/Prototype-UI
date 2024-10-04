@@ -18,6 +18,17 @@ export default class PrototypeTab
   private _tabRefs: HTMLElement[] = [];
   private _tabs: string[] = [];
 
+  private _changTab: (value: string, focus?: boolean) => void = (value, focus = false) => {
+    this._index = this._tabs.indexOf(value);
+    this.setContext('prototype-tab', { index: this._index, tabValue: value });
+    if (focus) {
+      const targetIndex = this._tabs.findIndex((tab) => tab === value);
+      if (targetIndex !== -1) this._tabRefs[targetIndex].focus();
+    }
+  };
+  // prettier-ignore
+  public get changTab() { return this._changTab.bind(this); }
+
   connectedCallback() {
     super.connectedCallback();
     this._defaultValue = this.getAttribute('default-value') || '';
@@ -28,14 +39,7 @@ export default class PrototypeTab
       tabRefs: this._tabRefs,
       index: this._index,
       defaultValue: this._defaultValue,
-      changeTab: (value, focus = false) => {
-        this._index = this._tabs.indexOf(value);
-        this.setContext('prototype-tab', { index: this._index, tabValue: value });
-        if (focus) {
-          const targetIndex = this._tabs.findIndex((tab) => tab === value);
-          if (targetIndex !== -1) this._tabRefs[targetIndex].focus();
-        }
-      },
+      changeTab: this.changTab,
     });
   }
 
