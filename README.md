@@ -21,6 +21,41 @@ npx prototype-ui init
 npx prototype-ui/shadcn init
 ```
 
+# Usage
+
+```shell
+$ npx prototype-ui --help
+
+
+██████╗ ██████╗  ██████╗ ████████╗ ██████╗ 
+██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗
+██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║
+██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║
+██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝
+╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ 
+████████╗██╗   ██╗██████╗ ███████╗    ██╗   ██╗██╗
+╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝    ██║   ██║██║
+   ██║    ╚████╔╝ ██████╔╝█████╗█████╗██║   ██║██║
+   ██║     ╚██╔╝  ██╔═══╝ ██╔══╝╚════╝██║   ██║██║
+   ██║      ██║   ██║     ███████╗    ╚██████╔╝██║
+   ╚═╝      ╚═╝   ╚═╝     ╚══════╝     ╚═════╝ ╚═╝
+
+Usage: prototype-ui [options] [command]
+
+CLI for prototype-ui project
+
+Options:
+  -v, --version       Output the current version
+  -h, --help          display help for command
+
+Commands:
+  init                Initialize a new prototype-ui project
+  add <component>     Add a new component to the project
+  remove <component>  Remove a component from the project (maybe not safe)
+  list                List all components in the project
+  help [command]      display help for command
+```
+
 ## Note
 
 The code is provided "as is" for maximum flexibility in use and integration into various projects.
