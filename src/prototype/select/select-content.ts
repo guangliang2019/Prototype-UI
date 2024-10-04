@@ -28,9 +28,9 @@ export default class PrototypeSelectContent<
     if (!context.selecting) return;
     super.close();
     context.rootRef.setAttribute('data-state', 'close');
-    context.selecting = false;
-    setTimeout(() => { context.triggerRef.focus(); }, 0);
+    context.triggerRef.focus();
     // Return focus to the trigger
+    context.selecting = false;
   }
 
   onClickOutside = (e: MouseEvent) => {
