@@ -45,7 +45,7 @@ export default class PrototypeSelectItem<T extends PrototypeSelectContext = Prot
       context.itemsRefs[prevIndex].focus();
     }
 
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       context.changeValue(this._value, true);
     }
