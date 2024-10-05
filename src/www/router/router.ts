@@ -4,8 +4,8 @@ export interface RouteChange {
   action: 'push' | 'replace' | 'back' | 'forward' | 'go';
 }
 
-export default class WebsiteRouter {
-  private static _instance: WebsiteRouter | null = null; // 静态实例
+export default class Router {
+  private static _instance: Router | null = null; // 静态实例
   private _currentPath: string;
   private _historyDepth: number;
   private _prevHistoryDepth: number;
@@ -20,12 +20,12 @@ export default class WebsiteRouter {
     window.addEventListener('popstate', this.onPopState);
   }
 
-  // 获取 WebsiteRouter 的唯一实例
-  public static getInstance(): WebsiteRouter {
-    if (!WebsiteRouter._instance) {
-      WebsiteRouter._instance = new WebsiteRouter();
+  // 获取 Router 的唯一实例
+  public static getInstance(): Router {
+    if (!Router._instance) {
+      Router._instance = new Router();
     }
-    return WebsiteRouter._instance;
+    return Router._instance;
   }
 
   // 处理 'popstate' 事件

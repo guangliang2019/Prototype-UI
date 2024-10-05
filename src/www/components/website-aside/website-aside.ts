@@ -1,62 +1,11 @@
 import '@/prototype/tab';
+import { docsRoute } from '@/www/router';
 import { Aside, Div, h } from '@/www/utils/dom';
 class WebsiteAside extends HTMLElement {
   private _index: Record<string, { title: string; value: string; href: string }[]> = {};
   constructor() {
     super();
-    this._index = {
-      'Getting Started': [
-        {
-          title: 'Introduction',
-          value: 'docs-introduction',
-          href: '/docs/introduction',
-        },
-      ],
-      'Shadcn UI': [
-        {
-          title: 'Button',
-          value: 'shadcn-button',
-          href: '/components/shadcn/button',
-        },
-        {
-          title: 'Tab',
-          value: 'shadcn-tab',
-          href: '/components/shadcn/tab',
-        },
-        {
-          title: 'Select',
-          value: 'shadcn-select',
-          href: '/components/shadcn/select',
-        },
-        {
-          title: 'Input',
-          value: 'shadcn-input',
-          href: '/components/shadcn/input',
-        },
-      ],
-      'Prototype UI': [
-        {
-          title: 'Tab',
-          value: 'prototype-tab',
-          href: '/components/prototype/tab',
-        },
-        {
-          title: 'Transition',
-          value: 'prototype-transition',
-          href: '/components/prototype/transition',
-        },
-        {
-          title: 'Select',
-          value: 'prototype-select',
-          href: '/components/prototype/select',
-        },
-        {
-          title: 'Form',
-          value: 'prototype-form',
-          href: '/components/prototype/form',
-        },
-      ],
-    };
+    this._index = docsRoute;
   }
 
   private _render() {
