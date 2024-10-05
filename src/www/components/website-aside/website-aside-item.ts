@@ -1,5 +1,5 @@
 import { PrototypeTabTrigger } from '@/www/utils/dom';
-import { WebsiteRouter } from '../website-router';
+import { Router } from '@/www/router';
 
 class WebsiteAsideItem extends HTMLElement {
   private _title = '';
@@ -11,7 +11,7 @@ class WebsiteAsideItem extends HTMLElement {
     this._href = this.getAttribute('href') || '';
     this._render();
     this.onclick = () => {
-      WebsiteRouter.getInstance().push(this._href);
+      Router.getInstance().push(this._href);
     };
   }
 

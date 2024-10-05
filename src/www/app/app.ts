@@ -7,8 +7,7 @@ import './components/prototype';
 
 import '@/lucide/chevrons-up-down';
 import { PrototypeTab } from '@/prototype';
-import { WebsiteRouter } from '../components/website-router';
-import { RouteChange } from '../components/website-router/website-router';
+import { RouteChange, Router } from '../router';
 
 export default class AppRoot extends HTMLElement {
   connectedCallback() {
@@ -46,7 +45,7 @@ export default class AppRoot extends HTMLElement {
   };
 
   private _setup() {
-    WebsiteRouter.getInstance().addGuard(this._handleRouteChange);
+    Router.getInstance().addGuard(this._handleRouteChange);
 
     const docsTab = h(
       'prototype-tab',
