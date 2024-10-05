@@ -23,7 +23,7 @@ export default class WebsiteNav extends HTMLElement {
             Span({ class: 'font-bold mr-6' }, ['shadcn/web']),
             Nav({ class: 'relative flex items-center gap-4 text-sm lg:gap-6' }, [
               PrototypeTabTrigger({ value: 'docs', class: this._navItemsCls }, ['Docs']),
-              PrototypeTabTrigger({ value: 'components', class: this._navItemsCls }, [
+              PrototypeTabTrigger({ value: 'docs', class: this._navItemsCls }, [
                 'Components',
               ]),
               PrototypeTabTrigger({ value: 'blocks', class: this._navItemsCls }, ['Blocks']),
