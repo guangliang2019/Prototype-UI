@@ -74,7 +74,6 @@ export default class WebsiteRouter {
 
     this.runGuards(reason).then((canNavigate) => {
       if (canNavigate) {
-        console.log(from,to,url,state)
         history.pushState({ ...state, from, to }, '', url);
         this._currentPath = to;
         this._historyDepth++;

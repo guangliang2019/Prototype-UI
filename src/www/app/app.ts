@@ -26,13 +26,22 @@ export default class AppRoot extends HTMLElement {
   private _changeNav: (value: string, focus?: boolean | undefined) => void = () => {};
   private _changeDocs: (value: string, focus?: boolean | undefined) => void = () => {};
 
-  private _getPath() {
-    const path = window.location.pathname;
-    return path.split('/').filter((item) => item !== '');
-  }
   private _handleRouteChange = (reason: RouteChange) => {
-    console.log(reason);
-    this._changeDocs(reason.to.slice(1, -1).replace('/', '-'));
+    const path = new URL(window.location.origin + reason.to).pathname
+      .split('/')
+      .filter((item) => item !== '');
+    switch (path[0]) {
+      case 'docs':
+        this._changeNav('docs');
+        this._changeDocs(path[1] ? `docs-${path[1]}` : 'docs-introduction');
+        break;
+      case 'components':
+        this._changeNav('docs');
+        this._changeDocs(path[1] ? `${path[1]}-${path[2]}` : 'shadcn-button');
+        break;
+      default:
+        break;
+    }
     return true;
   };
 
