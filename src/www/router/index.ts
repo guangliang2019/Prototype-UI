@@ -1,4 +1,5 @@
-export { default as Router, RouteChange } from './router';
+export { default as Router } from './router';
+export type { RouteChange } from './router';
 
 export const docsRoute: Record<string, { title: string; value: string; href: string }[]> = {
   'Getting Started': [
