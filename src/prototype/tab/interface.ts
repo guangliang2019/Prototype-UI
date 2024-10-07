@@ -12,15 +12,18 @@ export interface TabContentProps {
 }
 
 export interface TabIndicatorProps {
-  onTabChange: (context: TabContext) => void;
-  onTabResize: (context: TabContext) => void;
+  onTabChange: (context: PrototypeTabContext['prototype-tab']) => void;
+  onTabResize: (context: PrototypeTabContext['prototype-tab']) => void;
 }
 
-export interface TabContext {
-  readonly index: number;
-  readonly tabValue: string;
-  readonly defaultValue: string;
-  readonly changeTab: (value: string, focus?: boolean) => void;
-  readonly tabs: string[];
-  readonly tabRefs: HTMLElement[];
+export interface PrototypeTabContext extends Record<string, Object> {
+  'prototype-tab': {
+    readonly index: number;
+    readonly tabValue: string;
+    readonly defaultValue: string;
+    readonly changeTab: (value: string, focus?: boolean) => void;
+    readonly tabs: string[];
+    readonly tabRefs: HTMLElement[];
+  };
+  [key: string]: Object;
 }
