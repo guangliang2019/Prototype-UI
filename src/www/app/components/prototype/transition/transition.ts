@@ -1,6 +1,7 @@
 import { Doc, DocComponent } from '@/www/components/doc-component';
 import './transition-basic';
 import './overlay-test';
+import './motion-scroll-test';
 
 export default class TransitionDoc extends DocComponent {
   protected _doc: Doc = {
@@ -27,6 +28,16 @@ export default class TransitionDoc extends DocComponent {
             type: 'code',
             key: '',
             content: 'overlay-test',
+          },
+        ],
+      },
+      {
+        title: 'Motion Scroll Test',
+        contents: [
+          {
+            type: 'code',
+            key: '',
+            content: 'motion-scroll-test',
           },
         ],
       },

@@ -1,6 +1,7 @@
 import { h } from '@/www/utils/dom';
 import '@/www/components';
 import '@/prototype';
+import '@/motion';
 import './docs';
 import './components/shadcn';
 import './components/prototype';
