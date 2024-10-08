@@ -1,0 +1,11 @@
+{
+  "templates": {
+    "basic": {
+      "name": "basic",
+      "repoUrl": "https://github.com/example/prototype-ui-template-basic",
+      "branch": "main",
+      "version": "latest",
+      "description": "A basic template for Prototype-UI projects"
+    }
+  }
+}
