@@ -1,7 +1,7 @@
 import { ContextProvider } from '@/common';
 import { OverlayProviderProps, OverlayContext, OpenOverlayEventDetail } from './interface';
-import ContextManager from '@/common/context/contextManager';
 import PrototypeOverlay from './overlay';
+import ContextManager from '@/common/context/manager';
 
 export default class PrototypeOverlayProvider
   extends ContextProvider<

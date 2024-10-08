@@ -1,2 +1,2 @@
-export { default as ContextProvider } from './contextProvider';
-export { default as ContextConsumer } from './contextConsumer';
+export { default as ContextProvider } from './provider';
+export { default as ContextConsumer } from './consumer';

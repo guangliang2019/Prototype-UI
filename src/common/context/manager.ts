@@ -4,8 +4,8 @@
  * @date 2024-08-13
  */
 
-import ContextConsumer, { requestContextSymbol, setConsumerContextSymbol } from './contextConsumer';
-import ContextProvider from './contextProvider';
+import ContextConsumer, { requestContextSymbol, setConsumerContextSymbol } from './consumer';
+import ContextProvider from './provider';
 
 /**
  * 由于 WeakSet 不能被遍历，因此额外维护一个 Set，切勿忘记同步更新
