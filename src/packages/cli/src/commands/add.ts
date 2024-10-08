@@ -11,7 +11,6 @@ export const addCommand = new Command('add')
   .argument('<component>', 'Name of the component to add')
   .description('Add a new component to the project')
   .action(async (component: string) => {
-    const componentsPath = path.resolve(__dirname, '../components.json');
     const remoteComponents: ComponentGraph = await getRemoteComponents(componentsPath);
     
     const localComponentsPath = path.resolve(process.cwd(), 'prototype-ui-components.json');

@@ -10,7 +10,6 @@ const templatesPath = 'https://raw.githubusercontent.com/guangliang2019/Prototyp
 export const initCommand = new Command('init')
   .description('Initialize a new prototype-ui project')
   .action(async () => {
-    const templatesPath = path.resolve(__dirname, '../templates.json');
     const templates: TemplateConfig = await getRemoteTemplates(templatesPath);
 
     const templateChoices = Object.keys(templates.templates).map((name) => {
