@@ -1,9 +1,11 @@
 {
   "name": "@prototype-ui/cli",
-  "version": "0.0.3",
+  "version": "0.0.7",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "postbuild": "ts-node src/post-build.ts",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
@@ -20,5 +22,10 @@
     "inquirer": "^12.0.0",
     "simple-git": "^3.27.0",
     "typescript": "^5.6.2"
-  }
+  },
+  "files": [
+    "dist",
+    "components.json",
+    "templates.json"
+  ]
 }
