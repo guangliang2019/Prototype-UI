@@ -1,0 +1,9 @@
+prototype-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+prototype-scroll-area {
+  scrollbar-width: none; /* 对 Firefox */
+  -ms-overflow-style: none; /* 对 IE 和 Edge 旧版 */
+  -webkit-overflow-scrolling: touch; /* 为移动设备提供惯性滚动 */
+}

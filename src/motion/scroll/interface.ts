@@ -3,8 +3,10 @@ export interface MotionScrollContext extends Record<string, Object> {
     scrollY: number;
     scrollX: number;
 
-    onContentResize: () => void;
-    onViewportResize: () => void;
+    viewportHeight: number;
+    viewportWidth: number;
+    contentHeight: number;
+    contentWidth: number;
 
     contentRef: HTMLElement;
     viewportRef: HTMLElement;

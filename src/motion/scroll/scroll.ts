@@ -2,42 +2,75 @@ import { ContextProvider } from '@/common';
 import { MotionScrollContext } from './interface';
 import './style.css';
 
-export default class MotionScroll extends ContextProvider<MotionScrollContext> {
+export default class MotionScroll<
+  ProvideContextType extends Record<string, Object> & MotionScrollContext = MotionScrollContext,
+  ConsumeContextType extends Record<string, Object> = Record<string, Object>
+> extends ContextProvider<ProvideContextType, ConsumeContextType> {
   protected _providerKeys = new Set(['motion-scroll']);
 
   private _resizeObserver: ResizeObserver;
+  private _contentRef: HTMLElement | undefined;
 
   constructor() {
     super();
     // 初始化 ResizeObserver 来监听尺寸变化
     this._resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
-        console.log(
-          `Size changed for ${entry.target.className}: ${entry.contentRect.width}px x ${entry.contentRect.height}px`
-        );
+        if (entry.target === this) {
+          this.setContext('motion-scroll', {
+            viewportHeight: entry.contentRect.height,
+            viewportWidth: entry.contentRect.width,
+          } as Partial<ProvideContextType['motion-scroll']>);
+        }
+        if (entry.target === this._contentRef) {
+          this.setContext('motion-scroll', {
+            contentHeight: entry.contentRect.height,
+            contentWidth: entry.contentRect.width,
+          } as Partial<ProvideContextType['motion-scroll']>);
+        }
       }
     });
   }
 
+  get contentRef(): HTMLElement | undefined {
+    return this._contentRef;
+  }
+
+  set contentRef(value: HTMLElement | undefined) {
+    if (this._contentRef !== value) {
+      if (this._contentRef) {
+        this._resizeObserver.unobserve(this._contentRef);
+      }
+      this._contentRef = value;
+      if (value) {
+        this._resizeObserver.observe(value);
+      }
+    }
+  }
+
   connectedCallback() {
-    // 开始观察尺寸变化
+    super.connectedCallback();
     this._resizeObserver.observe(this);
     if (this.firstChild) {
-      this._resizeObserver.observe(this.firstChild as Element);
+      this.contentRef = this.firstChild as HTMLElement;
     }
-    // 监听滚动事件
-    this.addEventListener('scroll', this.logScroll);
+    this.addEventListener('scroll', this._handleScroll);
   }
 
   disconnectedCallback() {
-    // 清理工作
     this._resizeObserver.disconnect();
-    this.removeEventListener('scroll', this.logScroll);
+    if (this._contentRef) {
+      this._contentRef.removeEventListener('scroll', this._handleScroll);
+    }
+    super.disconnectedCallback();
   }
 
-  logScroll = (event: Event) => {
+  private _handleScroll = (event: Event) => {
     const target = event.target as Element;
-    console.log(`Scrolled to ${target.scrollTop}`);
+    this.setContext('motion-scroll', {
+      scrollY: target.scrollTop,
+      scrollX: target.scrollLeft,
+    } as Partial<ProvideContextType['motion-scroll']>);
   };
 }
 
