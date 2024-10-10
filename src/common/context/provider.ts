@@ -15,9 +15,9 @@ export default abstract class ContextProvider<
   extends ContextConsumer<TConsumer>
   implements ContextProviderProps<TProvider, TConsumer>
 {
-  protected abstract _providerKeys: Set<keyof TProvider>;
+  protected abstract _providerKeys: (keyof TProvider)[];
   protected _provideValues = {} as TProvider;
-  protected _consumerKeys: Set<keyof TConsumer> = new Set([] as const);
+  protected _consumerKeys: (keyof TConsumer)[] = [];
 
   // prettier-ignore
   get provideValues() { return this._provideValues; }
@@ -54,7 +54,7 @@ export default abstract class ContextProvider<
   private handleRequestContext(event: CustomEvent<RequestContextEventDetail<TProvider>>) {
     const { key, consumer } = event.detail;
     // 如果该上下文请求事件来自除自身外的其他 consumer, 则响应该事件并打断其传播
-    if (this._providerKeys.has(key) && this !== (consumer as unknown as typeof this)) {
+    if (this._providerKeys.includes(key) && this !== (consumer as unknown as typeof this)) {
       event.stopPropagation(); // 阻止事件传播到外部 provider
       ContextManager.getInstance().addConsumer(key, this, consumer);
       if (this._provideValues[key] === undefined)

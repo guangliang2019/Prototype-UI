@@ -41,7 +41,7 @@ Trigger 是一个抽象类，这要求它必须必须被继承，而无法直接
 
 ```ts
 class MyComponentTrigger extends Trigger<{}> {
-  protected _consumerKeys = new Set(['my-component']);
+  protected _consumerKeys = ['my-component'];
 
   connectedCallback() {
     super.connectedCallback();

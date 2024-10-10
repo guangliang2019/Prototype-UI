@@ -2,7 +2,7 @@ import { ContextConsumer } from '@/common';
 import { PrototypeFormItemContext } from '../form/interface';
 
 export default class PrototypeInput extends ContextConsumer<PrototypeFormItemContext> {
-  protected _consumerKeys = new Set(['prototype-form-item' as const]);
+  protected _consumerKeys = ['prototype-form-item' as const];
 
   protected _inputRef = document.createElement('input');
 

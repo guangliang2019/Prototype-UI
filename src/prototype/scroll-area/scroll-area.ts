@@ -10,7 +10,7 @@ export default class PrototypeScrollArea
   extends MotionScroll<PrototypeScrollAreaContext>
   implements PrototypeScrollAreaProps
 {
-  protected _providerKeys = new Set(['prototype-scroll-area', 'motion-scroll']);
+  protected _providerKeys = ['prototype-scroll-area', 'motion-scroll'];
 
   hideDelay = DEFAULT_PROTOTYPE_SCROLL_AREA_PROPS['hideDelay'];
   alwaysShowScrollbar = DEFAULT_PROTOTYPE_SCROLL_AREA_PROPS['alwaysShowScrollbar'];

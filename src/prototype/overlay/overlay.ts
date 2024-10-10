@@ -5,7 +5,7 @@ export default class PrototypeOverlay<T extends Record<string, Object> = {}>
   extends ContextConsumer<T>
   implements OverlayProps
 {
-  protected _consumerKeys = new Set(['prototype-overlay']);
+  protected _consumerKeys = ['prototype-overlay'];
   protected _content = document.createElement('click-outside') as ClickOutside;
   protected _target?: HTMLElement;
   protected _closestRelative: HTMLElement = this;

@@ -21,7 +21,7 @@ import { dfsFindElement } from '@/www/utils/dom';
 export default abstract class Trigger<
   T extends Record<string, Object> = {}
 > extends ContextConsumer<T> {
-  protected _consumerKeys = new Set(['prototype-trigger']);
+  protected _consumerKeys = ['prototype-trigger'];
   protected _target?: HTMLElement;
   protected _pendingEventListeners: Parameters<HTMLElement['addEventListener']>[] = [];
   protected _pendingDispatchEvents: Event[] = [];

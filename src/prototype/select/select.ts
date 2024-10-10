@@ -9,8 +9,8 @@ export default class PrototypeSelect<
   extends ContextProvider<T, PrototypeFormItemContext>
   implements PrototypeSelectProps
 {
-  protected _providerKeys = new Set(['prototype-select']);
-  protected _consumerKeys = new Set(['prototype-form-item'] as const);
+  protected _providerKeys =(['prototype-select']);
+  protected _consumerKeys =(['prototype-form-item'] as const);
   private _defaultValue: string = '';
 
   get defaultValue(): string {
