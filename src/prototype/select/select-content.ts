@@ -4,7 +4,7 @@ import { PrototypeSelectContext } from './interface';
 export default class PrototypeSelectContent<
   T extends PrototypeSelectContext = PrototypeSelectContext
 > extends PrototypeOverlay<T> {
-  protected _consumerKeys = new Set(['prototype-select']);
+  protected _consumerKeys = ['prototype-select'];
 
   connectedCallback() {
     super.connectedCallback();

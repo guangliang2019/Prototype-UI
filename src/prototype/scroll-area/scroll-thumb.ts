@@ -9,11 +9,7 @@ import { MotionScrollContext } from '@/motion';
 export default class PrototypeScrollThumb extends ContextConsumer<
   PrototypeScrollAreaContext & PrototypeScrollRailContext
 > {
-  protected _consumerKeys = new Set([
-    'prototype-scroll-area',
-    'motion-scroll',
-    'prototype-scroll-rail',
-  ]);
+  protected _consumerKeys = ['prototype-scroll-area', 'motion-scroll', 'prototype-scroll-rail'];
   private _direction: PrototypeScrollRailContext['direction'] =
     DEFAULT_PROTOTYPE_SCROLL_RAIL_PROPS['direction'];
 

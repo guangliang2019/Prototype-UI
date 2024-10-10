@@ -12,8 +12,8 @@ export default class PrototypeOverlayProvider
   >
   implements OverlayProviderProps
 {
-  protected _providerKeys = new Set(['prototype-overlay'] as const);
-  protected _consumerKeys = new Set([]);
+  protected _providerKeys = ['prototype-overlay' as const];
+  protected _consumerKeys = [];
 
   connectedCallback(): void {
     super.connectedCallback();

@@ -2,7 +2,7 @@ import { PrototypeSelect } from '@/prototype/select';
 import { ShadcnSelectContext } from './interface';
 
 export default class ShadcnSelect extends PrototypeSelect<ShadcnSelectContext> {
-  protected _providerKeys = new Set(['shadcn-select', 'prototype-select']);
+  protected _providerKeys =(['shadcn-select', 'prototype-select']);
   private _class = '';
   private _computedClass = '';
   private _arrowRef = document.createElement('shadcn-select-arrow');

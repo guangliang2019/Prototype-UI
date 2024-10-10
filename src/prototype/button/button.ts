@@ -5,7 +5,7 @@ export default class PrototypeButton<T extends Record<string, Object> = {}>
   extends Trigger<T>
   implements ButtonProps
 {
-  protected _consumerKeys = new Set(['prototype-form']);
+  protected _consumerKeys = ['prototype-form'];
   /**
    * disable，响应式属性，有自定义的 getter 与 setter
    */

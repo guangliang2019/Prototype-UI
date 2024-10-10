@@ -10,8 +10,8 @@ export default class PrototypeScrollRail
   extends ContextProvider<PrototypeScrollRailContext, PrototypeScrollAreaContext>
   implements PrototypeScrollRailProps
 {
-  protected _providerKeys = new Set(['prototype-scroll-rail']);
-  protected _consumerKeys = new Set(['prototype-scroll-area', 'motion-scroll']);
+  protected _providerKeys = ['prototype-scroll-rail'];
+  protected _consumerKeys = ['prototype-scroll-area', 'motion-scroll'];
 
   private _direction: PrototypeScrollRailProps['direction'] =
     DEFAULT_PROTOTYPE_SCROLL_RAIL_PROPS['direction'];

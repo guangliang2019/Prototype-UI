@@ -28,8 +28,8 @@ interface MyTabContext {
 }
 
 class MyTab extends ContextProvider<MyTabContext> {
-  protected _consumerKeys = new Set(["my-tab"]);
-  protected _providerKeys = new Set(["my-tab"]);
+  protected _consumerKeys = ["my-tab"];
+  protected _providerKeys = ["my-tab"];
 
   private _tabValue = '';
 
@@ -46,7 +46,7 @@ class MyTab extends ContextProvider<MyTabContext> {
 }
 
 class MyTabTrigger extends Trigger<MyTabContext> {
-  protected _consumerKeys = new Set(["my-tab"]);
+  protected _consumerKeys = ["my-tab"];
   private _value = '';
 
   get value(): string {
@@ -84,7 +84,7 @@ class MyTabTrigger extends Trigger<MyTabContext> {
 }
 
 class MyTabContent extends ContextConsumer<MyTabContext> {
-  protected _consumerKeys = new Set(["my-tab"]);
+  protected _consumerKeys = ["my-tab"];
   private _value = '';
   get value(): string {
     return this._value;

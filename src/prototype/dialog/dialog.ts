@@ -7,8 +7,8 @@ export default class PrototypeDialog
   }>
   implements DialogProps
 {
-  protected _providerKeys = new Set(['prototype-dialog'] as const);
-  protected _consumerKeys = new Set([] as const);
+  protected _providerKeys = ['prototype-dialog' as const];
+  protected _consumerKeys = [];
 
   /**
    * 是否显示弹窗, 该属性为响应式属性

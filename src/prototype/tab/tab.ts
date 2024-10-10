@@ -5,7 +5,7 @@ export default class PrototypeTab
   extends ContextProvider<PrototypeTabContext>
   implements TabProps
 {
-  protected _providerKeys = new Set(['prototype-tab'] as const);
+  protected _providerKeys =(['prototype-tab'] as const);
 
   private _defaultValue = '';
   // prettier-ignore

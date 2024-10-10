@@ -3,7 +3,7 @@ import { ShadcnSelectContext } from './interface';
 import { PrototypeSelectContext } from '@/prototype/select/interface';
 
 export default class ShadcnSelectItem extends PrototypeSelectItem<ShadcnSelectContext> {
-  protected _consumerKeys = new Set(['shadcn-select', 'prototype-select']);
+  protected _consumerKeys =(['shadcn-select', 'prototype-select']);
 
   private _class = '';
   private _computedClass = '';

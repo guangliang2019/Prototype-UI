@@ -4,7 +4,7 @@ import { DialogContext } from './interface';
 export default class PrototypeDialogClose extends PrototypeButton<{
   'prototype-dialog': DialogContext;
 }> {
-  protected _consumerKeys = new Set(['prototype-dialog']);
+  protected _consumerKeys = ['prototype-dialog'];
   onClick = () => this._contextValues['prototype-dialog'].close();
 }
 

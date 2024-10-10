@@ -7,7 +7,7 @@ import { splitByHighlightRules } from '@/www/utils/regex';
 export default abstract class DocCode extends ContextConsumer<{
   'doc': DocContext;
 }> {
-  protected _consumerKeys = new Set(['doc'] as const);
+  protected _consumerKeys =(['doc'] as const);
   /**
    * 代码块的预览组件
    * 强烈建议：赋值时用箭头函数，防止 this 指向问题

@@ -134,33 +134,33 @@ export default class ContextManager {
       consumersRecord[key] = [];
     });
     const queue: Element[] = [provider];
-    const keyFlags: Set<keyof T>[] = [provider.providerKeys];
+    const keyFlags: (keyof T)[][] = [provider.providerKeys];
 
     while (queue.length) {
       const node = queue.shift();
       const keyFlag = keyFlags.shift();
       if (!keyFlag) throw new Error('ContextManager: keyFlag is undefined, 这是个系统问题');
-      if (!node || keyFlag.size === 0) continue;
+      if (!node || keyFlag.length === 0) continue;
 
       // 如果遇到相同 key 的 Provider，并且不是自己，
       // 该分支的 keyFlag 减少当前 key，若 KeyFlag size 为 0，则停止搜索
       if (node instanceof ContextProvider && node !== provider) {
         keyFlag.forEach((key) => {
-          if (node.providerKeys.has(key)) keyFlag.delete(key);
+          if (node.providerKeys.includes(key)) keyFlag.splice(keyFlag.indexOf(key), 1);
         });
-        if (keyFlag.size === 0) continue;
+        if (keyFlag.length === 0) continue;
       }
 
       if (node instanceof ContextConsumer) {
         keyFlag.forEach((key) => {
-          if (node.consumerKeys.has(key)) {
+          if (node.consumerKeys.includes(key)) {
             consumersRecord[key].push(node);
           }
         });
       }
 
       Array.from(node.children).forEach((child) => {
-        keyFlags.push(new Set(keyFlag));
+        keyFlags.push(keyFlag.slice(0));
         queue.push(child);
       });
     }

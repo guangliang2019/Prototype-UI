@@ -13,7 +13,7 @@ export default abstract class ContextConsumer<T extends Record<string, Object>>
   implements ContextConsumerProps<T>
 {
   protected _contextValues = {} as T;
-  protected abstract _consumerKeys: Set<keyof T>;
+  protected abstract _consumerKeys: (keyof T)[];
 
   // TODO: 明确这里的 any
   private _contextListeners = new Map<keyof T, Set<any>>();

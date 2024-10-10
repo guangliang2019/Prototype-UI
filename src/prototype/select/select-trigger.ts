@@ -4,7 +4,7 @@ import { Trigger } from '../../common/trigger';
 export default class PrototypeSelectTrigger<
   T extends PrototypeSelectContext = PrototypeSelectContext
 > extends Trigger<T> {
-  protected _consumerKeys = new Set(['prototype-select']);
+  protected _consumerKeys =(['prototype-select']);
 
   private _handleMouseDown = (event: MouseEvent): void => {
     const context = this._contextValues['prototype-select'];
