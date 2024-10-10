@@ -10,5 +10,7 @@ export interface MotionScrollContext extends Record<string, Object> {
 
     contentRef: HTMLElement;
     viewportRef: HTMLElement;
+
+    scrollTo: (x: number, y: number) => void;
   };
 }

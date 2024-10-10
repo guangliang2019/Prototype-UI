@@ -8,6 +8,8 @@ export default class MotionScroll<
 > extends ContextProvider<ProvideContextType, ConsumeContextType> {
   protected _providerKeys = new Set(['motion-scroll']);
 
+  protected _provideValues = { 'motion-scroll': {} } as ProvideContextType;
+
   private _resizeObserver: ResizeObserver;
   private _contentRef: HTMLElement | undefined;
 
@@ -54,6 +56,13 @@ export default class MotionScroll<
     if (this.firstChild) {
       this.contentRef = this.firstChild as HTMLElement;
     }
+
+    this._provideValues['motion-scroll'].scrollTo = (x: number, y: number) => {
+      this.scrollTo({ top: y, left: x, behavior: 'auto' });
+    };
+    this._provideValues['motion-scroll'].scrollY = this.contentRef?.scrollTop ?? 0;
+    this._provideValues['motion-scroll'].scrollX = this.contentRef?.scrollLeft ?? 0;
+
     this.addEventListener('scroll', this._handleScroll);
   }
 
