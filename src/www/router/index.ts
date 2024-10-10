@@ -52,5 +52,10 @@ export const docsRoute: Record<string, { title: string; value: string; href: str
       value: 'prototype-form',
       href: '/components/prototype/form',
     },
+    {
+      title: 'Scroll Area',
+      value: 'prototype-scroll-area',
+      href: '/components/prototype/scroll-area',
+    },
   ],
 };

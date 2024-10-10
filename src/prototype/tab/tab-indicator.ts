@@ -1,10 +1,8 @@
 import { ContextConsumer } from '@/common';
-import { TabContext, TabIndicatorProps } from './interface';
+import { PrototypeTabContext, TabIndicatorProps } from './interface';
 
 export default class PrototypeTabIndicator
-  extends ContextConsumer<{
-    'prototype-tab': TabContext;
-  }>
+  extends ContextConsumer<PrototypeTabContext>
   implements TabIndicatorProps
 {
   protected _consumerKeys = new Set(['prototype-tab'] as const);
@@ -19,7 +17,7 @@ export default class PrototypeTabIndicator
 
   private _tabChangedFlag = false;
 
-  private _handlePrototypeTabContextChange = (context: TabContext) => {
+  private _handlePrototypeTabContextChange = (context: PrototypeTabContext['prototype-tab']) => {
     if (this._currentTabRef) this._resizeObserver.unobserve(this._currentTabRef as HTMLElement);
     this._tabChangedFlag = true;
     this._currentTabRef = context.tabRefs[context.index];
@@ -27,8 +25,8 @@ export default class PrototypeTabIndicator
     this.onTabChange(context);
   };
 
-  onTabChange: (context: TabContext) => void = () => {};
-  onTabResize: (context: TabContext) => void = () => {};
+  onTabChange: (context: PrototypeTabContext['prototype-tab']) => void = () => {};
+  onTabResize: (context: PrototypeTabContext['prototype-tab']) => void = () => {};
 
   connectedCallback() {
     super.connectedCallback();

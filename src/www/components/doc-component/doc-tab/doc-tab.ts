@@ -39,7 +39,7 @@ class DocTabIndicator extends PrototypeTabIndicator {
     func: T,
     delay: number
   ): (...funcArgs: Parameters<T>) => void {
-    let timerId: number | null = null;
+    let timerId: NodeJS.Timeout | null = null;
     let leadingCall = false; // 标记是否为首次调用
 
     return function (...args: Parameters<T>): void {
@@ -68,6 +68,7 @@ class DocTabIndicator extends PrototypeTabIndicator {
 
   connectedCallback() {
     super.connectedCallback();
+    this.style.willChange = 'width left right';
     this.__resizeObserver.observe(this.parentElement!);
     this.className = 'absolute -mb-[34px] h-0.5 bg-primary';
 

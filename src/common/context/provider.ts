@@ -4,8 +4,8 @@
  * @date 2024-08-13
  */
 
-import ContextConsumer from './contextConsumer';
-import ContextManager from './contextManager';
+import ContextConsumer from './consumer';
+import ContextManager from './manager';
 import type { ContextProviderProps, RequestContextEventDetail } from './interface';
 
 export default abstract class ContextProvider<
