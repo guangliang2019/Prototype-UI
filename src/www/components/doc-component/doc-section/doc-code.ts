@@ -21,7 +21,7 @@ export default abstract class DocCode extends ContextConsumer<{
 
   connectedCallback() {
     super.connectedCallback();
-    this._render();
+    this._setup();
   }
 
   private _renderCodeBlock() {
@@ -54,7 +54,7 @@ export default abstract class DocCode extends ContextConsumer<{
     return codeBlock;
   }
 
-  private _render() {
+  private _setup() {
     const content = h('doc-tab', { 'default-value': 'Preview' }, [
       Div({ class: 'group relative my-4 flex flex-col space-y-2' }, [
         Div(

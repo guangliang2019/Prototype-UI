@@ -9,13 +9,13 @@ class WebsiteAsideItem extends HTMLElement {
     this._value = this.getAttribute('value') || '';
     this._title = this.getAttribute('title') || '';
     this._href = this.getAttribute('href') || '';
-    this._render();
+    this._setup();
     this.onclick = () => {
       Router.getInstance().push(this._href);
     };
   }
 
-  private _render() {
+  private _setup() {
     this.appendChild(
       PrototypeTabTrigger(
         {

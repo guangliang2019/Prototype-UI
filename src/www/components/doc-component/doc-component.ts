@@ -13,10 +13,10 @@ export default abstract class DocComponent extends ContextProvider<{
     this.setContext('doc', {
       doc: this._doc,
     });
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     if (!this._doc) {
       throw new Error(
         "DocComponent should be initialized with '_doc' property before connectedCallback"

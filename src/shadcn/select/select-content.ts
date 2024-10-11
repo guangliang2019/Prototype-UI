@@ -9,10 +9,10 @@ export default class ShadcnSelectContent extends PrototypeSelectContent<ShadcnSe
 
   connectedCallback() {
     super.connectedCallback();
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     const flexCls = 'flex flex-col items-start';
     const positionCls = 'relative z-50 top-1';
     const sizeCls = 'max-h-96 min-w-[8rem] p-1';

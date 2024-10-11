@@ -24,7 +24,7 @@ export default class ShadcnSelectItem extends PrototypeSelectItem<ShadcnSelectCo
 
   connectedCallback() {
     super.connectedCallback();
-    this._render();
+    this._setup();
     this._handlePrototypeSelectValueChange(this._contextValues['prototype-select'], ['value']);
     this.addContextListener('prototype-select', this._handlePrototypeSelectValueChange);
   }
@@ -34,7 +34,7 @@ export default class ShadcnSelectItem extends PrototypeSelectItem<ShadcnSelectCo
     super.disconnectedCallback();
   }
 
-  private _render() {
+  private _setup() {
     this._computedClass =
       'relative flex justify-between w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50';
     if (!this.contains(this._checkRef)) this.appendChild(this._checkRef);

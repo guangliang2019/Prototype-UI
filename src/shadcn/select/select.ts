@@ -22,10 +22,10 @@ export default class ShadcnSelect extends PrototypeSelect<ShadcnSelectContext> {
         this.setContext('shadcn-select', { [name]: ref });
       },
     };
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     this._computedClass = 'block';
     this.className = [this._computedClass, this._class].join(' ').trimEnd();
   }

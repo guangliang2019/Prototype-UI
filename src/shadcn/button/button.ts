@@ -1,6 +1,7 @@
 import { PrototypeButton } from '@/prototype/button';
 import { ShadcnButtonProps, SHADCN_BUTTON_DEFAULT_PROPS } from './interface';
 import { CONFIG } from '../_config';
+import { optimizeTailwindClasses } from '@/www/utils/tailwind';
 
 export default class ShadcnButton<T extends Record<string, Object> = {}>
   extends PrototypeButton<T>
@@ -29,7 +30,7 @@ export default class ShadcnButton<T extends Record<string, Object> = {}>
     // 响应式属性变化进行重新渲染 (初始化时不会触发), onClick 变化不会重新渲染,
     if (oldValue !== newValue && oldValue !== null) {
       if (name === 'variant' || name === 'icon-only' || name === 'disabled') {
-        this._render();
+        this._setup();
       }
     }
   }
@@ -42,10 +43,10 @@ export default class ShadcnButton<T extends Record<string, Object> = {}>
       (this.getAttribute('variant') as ShadcnButtonProps['variant']) ||
       SHADCN_BUTTON_DEFAULT_PROPS['variant'];
     this._iconOnly = this.hasAttribute('icon-only');
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     let basicCls = 'select-none whitespace-nowrap';
     let flexCls = 'inline-flex items-center justify-center gap-2';
     let shapeCls = 'rounded-md';
@@ -84,7 +85,9 @@ export default class ShadcnButton<T extends Record<string, Object> = {}>
     }
     // prettier-ignore
     this._computedClass = [basicCls, flexCls, shapeCls, sizeCls, cursorCls, fontCls, animationCls, disabledCls, focusCls, shadowCls, colorCls, borderCls, extraCls].join(' ').trimEnd();
-    this.className = [this._computedClass, this._class].join(' ').trimEnd();
+    this.className = optimizeTailwindClasses(
+      [this._computedClass, this._class].join(' ').trimEnd()
+    );
   }
 }
 

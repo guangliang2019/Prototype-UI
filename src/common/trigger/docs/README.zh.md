@@ -45,7 +45,7 @@ class MyComponentTrigger extends Trigger<{}> {
 
   connectedCallback() {
     super.connectedCallback();
-    this._render();
+    this._setup();
     // this 连入 DOM 后，你要做什么
   }
 
@@ -54,7 +54,7 @@ class MyComponentTrigger extends Trigger<{}> {
     super.disconnectedCallback();
   }
 
-  private _render() {
+  private _setup() {
     // 你的渲染函数
   }
 }

@@ -8,7 +8,7 @@ export default class PrototypeInput extends ContextConsumer<PrototypeFormItemCon
 
   connectedCallback() {
     super.connectedCallback();
-    this._render();
+    this._setup();
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -28,7 +28,7 @@ export default class PrototypeInput extends ContextConsumer<PrototypeFormItemCon
     ];
   }
 
-  private _render = () => {
+  private _setup = () => {
     if (this.contains(this._inputRef)) return;
 
     this.appendChild(this._inputRef);
