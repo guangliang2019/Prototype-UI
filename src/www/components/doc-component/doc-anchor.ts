@@ -2,10 +2,10 @@ import { A, Div, Li, P, Ul } from '@/www/utils/dom';
 
 class DocAnchor extends HTMLElement {
   connectedCallback() {
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     const anchorCls =
       'inline-block no-underline transition-colors hover:text-foreground text-muted-foreground';
 

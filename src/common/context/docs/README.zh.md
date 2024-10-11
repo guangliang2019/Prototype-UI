@@ -6,13 +6,13 @@
 
 - Provider 有一个 `_providerKey`，Consumer 有一个 `_consumerKey`
 - 如果 `_consumerKey` 与 `_providerKey` 相同，且 Provider 包裹了 Consumer，那么 Consumer 会被自动关联到 Provider
-- Provider 可以 `setContext`，Consumer 可以通过 `onContextChange` 监听 `setContext` 的调用
+- Provider 可以 `setContext`，Consumer 可以通过 `addContextListener` 监听 `setContext` 的调用
 - Provider 通过 `_provideValue` 设置上下文数据的值，Consumer 通过 `_contextValue` 获取上下文数据的值
 
 另外：
 
 - Provider 本身也是一个 Consumer，这意味着：
-  - Provider 也可以指定 `_consumerKey`，也能够 `onContextChange` 监听外部其他 Provider 传递的上下文
+  - Provider 也可以指定 `_consumerKey`，也能够 `addContextListener` 监听外部其他 Provider 传递的上下文
   - 如果 `_consumerKey` 与 `_providerKey` 相同，视为 `_consumerKey` 无效
 - 相同 `_providerKey` 且嵌套的多个 Provider，会产生上下文的截断行为
 
@@ -28,8 +28,8 @@ interface MyTabContext {
 }
 
 class MyTab extends ContextProvider<MyTabContext> {
-  protected _consumerKeys = ["my-tab"];
-  protected _providerKeys = ["my-tab"];
+  protected _consumerKeys = ['my-tab'];
+  protected _providerKeys = ['my-tab'];
 
   private _tabValue = '';
 
@@ -46,7 +46,7 @@ class MyTab extends ContextProvider<MyTabContext> {
 }
 
 class MyTabTrigger extends Trigger<MyTabContext> {
-  protected _consumerKeys = ["my-tab"];
+  protected _consumerKeys = ['my-tab'];
   private _value = '';
 
   get value(): string {
@@ -67,24 +67,23 @@ class MyTabTrigger extends Trigger<MyTabContext> {
     super.connectedCallback();
     this.style.cursor = 'pointer';
     this._value = this.getAttribute('value') || '';
-    // 监听 setContext 的触发
-    this.onContextChange = (context) => {
-      this._handleTabValueChange();
-    };
     // 初始化默认状态
     this._handleTabValueChange(this.contextValue);
+    // 监听 setContext 的触发
+    this.addContextListener('my-tab', this._handleTabValueChange);
     this.addEventListener('click', this._handleClick);
   }
 
   disconnectedCallback() {
     this.removeEventListener('click', this._handleClick);
+    this.removeContextListener('my-tab', this._handleTabValueChange);
   }
 
   private _handleClick = () => this.contextValue.changeTab(this._value);
 }
 
 class MyTabContent extends ContextConsumer<MyTabContext> {
-  protected _consumerKeys = ["my-tab"];
+  protected _consumerKeys = ['my-tab'];
   private _value = '';
   get value(): string {
     return this._value;
@@ -98,10 +97,12 @@ class MyTabContent extends ContextConsumer<MyTabContext> {
   connectedCallback() {
     super.connectedCallback();
     this._value = this.getAttribute('value') || '';
-    this.onContextChange = (context) => {
-      this._handleTabValueChange(context);
-    };
+    this.addContextListener('my-tab', this._handleTabValueChange);
     this._handleTabValueChange(this.contextValue);
+  }
+
+  disconnectedCallback() {
+    this.removeContextListener('my-tab', this._handleTabValueChange);
   }
 }
 customElements.define('my-tab', PrototypeTab);
@@ -130,5 +131,5 @@ customElements.define('my-tab-content', PrototypeTabContent);
   - Consumer 的反复插拔，并不会导致性能问题，只有 Provider 的插拔，可能会导致性能问题
   - Provider 寻找 Consumer 是使用遍历 DOM 的方式实现的，而 Consumer 寻找 Provider，是通过事件冒泡实现的。
 
-- Provider 与 Consumer 的上下文数据共享同一个内存地址，所以 Consumer 实际上可以不触发 setContext 而修改上下文数据。当然，这个方法对于 Context 的更改是惰性的，不会立刻触发所有 Consumer 的 onContextChange
-  - Consumer 并没有 setContext 方法，Consumer 的某个动作需要触发所有 Consumer 的 onContextChange 时，应该由 Provider 提供一个调用了 Provider 的 setContext 的方法给 Consumer，例如 Demo 中的 changeTab 方法
+- Provider 与 Consumer 的上下文数据共享同一个内存地址，所以 Consumer 实际上可以不触发 setContext 而修改上下文数据。当然，这个方法对于 Context 的更改是惰性的，不会立刻触发所有 Consumer 的 addContextListener
+  - Consumer 并没有 setContext 方法，Consumer 的某个动作需要触发所有 Consumer 的 addContextListener 时，应该由 Provider 提供一个调用了 Provider 的 setContext 的方法给 Consumer，例如 Demo 中的 changeTab 方法

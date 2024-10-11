@@ -7,10 +7,10 @@ export default class WebsiteNav extends HTMLElement {
     'cursor-pointer transition-colors hover:text-foreground/80 text-foreground/60 data-[selected]:text-foreground';
 
   connectedCallback() {
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     this.appendChild(
       h(
         'header',

@@ -19,13 +19,13 @@ export default class PrototypeSelectValue<T extends PrototypeSelectContext = Pro
     _: T['prototype-select'],
     keys: (keyof T['prototype-select'])[]
   ) => {
-    if (keys.includes('value')) this._render();
+    if (keys.includes('value')) this._setup();
   };
 
   connectedCallback() {
     super.connectedCallback();
     this._contextValues['prototype-select'].valueRef = this;
-    this._render();
+    this._setup();
     this.addContextListener('prototype-select', this._handlePrototypeSelectContextChange);
   }
 
@@ -33,7 +33,7 @@ export default class PrototypeSelectValue<T extends PrototypeSelectContext = Pro
     this.removeContextListener('prototype-select', this._handlePrototypeSelectContextChange);
   }
 
-  protected _render() {
+  protected _setup() {
     if (this.firstChild) this.removeChild(this._content);
     const contextValue = this._contextValues['prototype-select'];
     this._content = this.renderValue(contextValue.value);

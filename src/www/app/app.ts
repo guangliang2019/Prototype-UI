@@ -5,6 +5,7 @@ import '@/motion';
 import './docs';
 import './components/shadcn';
 import './components/prototype';
+import './examples';
 
 import '@/lucide/chevrons-up-down';
 import { PrototypeTab } from '@/prototype';
@@ -39,6 +40,9 @@ export default class AppRoot extends HTMLElement {
         this._changeNav('docs');
         this._changeDocs(path[1] ? `${path[1]}-${path[2]}` : 'shadcn-button');
         break;
+      case 'examples':
+        this._changeNav('examples');
+        break;
       default:
         break;
     }
@@ -61,6 +65,9 @@ export default class AppRoot extends HTMLElement {
       h('main', { class: 'flex-1 flex justify-center' }, [
         h('prototype-tab-content', { value: 'docs' }, [docsTab]),
         h('prototype-tab-content', { style: 'display: none', value: 'components' }, ['components']),
+        h('prototype-tab-content', { style: 'display: none', value: 'examples' }, [
+          h('examples-page'),
+        ]),
       ]),
     ]) as PrototypeTab;
 

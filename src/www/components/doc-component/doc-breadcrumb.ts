@@ -10,10 +10,10 @@ class DocBreadcrumb extends ContextConsumer<{
 
   connectedCallback() {
     super.connectedCallback();
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     if (this.svg === null) {
       const domParser = new DOMParser();
       this.svg = domParser.parseFromString(

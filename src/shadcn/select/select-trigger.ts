@@ -25,7 +25,7 @@ export default class ShadcnSelectTrigger extends PrototypeSelectTrigger<ShadcnSe
     super.connectedCallback();
     this._class = this.className || '';
 
-    this._render();
+    this._setup();
     this.addContextListener('shadcn-select', this._handleShadcnSelectContextChange);
   }
 
@@ -34,7 +34,7 @@ export default class ShadcnSelectTrigger extends PrototypeSelectTrigger<ShadcnSe
     super.disconnectedCallback();
   }
 
-  private _render() {
+  private _setup() {
     this._computedClass =
       'cursor-pointer flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1';
 

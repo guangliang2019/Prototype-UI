@@ -2,10 +2,10 @@ import { h } from '@/www/utils/dom';
 
 export default class ShadcnDoc extends HTMLElement {
   connectedCallback() {
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     const fragment = document.createDocumentFragment();
 
     fragment.appendChild(h('shadcn-button-doc'));

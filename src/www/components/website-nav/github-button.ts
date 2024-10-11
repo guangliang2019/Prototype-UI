@@ -4,10 +4,10 @@ class GitHubButton extends HTMLElement {
   private _svg: Document | null = null;
 
   connectedCallback() {
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     const domParser = new DOMParser();
     this._svg = domParser.parseFromString(
       ` <svg viewBox="0 0 438.549 438.549" class="h-4 w-4">

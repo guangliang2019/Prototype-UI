@@ -6,10 +6,10 @@ import './scroll-area';
 
 export default class PrototypeDoc extends HTMLElement {
   connectedCallback() {
-    this._render();
+    this._setup();
   }
 
-  private _render() {
+  private _setup() {
     const fragment = document.createDocumentFragment();
 
     fragment.appendChild(h('button-doc'));

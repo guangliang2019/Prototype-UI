@@ -8,7 +8,7 @@ class WebsiteAside extends HTMLElement {
     this._index = docsRoute;
   }
 
-  private _render() {
+  private _setup() {
     const fragment = document.createDocumentFragment();
 
     fragment.appendChild(
@@ -66,7 +66,7 @@ class WebsiteAside extends HTMLElement {
   }
 
   connectedCallback() {
-    this._render();
+    this._setup();
   }
 }
 
