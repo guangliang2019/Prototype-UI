@@ -10,7 +10,7 @@ import type { ContextProviderProps, RequestContextEventDetail } from './interfac
 
 export default abstract class ContextProvider<
     TProvider extends Record<string, Object>,
-    TConsumer extends Record<string, Object> = {}
+    TConsumer extends Record<string, Object> = {},
   >
   extends ContextConsumer<TConsumer>
   implements ContextProviderProps<TProvider, TConsumer>

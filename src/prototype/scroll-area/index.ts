@@ -10,4 +10,4 @@ export type {
   PrototypeScrollRailProps,
 } from './interface';
 
-import './style.css'
+import './style.css';

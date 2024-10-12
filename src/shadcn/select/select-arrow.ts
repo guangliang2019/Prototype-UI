@@ -2,7 +2,7 @@ import { ContextConsumer } from '@/common';
 import { ShadcnSelectContext } from './interface';
 
 export default class ShadcnSelectArrow extends ContextConsumer<ShadcnSelectContext> {
-  protected _consumerKeys =(['shadcn-select', 'prototype-select']);
+  protected _consumerKeys = ['shadcn-select', 'prototype-select'];
 
   connectedCallback() {
     super.connectedCallback();

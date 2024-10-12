@@ -2,7 +2,7 @@
 
 ## Overview
 
-Prototype UI is a headless UI library built with Web Components, offering a novel approach to component integration. Inspired by shadcn/ui, it bypasses traditional package management by directly incorporating component source code into your project via a CLI. This provides unparalleled customization and control, allowing you to tailor the components directly within your codebase while maintaining a lightweight footprint. 
+Prototype UI is a headless UI library built with Web Components, offering a novel approach to component integration. Inspired by shadcn/ui, it bypasses traditional package management by directly incorporating component source code into your project via a CLI. This provides unparalleled customization and control, allowing you to tailor the components directly within your codebase while maintaining a lightweight footprint.
 
 Website: [https://prototype-ui.dev](https://prototype-ui.dev)
 
@@ -28,12 +28,12 @@ npx @prototype-ui/cli init
 $ npx @prototype-ui/cli --help
 
 
-██████╗ ██████╗  ██████╗ ████████╗ ██████╗ 
+██████╗ ██████╗  ██████╗ ████████╗ ██████╗
 ██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗
 ██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║
 ██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║
 ██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝
-╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ 
+╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝
 ████████╗██╗   ██╗██████╗ ███████╗    ██╗   ██╗██╗
 ╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝    ██║   ██║██║
    ██║    ╚████╔╝ ██████╔╝█████╗█████╗██║   ██║██║
@@ -71,4 +71,4 @@ Run the project locally with `npm run dev`. For optimal performance, Node versio
 
 ## Guangliang's Note
 
-For smaller projects or situations where CLI integration isn't ideal, you can include the entire Prototype UI library via a script tag. This method is also efficient (projected output size under 30KB) and provides a quick way to get started.  However, it offers less granular control over individual components.  See the documentation for details on script tag integration.
+For smaller projects or situations where CLI integration isn't ideal, you can include the entire Prototype UI library via a script tag. This method is also efficient (projected output size under 30KB) and provides a quick way to get started. However, it offers less granular control over individual components. See the documentation for details on script tag integration.

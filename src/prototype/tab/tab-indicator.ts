@@ -5,7 +5,7 @@ export default class PrototypeTabIndicator
   extends ContextConsumer<PrototypeTabContext>
   implements TabIndicatorProps
 {
-  protected _consumerKeys =(['prototype-tab'] as const);
+  protected _consumerKeys = ['prototype-tab'] as const;
   private _currentTabRef: HTMLElement | null = null;
   private _resizeObserver = new ResizeObserver((_) => {
     if (this._tabChangedFlag) {

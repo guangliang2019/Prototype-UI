@@ -1,4 +1,3 @@
-
 export function optimizeTailwindClasses(classString: string) {
   const classes = classString.split(' ');
   const classMap: Record<string, string> = {};

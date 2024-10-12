@@ -20,7 +20,7 @@ export interface ContextConsumerProps<T extends Record<string, Object>> {
 
 export interface ContextProviderProps<
   TProvider extends Record<string, Object>,
-  TConsumer extends Record<string, Object>
+  TConsumer extends Record<string, Object>,
 > {
   readonly providerKeys: (keyof TProvider)[];
   readonly provideValues: TProvider;

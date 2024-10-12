@@ -2,7 +2,7 @@ import { PrototypeOverlay } from '../overlay';
 import { PrototypeSelectContext } from './interface';
 
 export default class PrototypeSelectContent<
-  T extends PrototypeSelectContext = PrototypeSelectContext
+  T extends PrototypeSelectContext = PrototypeSelectContext,
 > extends PrototypeOverlay<T> {
   protected _consumerKeys = ['prototype-select'];
 

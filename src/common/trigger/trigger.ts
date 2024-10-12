@@ -19,7 +19,7 @@ import { dfsFindElement } from '@/www/utils/dom';
  * 同理，在连接进 DOM 之前，dispatchEvent 会被暂存，在 connectedCallback 时触发
  */
 export default abstract class Trigger<
-  T extends Record<string, Object> = {}
+  T extends Record<string, Object> = {},
 > extends ContextConsumer<T> {
   protected _consumerKeys = ['prototype-trigger'];
   protected _target?: HTMLElement;

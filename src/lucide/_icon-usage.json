@@ -1,0 +1,8 @@
+{
+  "examples": {
+    "mail": ["archive", "archive-x", "trash-2", "clock", "reply", "reply-all"]
+  },
+  "website": {
+    "breadcrumbs": ["chevron-right"]
+  }
+}

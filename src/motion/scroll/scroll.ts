@@ -4,7 +4,7 @@ import './style.css';
 
 export default class MotionScroll<
   ProvideContextType extends Record<string, Object> & MotionScrollContext = MotionScrollContext,
-  ConsumeContextType extends Record<string, Object> = Record<string, Object>
+  ConsumeContextType extends Record<string, Object> = Record<string, Object>,
 > extends ContextProvider<ProvideContextType, ConsumeContextType> {
   protected _providerKeys = ['motion-scroll'];
 

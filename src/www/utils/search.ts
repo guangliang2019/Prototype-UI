@@ -25,4 +25,3 @@ export function binarySearch<T>(array: T[], target: T, compare: (a: T, b: T) => 
   // 没有找到目标，返回应该插入的位置
   return low;
 }
-

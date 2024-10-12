@@ -139,7 +139,10 @@ export default class ContextManager {
     while (queue.length) {
       const node = queue.shift();
       const keyFlag = keyFlags.shift();
-      if (!keyFlag) throw new Error('ContextManager: keyFlag is undefined, 这是个系统问题');
+      if (!keyFlag)
+        throw new Error(
+          'ContextManager: keyFlag is undefined, This should not happen. \nPlease contact the developer! https://github.com/guangliang2019'
+        );
       if (!node || keyFlag.length === 0) continue;
 
       // 如果遇到相同 key 的 Provider，并且不是自己，
