@@ -6,7 +6,7 @@ export default abstract class DocComponent extends ContextProvider<{
   'doc': DocContext;
 }> {
   protected abstract _doc: Doc;
-  protected _providerKeys = ['doc'] as const;
+  protected _providerKeys = ['doc' as const];
 
   connectedCallback() {
     super.connectedCallback();

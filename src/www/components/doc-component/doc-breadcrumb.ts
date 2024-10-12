@@ -5,7 +5,7 @@ import { DocContext } from './interface';
 class DocBreadcrumb extends ContextConsumer<{
   doc: DocContext;
 }> {
-  protected _consumerKeys = ['doc'] as const;
+  protected _consumerKeys = ['doc' as const];
   private svg: Document | null = null;
 
   connectedCallback() {
