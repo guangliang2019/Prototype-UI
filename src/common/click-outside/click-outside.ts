@@ -1,6 +1,6 @@
 /**
  * Click Outside Component
- * 
+ *
  * @link https://github.com/guangliang2019/Prototype-UI/blob/main/src/common/click-outside/click-outside.ts
  * @author guangliang2019
  * @date 2024-08-11

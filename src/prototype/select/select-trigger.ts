@@ -2,9 +2,9 @@ import { PrototypeSelectContext } from './interface';
 import { Trigger } from '../../common/trigger';
 
 export default class PrototypeSelectTrigger<
-  T extends PrototypeSelectContext = PrototypeSelectContext
+  T extends PrototypeSelectContext = PrototypeSelectContext,
 > extends Trigger<T> {
-  protected _consumerKeys =(['prototype-select']);
+  protected _consumerKeys = ['prototype-select'];
 
   private _handleMouseDown = (event: MouseEvent): void => {
     const context = this._contextValues['prototype-select'];
@@ -46,11 +46,13 @@ export default class PrototypeSelectTrigger<
         if (itemToFocus && typeof itemToFocus.focus === 'function') {
           itemToFocus.focus();
         } else {
-          console.warn(`Failed to focus item at index ${index}. Item may not be properly initialized.`);
+          console.warn(
+            `Failed to focus item at index ${index}. Item may not be properly initialized.`
+          );
         }
       });
     } else {
-      // -1 index appears when no item is selected, add this message for better debugging 
+      // -1 index appears when no item is selected, add this message for better debugging
       console.debug(`Invalid index ${index} or itemsRefs not properly initialized.`);
     }
   }

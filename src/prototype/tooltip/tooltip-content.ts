@@ -4,7 +4,7 @@ import { TooltipContext } from './interface';
 export default class PrototypeTooltipContent extends PrototypeOverlay<{
   'prototype-tooltip': TooltipContext;
 }> {
-  protected _consumerKeys =(['prototype-tooltip'] as const);
+  protected _consumerKeys = ['prototype-tooltip'] as const;
 
   connectedCallback() {
     super.connectedCallback();

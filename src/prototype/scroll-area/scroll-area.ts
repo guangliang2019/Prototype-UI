@@ -19,7 +19,7 @@ export default class PrototypeScrollArea
     return ['hideDelay', 'alwaysShowScrollbar'];
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  attributeChangedCallback(name: string, _: string, newValue: string) {
     const mapping: Record<string, any> = {
       'hideDelay': () => {
         this.hideDelay = Number(newValue);

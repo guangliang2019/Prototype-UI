@@ -2,7 +2,7 @@ import { PrototypeSelectTrigger } from '@/prototype/select';
 import './select-arrow';
 import { ShadcnSelectContext } from './interface';
 export default class ShadcnSelectTrigger extends PrototypeSelectTrigger<ShadcnSelectContext> {
-  protected _consumerKeys =(['shadcn-select', 'prototype-select']);
+  protected _consumerKeys = ['shadcn-select', 'prototype-select'];
   // 用户添加的 class 属性
   private _class = '';
   // 组件自身的 class 属性

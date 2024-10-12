@@ -11,7 +11,7 @@ class OverlayTest extends DocCode {
 </shadcn-button>
 <prototype-overlay style="position: relative; width: 0px; height: 0px;"></prototype-overlay>
 `; // 我觉得这块没法写死，展示 overlay 后里面动态生成的 div 也应该在 _code 里被展示
-   // 有没有什么办法直接从 DOM 拿到那块的 innerHTML 的？
+  // 有没有什么办法直接从 DOM 拿到那块的 innerHTML 的？
   protected _highlightRules: HighlightRule[] = [
     HIGHLIGHT_RULE.htmlTagName,
     HIGHLIGHT_RULE.shadcnTagName,
