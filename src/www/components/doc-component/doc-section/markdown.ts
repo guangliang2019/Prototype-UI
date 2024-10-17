@@ -6,6 +6,7 @@ export default function markdown(str: string) {
 }
 
 const styles = {
+  a: 'font-medium text-primary underline underline-offset-4',
   h1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl',
   h2: 'mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0',
   h3: 'mt-8 scroll-m-20 text-2xl font-semibold tracking-tight',
@@ -85,7 +86,7 @@ function compileInline(content: string) {
         if (curr.special.includes('](')) {
           fragment.appendChild(h('span', {}, [curr.text]));
           const [title, url] = curr.special.slice(1, -1).split('](');
-          fragment.appendChild(h('a', { href: url, target: '_blank' }, [title]));
+          fragment.appendChild(h('a', { class: styles.a, href: url, target: '_blank' }, [title]));
           curr.text = '';
           curr.special = '';
         } else clearSpecial();
