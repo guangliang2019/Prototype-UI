@@ -1,6 +1,7 @@
 import { ContextProvider } from '@/common';
 import { A, Div, h, Main, P, PrototypeTabContent, Span } from '@/www/utils/dom';
 import { Doc, DocContext } from './interface';
+import markdown from './doc-section/markdown';
 
 export default abstract class DocComponent extends ContextProvider<{
   'doc': DocContext;
@@ -96,11 +97,8 @@ export default abstract class DocComponent extends ContextProvider<{
                     case 'code':
                       fragment.appendChild(h(content.content));
                       break;
-                    // TODO: 这里之后要换成 Markdown 解析组件，而不是直接使用 p 标签
-                    case 'text':
-                      fragment.appendChild(
-                        P({ class: 'leading-7 [&:not(:first-child)]:mt-6' }, [content.content])
-                      );
+                    case 'markdown':
+                      fragment.appendChild(markdown(content.content));
                       break;
                   }
                 });

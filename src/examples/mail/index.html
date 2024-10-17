@@ -38,6 +38,10 @@
   <script type="module" src="../../lucide/archive-x.ts"></script>
   <script type="module" src="../../lucide/trash-2.ts"></script>
   <script type="module" src="../../lucide/clock.ts"></script>
+  <script type="module" src="../../lucide/reply.ts"></script>
+  <script type="module" src="../../lucide/reply-all.ts"></script>
+  <script type="module" src="../../lucide/forward.ts"></script>
+  <script type="module" src="../../lucide/ellipsis-vertical.ts"></script>
   <body class="dark">
     <div class="root">
       <div style="width: 15rem" class="menu">
@@ -61,6 +65,9 @@
           <h1 class="text-xl font-bold">Inbox</h1>
         </div>
         <div class="horizontal-divider"></div>
+        <div style="padding: 1rem">
+          <shadcn-input placeholder="Search"> </shadcn-input>
+        </div>
       </div>
       <div class="vertical-divider"></div>
       <div style="width: calc(100% - 45rem - 2px)" class="detail">
@@ -80,7 +87,23 @@
               <lucide-clock style="width: 1rem; height: 1rem"></lucide-clock>
             </shadcn-button>
           </div>
-          <div class="flex"></div>
+          <div class="flex items-center h-full gap-2">
+            <shadcn-button icon-only variant="ghost">
+              <lucide-reply style="width: 1rem; height: 1rem"></lucide-reply>
+            </shadcn-button>
+            <shadcn-button icon-only variant="ghost">
+              <lucide-reply-all style="width: 1rem; height: 1rem"></lucide-reply-all>
+            </shadcn-button>
+            <shadcn-button icon-only variant="ghost">
+              <lucide-forward style="width: 1rem; height: 1rem"></lucide-forward>
+            </shadcn-button>
+            <div style="height: 1.5rem" class="vertical-divider"></div>
+            <shadcn-button icon-only variant="ghost">
+              <lucide-ellipsis-vertical
+                style="width: 1rem; height: 1rem"
+              ></lucide-ellipsis-vertical>
+            </shadcn-button>
+          </div>
         </div>
         <div class="horizontal-divider"></div>
       </div>

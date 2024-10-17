@@ -20,9 +20,9 @@ export interface DocSection {
 export interface DocSectionContent {
   /**
    * type 为 code 时，content 的值为自定义 preview & code 组件的标签名
-   * type 为 text 时，content 的值为 markdown 文本
+   * type 为 markdown 时，content 的值为 markdown 文本
    */
-  type: 'code' | 'text';
+  type: 'code' | 'markdown';
   /**
    * key 与渲染无关，仅作为唯一标识
    */
