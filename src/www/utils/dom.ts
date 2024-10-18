@@ -106,20 +106,20 @@ export function A(props: Props = {}, children: (Node | string)[] = []) {
 }
 
 // library list
-export function PrototypeTab(props: Props = {}, children: (Node | string)[] = []) {
-  return h('prototype-tab', props, children) as HTMLElement;
+export function PrototypeTabs(props: Props = {}, children: (Node | string)[] = []) {
+  return h('prototype-tabs', props, children) as HTMLElement;
 }
 
-export function PrototypeTabContent(props: Props = {}, children: (Node | string)[] = []) {
-  return h('prototype-tab-content', props, children) as HTMLElement;
+export function PrototypeTabsContent(props: Props = {}, children: (Node | string)[] = []) {
+  return h('prototype-tabs-content', props, children) as HTMLElement;
 }
 
-export function PrototypeTabTrigger(props: Props = {}, children: (Node | string)[] = []) {
-  return h('prototype-tab-trigger', props, children) as HTMLElement;
+export function PrototypeTabsTrigger(props: Props = {}, children: (Node | string)[] = []) {
+  return h('prototype-tabs-trigger', props, children) as HTMLElement;
 }
 
-export function PrototypeTabIndicator(props: Props = {}, children: (Node | string)[] = []) {
-  return h('prototype-tab-indicator', props, children) as HTMLElement;
+export function PrototypeTabsIndicator(props: Props = {}, children: (Node | string)[] = []) {
+  return h('prototype-tabs-indicator', props, children) as HTMLElement;
 }
 
 /**

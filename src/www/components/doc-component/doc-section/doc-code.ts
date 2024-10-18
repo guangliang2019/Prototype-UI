@@ -55,7 +55,7 @@ export default abstract class DocCode extends ContextConsumer<{
   }
 
   private _setup() {
-    const content = h('doc-tab', { 'default-value': 'Preview' }, [
+    const content = h('doc-tabs', { 'default-value': 'Preview' }, [
       Div({ class: 'group relative my-4 flex flex-col space-y-2' }, [
         Div(
           {
@@ -63,12 +63,12 @@ export default abstract class DocCode extends ContextConsumer<{
               'relative inline-flex h-9 items-center text-muted-foreground w-full justify-start rounded-none border-b bg-transparent p-0',
           },
           [
-            h('doc-tab-trigger', { value: 'Preview' }, ['Preview']),
-            h('doc-tab-trigger', { value: 'Code' }, ['Code']),
-            h('doc-tab-indicator', {}, []),
+            h('doc-tabs-trigger', { value: 'Preview' }, ['Preview']),
+            h('doc-tabs-trigger', { value: 'Code' }, ['Code']),
+            h('doc-tabs-indicator', {}, []),
           ]
         ),
-        h('doc-tab-content', { value: 'Preview', style: 'display: none' }, [
+        h('doc-tabs-content', { value: 'Preview', style: 'display: none' }, [
           Div(
             {
               class:
@@ -87,7 +87,7 @@ export default abstract class DocCode extends ContextConsumer<{
             ]
           ),
         ]),
-        h('doc-tab-content', { value: 'Code', style: 'display: none' }, [this._renderCodeBlock()]),
+        h('doc-tabs-content', { value: 'Code', style: 'display: none' }, [this._renderCodeBlock()]),
       ]),
     ]);
 

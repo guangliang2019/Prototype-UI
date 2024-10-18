@@ -1,6 +1,6 @@
-import '@/prototype/tab';
+import '@/prototype/tabs';
 import './github-button';
-import { Div, h, Nav, PrototypeTabTrigger, Span } from '@/www/utils/dom';
+import { Div, h, Nav, PrototypeTabsTrigger, Span } from '@/www/utils/dom';
 
 export default class WebsiteNav extends HTMLElement {
   private _navItemsCls =
@@ -22,13 +22,13 @@ export default class WebsiteNav extends HTMLElement {
           Div({ class: 'container flex h-14 items-center' }, [
             Span({ class: 'font-bold mr-6' }, ['shadcn/web']),
             Nav({ class: 'relative flex items-center gap-4 text-sm lg:gap-6' }, [
-              PrototypeTabTrigger({ value: 'docs', class: this._navItemsCls }, ['Docs']),
-              PrototypeTabTrigger({ value: 'docs', class: this._navItemsCls }, ['Components']),
-              PrototypeTabTrigger({ value: 'blocks', class: this._navItemsCls }, ['Blocks']),
-              PrototypeTabTrigger({ value: 'charts', class: this._navItemsCls }, ['Charts']),
-              PrototypeTabTrigger({ value: 'themes', class: this._navItemsCls }, ['Themes']),
-              PrototypeTabTrigger({ value: 'examples', class: this._navItemsCls }, ['Examples']),
-              PrototypeTabTrigger({ value: 'colors', class: this._navItemsCls }, ['Colors']),
+              PrototypeTabsTrigger({ value: 'docs', class: this._navItemsCls }, ['Docs']),
+              PrototypeTabsTrigger({ value: 'docs', class: this._navItemsCls }, ['Components']),
+              PrototypeTabsTrigger({ value: 'blocks', class: this._navItemsCls }, ['Blocks']),
+              PrototypeTabsTrigger({ value: 'charts', class: this._navItemsCls }, ['Charts']),
+              PrototypeTabsTrigger({ value: 'themes', class: this._navItemsCls }, ['Themes']),
+              PrototypeTabsTrigger({ value: 'examples', class: this._navItemsCls }, ['Examples']),
+              PrototypeTabsTrigger({ value: 'colors', class: this._navItemsCls }, ['Colors']),
             ]),
             Div({ class: 'flex flex-1 items-center justify-between space-x-2 md:justify-end' }, [
               h('github-button'),

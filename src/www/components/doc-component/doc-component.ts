@@ -1,5 +1,5 @@
 import { ContextProvider } from '@/common';
-import { A, Div, h, Main, P, PrototypeTabContent, Span } from '@/www/utils/dom';
+import { A, Div, h, Main, P, PrototypeTabsContent, Span } from '@/www/utils/dom';
 import { Doc, DocContext } from './interface';
 import markdown from './doc-section/markdown';
 
@@ -25,7 +25,7 @@ export default abstract class DocComponent extends ContextProvider<{
     }
 
     const sections = this._doc.sections;
-    const content = PrototypeTabContent({ value: this._doc.id, style: 'display: none' }, [
+    const content = PrototypeTabsContent({ value: this._doc.id, style: 'display: none' }, [
       Main(
         {
           class:

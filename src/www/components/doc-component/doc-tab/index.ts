@@ -1,1 +1,0 @@
-import './doc-tab';

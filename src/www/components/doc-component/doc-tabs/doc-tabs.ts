@@ -1,20 +1,20 @@
 import {
-  PrototypeTab,
-  PrototypeTabContent,
-  PrototypeTabIndicator,
-  PrototypeTabTrigger,
-} from '@/prototype/tab';
+  PrototypeTabs,
+  PrototypeTabsContent,
+  PrototypeTabsIndicator,
+  PrototypeTabsTrigger,
+} from '@/prototype/tabs';
 
-class DocTab extends PrototypeTab {
+class DocTab extends PrototypeTabs {
   connectedCallback() {
     super.connectedCallback();
     this.className = 'relative mr-auto w-full';
   }
 }
 
-class DocTabContent extends PrototypeTabContent {}
+class DocTabContent extends PrototypeTabsContent {}
 
-class DocTabTrigger extends PrototypeTabTrigger {
+class DocTabTrigger extends PrototypeTabsTrigger {
   connectedCallback() {
     super.connectedCallback();
     this.style.transition = 'all 0.09s ease-in-out';
@@ -23,7 +23,7 @@ class DocTabTrigger extends PrototypeTabTrigger {
   }
 }
 
-class DocTabIndicator extends PrototypeTabIndicator {
+class DocTabIndicator extends PrototypeTabsIndicator {
   private _getOffsetRight(element: HTMLElement) {
     const el = element;
     const right = el.parentElement!.offsetWidth - (el.offsetWidth + el.offsetLeft);
@@ -32,7 +32,7 @@ class DocTabIndicator extends PrototypeTabIndicator {
 
   private _currentTabIndex = 0;
   private __resizeObserver = new ResizeObserver((_) => {
-    this.onTabResize(this.contextValues['prototype-tab']);
+    this.onTabResize(this.contextValues['prototype-tabs']);
   });
 
   private _leadingDebounce<T extends (...args: any[]) => void>(
@@ -100,7 +100,7 @@ class DocTabIndicator extends PrototypeTabIndicator {
   }
 }
 
-customElements.define('doc-tab', DocTab);
-customElements.define('doc-tab-content', DocTabContent);
-customElements.define('doc-tab-trigger', DocTabTrigger);
-customElements.define('doc-tab-indicator', DocTabIndicator);
+customElements.define('doc-tabs', DocTab);
+customElements.define('doc-tabs-content', DocTabContent);
+customElements.define('doc-tabs-trigger', DocTabTrigger);
+customElements.define('doc-tabs-indicator', DocTabIndicator);

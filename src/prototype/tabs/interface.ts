@@ -12,12 +12,12 @@ export interface TabContentProps {
 }
 
 export interface TabIndicatorProps {
-  onTabChange: (context: PrototypeTabContext['prototype-tab']) => void;
-  onTabResize: (context: PrototypeTabContext['prototype-tab']) => void;
+  onTabChange: (context: PrototypeTabContext['prototype-tabs']) => void;
+  onTabResize: (context: PrototypeTabContext['prototype-tabs']) => void;
 }
 
 export interface PrototypeTabContext extends Record<string, Object> {
-  'prototype-tab': {
+  'prototype-tabs': {
     readonly index: number;
     readonly tabValue: string;
     readonly defaultValue: string;
