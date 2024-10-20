@@ -5,16 +5,16 @@ import {
   PrototypeTabsTrigger,
 } from '@/prototype/tabs';
 
-class DocTab extends PrototypeTabs {
+class DocTabs extends PrototypeTabs {
   connectedCallback() {
     super.connectedCallback();
     this.className = 'relative mr-auto w-full';
   }
 }
 
-class DocTabContent extends PrototypeTabsContent {}
+class DocTabsContent extends PrototypeTabsContent {}
 
-class DocTabTrigger extends PrototypeTabsTrigger {
+class DocTabsTrigger extends PrototypeTabsTrigger {
   connectedCallback() {
     super.connectedCallback();
     this.style.transition = 'all 0.09s ease-in-out';
@@ -23,7 +23,7 @@ class DocTabTrigger extends PrototypeTabsTrigger {
   }
 }
 
-class DocTabIndicator extends PrototypeTabsIndicator {
+class DocTabsIndicator extends PrototypeTabsIndicator {
   private _getOffsetRight(element: HTMLElement) {
     const el = element;
     const right = el.parentElement!.offsetWidth - (el.offsetWidth + el.offsetLeft);
@@ -100,7 +100,7 @@ class DocTabIndicator extends PrototypeTabsIndicator {
   }
 }
 
-customElements.define('doc-tabs', DocTab);
-customElements.define('doc-tabs-content', DocTabContent);
-customElements.define('doc-tabs-trigger', DocTabTrigger);
-customElements.define('doc-tabs-indicator', DocTabIndicator);
+customElements.define('doc-tabs', DocTabs);
+customElements.define('doc-tabs-content', DocTabsContent);
+customElements.define('doc-tabs-trigger', DocTabsTrigger);
+customElements.define('doc-tabs-indicator', DocTabsIndicator);

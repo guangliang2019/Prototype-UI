@@ -10,7 +10,7 @@ export default class PrototypeSelect<
   implements PrototypeSelectProps
 {
   protected _providerKeys = ['prototype-select'];
-  protected _consumerKeys = ['prototype-form-item'] as const;
+  protected _consumerKeys = ['prototype-form-item'];
   private _defaultValue: string = '';
 
   get defaultValue(): string {

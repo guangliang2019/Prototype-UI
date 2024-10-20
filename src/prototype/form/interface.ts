@@ -7,7 +7,7 @@ export interface PrototypeFormItem {
   key: string;
 }
 
-export type FormContext<T extends Object> = {
+export interface FormContext<T extends Object> extends Record<string, Object> {
   'prototype-form': {
     data: T;
     submit: () => void;
@@ -17,9 +17,9 @@ export type FormContext<T extends Object> = {
   };
 };
 
-export type PrototypeFormItemContext = {
+export interface PrototypeFormItemContext extends Record<string, Object> {
   'prototype-form-item': {
     key: string;
     changeFormItemValue: (value: any) => void;
   };
-};
+}

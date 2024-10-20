@@ -1,11 +1,11 @@
-import { PrototypeTabContext, TabTriggerProps } from './interface';
+import { PrototypeTabsContext, TabsTriggerProps } from './interface';
 import { Trigger } from '../../common/trigger';
 import { binarySearch } from '@/www/utils/search';
 import { compareDOM } from '@/www/utils/dom';
 
 export default class PrototypeTabsTrigger
-  extends Trigger<PrototypeTabContext>
-  implements TabTriggerProps
+  extends Trigger<PrototypeTabsContext>
+  implements TabsTriggerProps
 {
   protected _consumerKeys = ['prototype-tabs'];
   private _value = '';
@@ -14,7 +14,7 @@ export default class PrototypeTabsTrigger
     return this._value;
   }
 
-  private _handlePrototypeTabContextChange = (context: PrototypeTabContext['prototype-tabs']) => {
+  private _handlePrototypeTabContextChange = (context: PrototypeTabsContext['prototype-tabs']) => {
     if (context.tabValue === this._value) {
       this.tabIndex = 0;
       this.setAttribute('data-selected', '');

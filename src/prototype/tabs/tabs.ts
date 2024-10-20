@@ -1,7 +1,7 @@
 import { ContextProvider } from '@/common';
-import { PrototypeTabContext, TabProps } from './interface';
+import { PrototypeTabsContext, TabsProps } from './interface';
 
-export default class PrototypeTab extends ContextProvider<PrototypeTabContext> implements TabProps {
+export default class PrototypeTab extends ContextProvider<PrototypeTabsContext> implements TabsProps {
   protected _providerKeys = ['prototype-tabs'];
 
   private _defaultValue = '';

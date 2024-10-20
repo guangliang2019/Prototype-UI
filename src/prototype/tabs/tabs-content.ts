@@ -1,16 +1,16 @@
 import { ContextConsumer } from '@/common';
-import { PrototypeTabContext, TabContentProps } from './interface';
+import { PrototypeTabsContext, TabsContentProps } from './interface';
 
 export default class PrototypeTabsContent
-  extends ContextConsumer<PrototypeTabContext>
-  implements TabContentProps
+  extends ContextConsumer<PrototypeTabsContext>
+  implements TabsContentProps
 {
   protected _consumerKeys = ['prototype-tabs'];
   private _value = '';
   // prettier-ignore
   get value(): string { return this._value; }
 
-  private _handlePrototypeTabContextChange = (context: PrototypeTabContext['prototype-tabs']) => {
+  private _handlePrototypeTabContextChange = (context: PrototypeTabsContext['prototype-tabs']) => {
     if (context.tabValue === this._value) this.style.display = 'unset';
     if (context.tabValue !== this._value) this.style.display = 'none';
   };
