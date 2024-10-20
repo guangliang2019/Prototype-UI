@@ -10,4 +10,6 @@ export {
 } from './select';
 export type { ShadcnSelectContext, ShadcnSelectProps } from './select';
 
+export { ShadcnTabs, ShadcnTabsContent, ShadcnTabsTrigger, ShadcnTabsList } from './tabs';
+
 export { ShadcnInput } from './input';

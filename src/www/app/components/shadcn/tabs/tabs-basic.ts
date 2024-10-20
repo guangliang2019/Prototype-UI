@@ -8,21 +8,33 @@ export default class ShadcnTabsBasic extends DocCode {
   protected _highlightRules: HighlightRule[] = [];
 
   protected _preview = () => {
-    const select = h('shadcn-select', { 'default-value': 'Option 2' }, [
-      h('shadcn-select-trigger', { class: 'w-[180px]' }),
-      h(
-        'shadcn-select-content',
-        {
-          class: 'flex flex-col items-center justify-center',
-        },
-        [
-          h('shadcn-select-item', { value: 'Option 1' }, ['Option 1']),
-          h('shadcn-select-item', { value: 'Option 2' }, ['Option 2']),
-          h('shadcn-select-item', { value: 'Option 3' }, ['Option 3']),
-        ]
-      ),
+    const tabs = h('shadcn-tabs', { class: 'w-full', 'default-value': 'account' }, [
+      h('shadcn-tabs-list', { class: 'w-full' }, [
+        h('shadcn-tabs-trigger', { value: 'account' }, ['Account']),
+        h('shadcn-tabs-trigger', { value: 'password' }, ['Password']),
+      ]),
+      h('shadcn-tabs-content', { value: 'account' }, [
+        h('div', { class: 'rounded-xl border bg-card text-card-foreground shadow mt-2' }, [
+          h('div', { class: 'flex flex-col space-y-1.5 p-6' }, [
+            h('h3', { class: 'font-semibold leading-none tracking-tight' }, ['Account']),
+            h('p', { class: 'text-sm text-muted-foreground' }, [
+              "Make changes to your account here. Click save when you're done.",
+            ]),
+          ]),
+        ]),
+      ]),
+      h('shadcn-tabs-content', { value: 'password', style: 'display: none' }, [
+        h('div', { class: 'rounded-xl border bg-card text-card-foreground shadow mt-2' }, [
+          h('div', { class: 'flex flex-col space-y-1.5 p-6' }, [
+            h('h3', { class: 'font-semibold leading-none tracking-tight' }, ['Password']),
+            h('p', { class: 'text-sm text-muted-foreground' }, [
+              "Change your password here. After saving, you'll be logged out.",
+            ]),
+          ]),
+        ]),
+      ]),
     ]);
-    return Div({ class: 'flex flex-col items-center justify-center' }, [select]);
+    return Div({ class: 'flex flex-col items-center justify-center w-[400px]' }, [tabs]);
   };
 }
 

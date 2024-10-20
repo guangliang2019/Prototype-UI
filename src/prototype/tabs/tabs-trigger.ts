@@ -17,16 +17,17 @@ export default class PrototypeTabsTrigger
   private _handlePrototypeTabContextChange = (context: PrototypeTabsContext['prototype-tabs']) => {
     if (context.tabValue === this._value) {
       this.tabIndex = 0;
-      this.setAttribute('data-selected', '');
+      this.setAttribute('data-state', 'active');
     } else {
       this.tabIndex = -1;
-      this.removeAttribute('data-selected');
+      this.setAttribute('data-state', 'inactive');
     }
   };
 
   connectedCallback() {
     super.connectedCallback();
     this.style.cursor = 'pointer';
+    this.setAttribute('data-state', 'inactive');
     this._value = this.getAttribute('value') || '';
     const context = this._contextValues['prototype-tabs'];
     const insertIndex = binarySearch(context.tabRefs, this, compareDOM);
@@ -40,6 +41,7 @@ export default class PrototypeTabsTrigger
 
     // 初始化默认选中状态
     if (this._value === this.contextValues['prototype-tabs'].defaultValue) {
+      this.setAttribute('data-state', 'active');
       this.contextValues['prototype-tabs'].changeTab(this._value);
     }
   }
