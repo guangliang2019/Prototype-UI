@@ -1,8 +1,8 @@
 import { ContextProvider } from '@/common';
-import { PrototypeTabContext, TabProps } from './interface';
+import { PrototypeTabsContext, TabsProps } from './interface';
 
-export default class PrototypeTab extends ContextProvider<PrototypeTabContext> implements TabProps {
-  protected _providerKeys = ['prototype-tab'] as const;
+export default class PrototypeTab extends ContextProvider<PrototypeTabsContext> implements TabsProps {
+  protected _providerKeys = ['prototype-tabs'];
 
   private _defaultValue = '';
   // prettier-ignore
@@ -15,7 +15,7 @@ export default class PrototypeTab extends ContextProvider<PrototypeTabContext> i
 
   private _changTab: (value: string, focus?: boolean) => void = (value, focus = false) => {
     this._index = this._tabs.indexOf(value);
-    this.setContext('prototype-tab', { index: this._index, tabValue: value });
+    this.setContext('prototype-tabs', { index: this._index, tabValue: value });
     if (focus) {
       const targetIndex = this._tabs.findIndex((tab) => tab === value);
       if (targetIndex !== -1) this._tabRefs[targetIndex].focus();
@@ -28,7 +28,7 @@ export default class PrototypeTab extends ContextProvider<PrototypeTabContext> i
     super.connectedCallback();
     this._defaultValue = this.getAttribute('default-value') || '';
     this._index = this._tabs.indexOf(this._defaultValue);
-    this.setContext('prototype-tab', {
+    this.setContext('prototype-tabs', {
       tabValue: this._tabValue,
       tabs: this._tabs,
       tabRefs: this._tabRefs,
@@ -43,4 +43,4 @@ export default class PrototypeTab extends ContextProvider<PrototypeTabContext> i
   }
 }
 
-customElements.define('prototype-tab', PrototypeTab);
+customElements.define('prototype-tabs', PrototypeTab);

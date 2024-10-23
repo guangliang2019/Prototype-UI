@@ -5,7 +5,7 @@ export default class PrototypeForm<T extends Object>
   extends ContextProvider<FormContext<T>>
   implements PrototypeFormProps<T>
 {
-  protected _providerKeys = ['prototype-form' as const];
+  protected _providerKeys = ['prototype-form'];
   protected _consumerKeys = [];
 
   submit: (data: T) => void = () => {};

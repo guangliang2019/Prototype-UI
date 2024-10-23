@@ -5,8 +5,8 @@ export default class PrototypeFormItem<T extends Object> extends ContextProvider
   PrototypeFormItemContext,
   FormContext<T>
 > {
-  protected _consumerKeys = ['prototype-form' as const];
-  protected _providerKeys = ['prototype-form-item' as const];
+  protected _consumerKeys = ['prototype-form'];
+  protected _providerKeys = ['prototype-form-item'];
 
   private _key = '';
 

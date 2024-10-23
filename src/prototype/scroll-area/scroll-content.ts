@@ -1,7 +1,9 @@
 import { ContextConsumer } from '@/common';
 import { PrototypeScrollAreaContext } from './interface';
 
-export default class PrototypeScrollContent extends ContextConsumer<PrototypeScrollAreaContext> {
+export default class PrototypeScrollContent<
+  T extends PrototypeScrollAreaContext = PrototypeScrollAreaContext,
+> extends ContextConsumer<T> {
   protected _consumerKeys = ['prototype-scroll-area', 'motion-scroll'];
 
   connectedCallback() {

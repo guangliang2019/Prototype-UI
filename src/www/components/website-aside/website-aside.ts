@@ -1,4 +1,4 @@
-import '@/prototype/tab';
+import '@/prototype/tabs';
 import { docsRoute } from '@/www/router';
 import { Aside, Div, h } from '@/www/utils/dom';
 class WebsiteAside extends HTMLElement {

@@ -1,4 +1,4 @@
-import { PrototypeTabTrigger } from '@/www/utils/dom';
+import { PrototypeTabsTrigger } from '@/www/utils/dom';
 import { Router } from '@/www/router';
 
 class WebsiteAsideItem extends HTMLElement {
@@ -17,7 +17,7 @@ class WebsiteAsideItem extends HTMLElement {
 
   private _setup() {
     this.appendChild(
-      PrototypeTabTrigger(
+      PrototypeTabsTrigger(
         {
           class:
             'cursor-pointer group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline text-muted-foreground data-[selected]:text-foreground',

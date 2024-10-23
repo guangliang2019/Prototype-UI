@@ -8,9 +8,9 @@ export {
 export { PrototypeSelect, PrototypeSelectTrigger, PrototypeSelectItem } from './select';
 export { PrototypeOverlay } from './overlay';
 export {
-  PrototypeTab,
-  PrototypeTabContent,
-  PrototypeTabTrigger,
-  PrototypeTabIndicator,
-} from './tab';
+  PrototypeTabs,
+  PrototypeTabsContent,
+  PrototypeTabsTrigger,
+  PrototypeTabsIndicator,
+} from './tabs';
 export { PrototypeTransition } from './transition';

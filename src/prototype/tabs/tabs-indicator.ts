@@ -1,23 +1,23 @@
 import { ContextConsumer } from '@/common';
-import { PrototypeTabContext, TabIndicatorProps } from './interface';
+import { PrototypeTabsContext, TabsIndicatorProps } from './interface';
 
-export default class PrototypeTabIndicator
-  extends ContextConsumer<PrototypeTabContext>
-  implements TabIndicatorProps
+export default class PrototypeTabsIndicator
+  extends ContextConsumer<PrototypeTabsContext>
+  implements TabsIndicatorProps
 {
-  protected _consumerKeys = ['prototype-tab'] as const;
+  protected _consumerKeys = ['prototype-tabs'];
   private _currentTabRef: HTMLElement | null = null;
   private _resizeObserver = new ResizeObserver((_) => {
     if (this._tabChangedFlag) {
       this._tabChangedFlag = false;
       return;
     }
-    this.onTabResize(this.contextValues['prototype-tab']);
+    this.onTabResize(this.contextValues['prototype-tabs']);
   });
 
   private _tabChangedFlag = false;
 
-  private _handlePrototypeTabContextChange = (context: PrototypeTabContext['prototype-tab']) => {
+  private _handlePrototypeTabContextChange = (context: PrototypeTabsContext['prototype-tabs']) => {
     if (this._currentTabRef) this._resizeObserver.unobserve(this._currentTabRef as HTMLElement);
     this._tabChangedFlag = true;
     this._currentTabRef = context.tabRefs[context.index];
@@ -25,24 +25,24 @@ export default class PrototypeTabIndicator
     this.onTabChange(context);
   };
 
-  onTabChange: (context: PrototypeTabContext['prototype-tab']) => void = () => {};
-  onTabResize: (context: PrototypeTabContext['prototype-tab']) => void = () => {};
+  onTabChange: (context: PrototypeTabsContext['prototype-tabs']) => void = () => {};
+  onTabResize: (context: PrototypeTabsContext['prototype-tabs']) => void = () => {};
 
   connectedCallback() {
     super.connectedCallback();
-    const context = this._contextValues['prototype-tab'];
+    const context = this._contextValues['prototype-tabs'];
     if (context.tabRefs.length > 0 && context.index !== -1) {
       this._currentTabRef = context.tabRefs[context.index];
       this._resizeObserver.observe(this._currentTabRef);
     }
 
-    this.addContextListener('prototype-tab', this._handlePrototypeTabContextChange);
+    this.addContextListener('prototype-tabs', this._handlePrototypeTabContextChange);
   }
 
   disconnectedCallback() {
     this._resizeObserver.unobserve(this._currentTabRef as HTMLElement);
-    this.removeContextListener('prototype-tab', this._handlePrototypeTabContextChange);
+    this.removeContextListener('prototype-tabs', this._handlePrototypeTabContextChange);
   }
 }
 
-customElements.define('prototype-tab-indicator', PrototypeTabIndicator);
+customElements.define('prototype-tabs-indicator', PrototypeTabsIndicator);

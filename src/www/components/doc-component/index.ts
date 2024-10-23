@@ -1,7 +1,7 @@
 import './doc-breadcrumb';
 import './doc-anchor';
 import './doc-component';
-import './doc-tab';
+import './doc-tabs';
 
 export { default as DocComponent } from './doc-component';
 

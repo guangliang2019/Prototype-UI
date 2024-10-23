@@ -16,9 +16,9 @@ export const docsRoute: Record<string, { title: string; value: string; href: str
       href: '/components/shadcn/button',
     },
     {
-      title: 'Tab',
-      value: 'shadcn-tab',
-      href: '/components/shadcn/tab',
+      title: 'Tabs',
+      value: 'shadcn-tabs',
+      href: '/components/shadcn/tabs',
     },
     {
       title: 'Select',
@@ -33,9 +33,9 @@ export const docsRoute: Record<string, { title: string; value: string; href: str
   ],
   'Prototype UI': [
     {
-      title: 'Tab',
-      value: 'prototype-tab',
-      href: '/components/prototype/tab',
+      title: 'Tabs',
+      value: 'prototype-tabs',
+      href: '/components/prototype/tabs',
     },
     {
       title: 'Transition',

@@ -1,5 +1,5 @@
 import './button';
-import './tab';
+import './tabs';
 import './select';
 import './input';
 

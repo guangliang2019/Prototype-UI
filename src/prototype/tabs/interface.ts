@@ -1,23 +1,23 @@
-export interface TabProps {
+export interface TabsProps {
   readonly defaultValue?: string;
   readonly changTab?: (value: string, focus?: boolean) => void;
 }
 
-export interface TabTriggerProps {
+export interface TabsTriggerProps {
   readonly value: string;
 }
 
-export interface TabContentProps {
+export interface TabsContentProps {
   readonly value: string;
 }
 
-export interface TabIndicatorProps {
-  onTabChange: (context: PrototypeTabContext['prototype-tab']) => void;
-  onTabResize: (context: PrototypeTabContext['prototype-tab']) => void;
+export interface TabsIndicatorProps {
+  onTabChange: (context: PrototypeTabsContext['prototype-tabs']) => void;
+  onTabResize: (context: PrototypeTabsContext['prototype-tabs']) => void;
 }
 
-export interface PrototypeTabContext extends Record<string, Object> {
-  'prototype-tab': {
+export interface PrototypeTabsContext extends Record<string, Object> {
+  'prototype-tabs': {
     readonly index: number;
     readonly tabValue: string;
     readonly defaultValue: string;

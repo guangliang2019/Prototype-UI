@@ -8,7 +8,7 @@ import './components/prototype';
 import './examples';
 
 import '@/lucide/chevrons-up-down';
-import { PrototypeTab } from '@/prototype';
+import { PrototypeTabs } from '@/prototype';
 import { RouteChange, Router } from '../router';
 
 export default class AppRoot extends HTMLElement {
@@ -53,23 +53,23 @@ export default class AppRoot extends HTMLElement {
     Router.getInstance().addGuard(this._handleRouteChange);
 
     const docsTab = h(
-      'prototype-tab',
+      'prototype-tabs',
       {
         'default-value': 'docs-introduction',
         class: 'container flex-1 items-start',
       },
       [h('website-aside'), h('doc-introduction'), h('shadcn-docs'), h('prototype-docs')]
-    ) as PrototypeTab;
-    const navTab = h('prototype-tab', { 'default-value': 'docs' }, [
+    ) as PrototypeTabs;
+    const navTab = h('prototype-tabs', { 'default-value': 'docs' }, [
       h('website-nav'),
       h('main', { class: 'flex-1 flex justify-center' }, [
-        h('prototype-tab-content', { value: 'docs' }, [docsTab]),
-        h('prototype-tab-content', { style: 'display: none', value: 'components' }, ['components']),
-        h('prototype-tab-content', { style: 'display: none', value: 'examples' }, [
+        h('prototype-tabs-content', { value: 'docs' }, [docsTab]),
+        h('prototype-tabs-content', { style: 'display: none', value: 'components' }, ['components']),
+        h('prototype-tabs-content', { style: 'display: none', value: 'examples' }, [
           h('examples-page'),
         ]),
       ]),
-    ]) as PrototypeTab;
+    ]) as PrototypeTabs;
 
     this._changeNav = navTab.changTab;
     this._changeDocs = docsTab.changTab;
