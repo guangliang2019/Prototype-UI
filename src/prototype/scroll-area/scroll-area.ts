@@ -6,8 +6,10 @@ import {
 } from './interface';
 import './style.css';
 
-export default class PrototypeScrollArea
-  extends MotionScroll<PrototypeScrollAreaContext>
+export default class PrototypeScrollArea<
+    T extends PrototypeScrollAreaContext = PrototypeScrollAreaContext,
+  >
+  extends MotionScroll<T>
   implements PrototypeScrollAreaProps
 {
   protected _providerKeys = ['prototype-scroll-area', 'motion-scroll'];
@@ -25,13 +27,13 @@ export default class PrototypeScrollArea
         this.hideDelay = Number(newValue);
         this.setContext('prototype-scroll-area', {
           hideDelay: this.hideDelay,
-        });
+        } as Partial<T['prototype-scroll-area']>);
       },
       'alwaysShowScrollbar': () => {
         this.alwaysShowScrollbar = Boolean(newValue);
         this.setContext('prototype-scroll-area', {
           alwaysShowScrollbar: this.alwaysShowScrollbar,
-        });
+        } as Partial<T['prototype-scroll-area']>);
         if (this.alwaysShowScrollbar) {
           this._provideValues['prototype-scroll-area'].show();
         }
@@ -45,7 +47,7 @@ export default class PrototypeScrollArea
     this.setContext('prototype-scroll-area', {
       hideDelay: this.hideDelay,
       alwaysShowScrollbar: this.alwaysShowScrollbar,
-    });
+    } as Partial<T['prototype-scroll-area']>);
   }
 
   disconnectedCallback() {

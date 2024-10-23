@@ -4,11 +4,11 @@ import {
   PrototypeScrollAreaContext,
   PrototypeScrollRailContext,
 } from './interface';
-import { MotionScrollContext } from '@/motion';
 
-export default class PrototypeScrollThumb extends ContextConsumer<
-  PrototypeScrollAreaContext & PrototypeScrollRailContext
-> {
+export default class PrototypeScrollThumb<
+  T extends PrototypeScrollAreaContext & PrototypeScrollRailContext = PrototypeScrollAreaContext &
+    PrototypeScrollRailContext,
+> extends ContextConsumer<T> {
   protected _consumerKeys = ['prototype-scroll-area', 'motion-scroll', 'prototype-scroll-rail'];
   private _direction: PrototypeScrollRailContext['direction'] =
     DEFAULT_PROTOTYPE_SCROLL_RAIL_PROPS['direction'];
@@ -16,8 +16,8 @@ export default class PrototypeScrollThumb extends ContextConsumer<
   private _scale = -1;
 
   private _handleScroll = (
-    context: MotionScrollContext['motion-scroll'],
-    changedKeys: (keyof MotionScrollContext)[] = []
+    context: T['motion-scroll'],
+    changedKeys: (keyof T['motion-scroll'])[] = []
   ) => {
     switch (this._direction) {
       case 'horizontal':

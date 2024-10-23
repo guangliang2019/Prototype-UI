@@ -6,8 +6,11 @@ import {
   PrototypeScrollRailProps,
 } from './interface';
 
-export default class PrototypeScrollRail
-  extends ContextProvider<PrototypeScrollRailContext, PrototypeScrollAreaContext>
+export default class PrototypeScrollRail<
+    ProvideType extends PrototypeScrollRailContext = PrototypeScrollRailContext,
+    ConsumeType extends PrototypeScrollAreaContext = PrototypeScrollAreaContext,
+  >
+  extends ContextProvider<ProvideType, ConsumeType>
   implements PrototypeScrollRailProps
 {
   protected _providerKeys = ['prototype-scroll-rail'];
@@ -28,7 +31,7 @@ export default class PrototypeScrollRail
 
     this.setContext('prototype-scroll-rail', {
       direction: this._direction,
-    });
+    } as Partial<ProvideType['prototype-scroll-rail']>);
   }
 
   disconnectedCallback() {
