@@ -3,6 +3,7 @@ import './transition';
 import './select';
 import './form';
 import './scroll-area';
+import './radio-group';
 
 export default class PrototypeDoc extends HTMLElement {
   connectedCallback() {
@@ -17,6 +18,7 @@ export default class PrototypeDoc extends HTMLElement {
     fragment.appendChild(h('select-doc'));
     fragment.appendChild(h('form-doc'));
     fragment.appendChild(h('scroll-area-doc'));
+    fragment.appendChild(h('radio-group-doc'));
 
     this.appendChild(fragment);
     this.className = 'w-full';

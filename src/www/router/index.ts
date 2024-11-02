@@ -58,6 +58,11 @@ export const docsRoute: Record<string, { title: string; value: string; href: str
       href: '/components/prototype/form',
     },
     {
+      title: 'Radio Group',
+      value: 'prototype-radio-group',
+      href: '/components/prototype/radio-group',
+    },
+    {
       title: 'Scroll Area',
       value: 'prototype-scroll-area',
       href: '/components/prototype/scroll-area',
