@@ -4,7 +4,61 @@ import { ShadcnScrollAreaContext } from './interface';
 export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAreaContext> {
   protected _providerKeys = ['prototype-scroll-area', 'motion-scroll', 'shadcn-scroll-area'];
 
-  private _setup() {}
+  private _scrollContentRef = document.createElement('prototype-scroll-content');
+  private _horizontalScrollBarRef = document.createElement('shadcn-scroll-bar');
+  private _verticalScrollBarRef = document.createElement('shadcn-scroll-bar');
+
+  private _mutationObserver: MutationObserver;
+
+  constructor() {
+    super();
+    this._mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (this._scrollContentRef && node !== this._scrollContentRef) {
+            // 将新添加的子节点移动到目标位置
+            this._scrollContentRef.appendChild(node);
+          }
+        });
+      });
+    });
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.setContext('shadcn-scroll-area', {
+      verticalScrollBarRef: this._verticalScrollBarRef,
+      horizontalScrollBarRef: this._horizontalScrollBarRef,
+
+      updateRef: (name, ref) => {
+        this[`_${name}`] = ref;
+        this.setContext('shadcn-select', { [name]: ref });
+      },
+    });
+    this._mutationObserver.observe(this, { childList: true });
+
+    Array.from(this.childNodes).forEach((node) => {
+      if (this._scrollContentRef && node !== this._scrollContentRef) {
+        this._scrollContentRef.appendChild(node);
+      }
+    });
+    this._setup();
+  }
+
+  disconnectedCallback() {
+    this._mutationObserver.disconnect();
+    super.disconnectedCallback();
+  }
+
+  private _setup() {
+    if (!this.contains(this._scrollContentRef)) this.appendChild(this._scrollContentRef);
+
+    if (!this.contains(this._provideValues['shadcn-scroll-area'].horizontalScrollBarRef))
+      this.appendChild(this._provideValues['shadcn-scroll-area'].horizontalScrollBarRef);
+
+    if (!this.contains(this._provideValues['shadcn-scroll-area'].verticalScrollBarRef))
+      this.appendChild(this._provideValues['shadcn-scroll-area'].verticalScrollBarRef);
+  }
 }
 
 customElements.define('shadcn-scroll-area', ShadcnScrollArea);
