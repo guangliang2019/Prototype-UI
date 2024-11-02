@@ -5,6 +5,9 @@ export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAr
   protected _providerKeys = ['prototype-scroll-area', 'motion-scroll', 'shadcn-scroll-area'];
 
   private _scrollContentRef = document.createElement('prototype-scroll-content');
+  get scrollContentRef() {
+    return this._scrollContentRef;
+  }
   private _horizontalScrollBarRef = document.createElement('shadcn-scroll-bar');
   private _verticalScrollBarRef = document.createElement('shadcn-scroll-bar');
 
@@ -42,6 +45,7 @@ export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAr
         this._scrollContentRef.appendChild(node);
       }
     });
+
     this._setup();
   }
 
@@ -51,6 +55,7 @@ export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAr
   }
 
   private _setup() {
+    console.log(this._scrollContentRef);
     if (!this.contains(this._scrollContentRef)) this.appendChild(this._scrollContentRef);
 
     if (!this.contains(this._provideValues['shadcn-scroll-area'].horizontalScrollBarRef))

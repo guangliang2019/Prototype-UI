@@ -30,6 +30,11 @@ export const docsRoute: Record<string, { title: string; value: string; href: str
       value: 'shadcn-input',
       href: '/components/shadcn/input',
     },
+    {
+      title: 'Scroll Area',
+      value: 'shadcn-scroll-area',
+      href: '/components/shadcn/scroll-area',
+    },
   ],
   'Prototype UI': [
     {
