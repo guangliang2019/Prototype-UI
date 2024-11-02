@@ -24,11 +24,7 @@ export default class PrototypeScrollRail<
   connectedCallback() {
     super.connectedCallback();
     this.style.position = 'absolute';
-    this._direction =
-      this.getAttribute('direction') === 'horizontal'
-        ? 'horizontal'
-        : DEFAULT_PROTOTYPE_SCROLL_RAIL_PROPS['direction'];
-
+    this._direction = this.getAttribute('direction') === 'horizontal' ? 'horizontal' : 'vertical';
     this.setContext('prototype-scroll-rail', {
       direction: this._direction,
     } as Partial<ProvideType['prototype-scroll-rail']>);

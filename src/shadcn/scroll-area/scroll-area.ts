@@ -1,5 +1,6 @@
 import { PrototypeScrollArea } from '@/prototype/scroll-area';
 import { ShadcnScrollAreaContext } from './interface';
+import './scroll-bar';
 
 export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAreaContext> {
   protected _providerKeys = ['prototype-scroll-area', 'motion-scroll', 'shadcn-scroll-area'];
@@ -28,7 +29,9 @@ export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAr
   }
 
   connectedCallback() {
+   
     super.connectedCallback();
+    this.contentRef = this._scrollContentRef;
     this.setContext('shadcn-scroll-area', {
       verticalScrollBarRef: this._verticalScrollBarRef,
       horizontalScrollBarRef: this._horizontalScrollBarRef,
@@ -55,14 +58,24 @@ export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAr
   }
 
   private _setup() {
-    console.log(this._scrollContentRef);
+    this.style.overflow = 'scroll';
     if (!this.contains(this._scrollContentRef)) this.appendChild(this._scrollContentRef);
 
-    if (!this.contains(this._provideValues['shadcn-scroll-area'].horizontalScrollBarRef))
+    if (!this.contains(this._provideValues['shadcn-scroll-area'].horizontalScrollBarRef)) {
+      this._provideValues['shadcn-scroll-area'].horizontalScrollBarRef.setAttribute(
+        'direction',
+        'horizontal'
+      );
       this.appendChild(this._provideValues['shadcn-scroll-area'].horizontalScrollBarRef);
+    }
 
-    if (!this.contains(this._provideValues['shadcn-scroll-area'].verticalScrollBarRef))
+    if (!this.contains(this._provideValues['shadcn-scroll-area'].verticalScrollBarRef)) {
+      this._provideValues['shadcn-scroll-area'].verticalScrollBarRef.setAttribute(
+        'direction',
+        'vertical'
+      );
       this.appendChild(this._provideValues['shadcn-scroll-area'].verticalScrollBarRef);
+    }
   }
 }
 

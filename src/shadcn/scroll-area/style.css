@@ -7,3 +7,7 @@ shadcn-scroll-area {
   -ms-overflow-style: none; /* 对 IE 和 Edge 旧版 */
   -webkit-overflow-scrolling: touch; /* 为移动设备提供惯性滚动 */
 }
+
+.bg-border {
+  background-color: hsl(var(--border));
+}
