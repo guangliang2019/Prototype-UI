@@ -14,7 +14,7 @@
   color: hsl(var(--foreground) / 0.8);
 }
 
-.data-\[selected\]\:text-foreground[data-selected] {
+.data-\[state\=active\]\:text-foreground[data-state="active"] {
   color: hsl(var(--foreground));
 }
 

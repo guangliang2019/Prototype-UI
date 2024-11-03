@@ -30,6 +30,7 @@ export default abstract class ContextProvider<
   }
 
   connectedCallback() {
+    super.connectedCallback();
     this.addEventListener('request-context', this.handleRequestContext as EventListener);
     ContextManager.getInstance().addProvider(this);
   }
