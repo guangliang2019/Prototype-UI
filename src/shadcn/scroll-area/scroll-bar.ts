@@ -22,13 +22,29 @@ export default class ShadcnScrollBar extends PrototypeScrollRail<
       ? (this._contextValues['shadcn-scroll-area'].verticalScrollBarRef = this)
       : (this._contextValues['shadcn-scroll-area'].horizontalScrollBarRef = this);
     this._setup();
+    this.addContextListener('motion-scroll', (context, changedKeys) => {
+      switch (this.direction) {
+        case 'horizontal':
+          if (context.contentWidth <= context.viewportWidth) this.style.visibility = 'hidden';
+          else this.style.visibility = 'visible';
+          break;
+        case 'vertical':
+          if (context.contentHeight <= context.viewportHeight) this.style.visibility = 'hidden';
+          else this.style.visibility = 'visible';
+          break;
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
   }
 
   private _setup() {
     if (!this.contains(this._thumbRef)) this.appendChild(this._thumbRef);
     const positionCls = `absolute ${this.direction === 'vertical' ? 'right-0' : 'bottom-0'}`;
     const sizeCls = `${this.direction === 'vertical' ? 'h-full w-2' : 'w-full h-2'}`;
-    let otherCls = ""
+    let otherCls = '';
 
     // prettier-ignore
     this._computedClass = [positionCls, sizeCls, otherCls].join(' ').trimEnd();
