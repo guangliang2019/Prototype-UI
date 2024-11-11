@@ -1,6 +1,7 @@
 export interface TabsProps {
   readonly defaultValue?: string;
   readonly changTab?: (value: string, focus?: boolean) => void;
+  onTabChange: (context: PrototypeTabsContext['prototype-tabs']) => void;
 }
 
 export interface TabsTriggerProps {
