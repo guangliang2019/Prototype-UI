@@ -20,6 +20,8 @@ export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAr
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
           if (this._scrollContentRef && node !== this._scrollContentRef) {
+            if (node === this._horizontalScrollBarRef || node === this._verticalScrollBarRef)
+              return;
             // 将新添加的子节点移动到目标位置
             this._scrollContentRef.appendChild(node);
           }
@@ -29,7 +31,6 @@ export default class ShadcnScrollArea extends PrototypeScrollArea<ShadcnScrollAr
   }
 
   connectedCallback() {
-   
     super.connectedCallback();
     this.contentRef = this._scrollContentRef;
     this.setContext('shadcn-scroll-area', {
