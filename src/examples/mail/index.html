@@ -60,27 +60,28 @@
       .menu-item[data-state='active'] {
         background-color: hsl(var(--muted));
       }
+
+      .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+      .p-3 {
+        padding: 0.75rem;
+      }
+      .gap-1 {
+        gap: 0.25rem;
+      }
+      .scroll-area {
+        height: calc(100vh - 7.75rem);
+        display: block;
+        position: relative;
+      }
     </style>
   </head>
-  <link rel="stylesheet" href="https://www.prototype-ui.dev/assets/index-U0OrYw6s.css" />
-  <script defer type="module" src="https://www.prototype-ui.dev/assets/index-uXWRm3YT.js"></script>
-  <!-- <script type="module" src="../../lucide/archive-x.ts"></script>
-  <script type="module" src="../../lucide/trash-2.ts"></script>
-  <script type="module" src="../../lucide/clock.ts"></script>
-  <script type="module" src="../../lucide/reply.ts"></script>
-  <script type="module" src="../../lucide/reply-all.ts"></script>
-  <script type="module" src="../../lucide/forward.ts"></script>
-
-  <script type="module" src="../../lucide/ellipsis-vertical.ts"></script>
-
-  <script type="module" src="../../lucide/inbox.ts"></script>
-  <script type="module" src="../../lucide/file.ts"></script>
-  <script type="module" src="../../lucide/send.ts"></script>
-  <script type="module" src="../../lucide//users-round.ts"></script>
-  <script type="module" src="../../lucide//shopping-cart.ts"></script>
-  <script type="module" src="../../lucide//circle-alert.ts"></script>
-  <script type="module" src="../../lucide//messages-square.ts"></script> -->
-
+  <link rel="stylesheet" href="https://www.prototype-ui.dev/assets/index-Dl8GNfGN.css" />
+  <script defer type="module" src="https://www.prototype-ui.dev/assets/index-Bqx-0LYk.js"></script>
   <body class="dark">
     <prototype-tabs id="mail-tabs" class="root" default-value="inbox">
       <div style="width: 15rem" class="menu">
@@ -158,9 +159,7 @@
               <shadcn-input id="mail-search" placeholder="Search"> </shadcn-input>
             </div>
             <div class="relative w-full">
-              <!-- <shadcn-scroll-area class="flex w-full">
-                <div id="mail-inbox-list"></div>
-              </shadcn-scroll-area> -->
+              <div id="mail-inbox-list"></div>
             </div>
           </div>
           <div class="vertical-divider"></div>
@@ -207,7 +206,6 @@
     </prototype-tabs>
   </body>
   <script defer>
-    console.log('script loaded');
     const mails = [
       {
         id: '6c84fb90-12c4-11e1-840d-7b25c5ee775a',
@@ -381,45 +379,6 @@
       },
     ];
 
-    // const accounts = [
-    //   {
-    //     label: 'Alicia Koch',
-    //     email: 'alicia@example.com',
-    //     icon: (
-    //       <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    //         <title>Vercel</title>
-    //         <path d="M24 22.525H0l12-21.05 12 21.05z" fill="currentColor" />
-    //       </svg>
-    //     ),
-    //   },
-    //   {
-    //     label: 'Alicia Koch',
-    //     email: 'alicia@gmail.com',
-    //     icon: (
-    //       <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    //         <title>Gmail</title>
-    //         <path
-    //           d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"
-    //           fill="currentColor"
-    //         />
-    //       </svg>
-    //     ),
-    //   },
-    //   {
-    //     label: 'Alicia Koch',
-    //     email: 'alicia@me.com',
-    //     icon: (
-    //       <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    //         <title>iCloud</title>
-    //         <path
-    //           d="M13.762 4.29a6.51 6.51 0 0 0-5.669 3.332 3.571 3.571 0 0 0-1.558-.36 3.571 3.571 0 0 0-3.516 3A4.918 4.918 0 0 0 0 14.796a4.918 4.918 0 0 0 4.92 4.914 4.93 4.93 0 0 0 .617-.045h14.42c2.305-.272 4.041-2.258 4.043-4.589v-.009a4.594 4.594 0 0 0-3.727-4.508 6.51 6.51 0 0 0-6.511-6.27z"
-    //           fill="currentColor"
-    //         />
-    //       </svg>
-    //     ),
-    //   },
-    // ];
-
     const contacts = [
       {
         name: 'Emma Johnson',
@@ -503,16 +462,114 @@
       },
     ];
 
+    const h = (tagname, props, children) => {
+      const el = document.createElement(tagname);
+      Object.keys(props).forEach((key) => {
+        el.setAttribute(key, props[key]);
+      });
+
+      const fragment = document.createDocumentFragment();
+      if (children) {
+        children.forEach((child) => {
+          if (typeof child === 'string') {
+            fragment.appendChild(document.createTextNode(child));
+          } else if (child instanceof Node) {
+            fragment.appendChild(child);
+          }
+        });
+      }
+      el.appendChild(fragment);
+      return el;
+    };
+
+    const inboxUiState = {
+      selectedTab: 'all mail',
+      selectedMailIndex: 0,
+    };
+
+    const mailInboxTabsRef = document.getElementById('mail-inbox-tabs');
+
     setTimeout(() => {
-      const mailInboxTabsRef = document.getElementById('mail-tabs');
-      console.log(mailInboxTabsRef);
-      console.log(mailInboxTabsRef._contextValue);
       mailInboxTabsRef.onTabChange = (context) => {
         console.log(context);
       };
     }, 1000);
 
     const mailInboxListRef = document.getElementById('mail-inbox-list');
+    console.log(mailInboxListRef);
     const mailInboxDetailRef = document.getElementById('mail-inbox-detail');
+
+    const renderMailListItem = (mail) => {
+      return h(
+        'div',
+        {
+          class:
+            'cursor-pointer flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent',
+        },
+        [
+          h('div', { class: 'flex w-full flex-col gap-1' }, [
+            h('div', { class: 'flex items-center' }, [
+              h('div', { class: 'flex items-center gap-2' }, [
+                h('div', { class: 'font-semibold' }, [mail.name]),
+                mail.read === false &&
+                  h('div', { class: 'flex h-2 w-2 rounded-full bg-blue-600' }, []),
+              ]),
+              h(
+                'div',
+                {
+                  style: 'text-align: right',
+                  class: 'flex-1 ml-auto text-xs text-muted-foreground',
+                },
+                [mail.date]
+              ),
+            ]),
+            h('div', { class: 'text-xs font-medium' }, [mail.subject]),
+            h('div', { class: 'line-clamp-2 text-xs text-muted-foreground' }, [mail.text]),
+          ]),
+        ]
+      );
+    };
+
+    const handleInboxTabChange = (tabValue) => {
+      if (tabValue === inboxUiState.selectedTab) return;
+      inboxUiState.selectedTab = tabValue;
+
+      const fragment = document.createDocumentFragment();
+      switch (tabValue) {
+        case 'all mail':
+          mails.forEach((mail, index) => {
+            fragment.appendChild(renderMailListItem(mail));
+          });
+          break;
+
+        case 'unread':
+          mails.forEach((mail, index) => {
+            if (mail.read === false) fragment.appendChild(renderMailListItem(mail));
+          });
+          break;
+      }
+
+      mailInboxListRef.innerHTML = '';
+      mailInboxListRef.appendChild(
+        h('shadcn-scroll-area', { class: 'scroll-area' }, [
+          h(
+            'div',
+            {
+              style: 'padding-top: 0px;',
+              class: 'flex-1 flex flex-col gap-2 p-4',
+            },
+            [fragment]
+          ),
+        ])
+      );
+    };
+
+    setTimeout(() => {
+      console.log(document.getElementById('mail-inbox-list'));
+      console.log(mailInboxListRef);
+      handleInboxTabChange('all mail');
+    }, 1000);
+
+    handleInboxTabChange();
   </script>
 </html>
