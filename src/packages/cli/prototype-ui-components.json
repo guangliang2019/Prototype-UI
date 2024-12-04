@@ -1,0 +1,16 @@
+{
+  "baseUrl": "https://github.com/guangliang2019/Prototype-UI",
+    "defaultBranch": "main",
+    "components": {
+      "common/context": {
+        "repoUrl": "src/common/context",
+        "version": "latest",
+        "dependencies": []
+      },
+      "prototype/button": {
+        "repoUrl": "src/prototype/button",
+        "version": "latest",
+        "dependencies": ["common/context"]
+      }
+  }
+}
