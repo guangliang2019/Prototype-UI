@@ -16,15 +16,16 @@ Website: [https://prototype-ui.dev](https://prototype-ui.dev)
 ## Installation (Working in Progress)
 
 ```bash
-npx prototype-ui init
+npx @prototype-ui/cli init
 # Or for a specific theme:
-npx prototype-ui/shadcn init
+npx @prototype-ui/cli init
+(and choose your prefer theme in an interactive menu)
 ```
 
 # Usage
 
 ```shell
-$ npx prototype-ui --help
+$ npx @prototype-ui/cli --help
 
 
 ██████╗ ██████╗  ██████╗ ████████╗ ██████╗
