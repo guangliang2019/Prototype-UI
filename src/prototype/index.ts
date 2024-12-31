@@ -14,3 +14,4 @@ export {
   PrototypeTabsIndicator,
 } from './tabs';
 export { PrototypeTransition } from './transition';
+export { PrototypeResizable, PrototypeResizableHandle, PrototypeResizablePanel } from './resizable';

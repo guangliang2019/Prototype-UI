@@ -1,5 +1,5 @@
 import { PrototypeTabsTrigger } from '@/prototype';
-export default class ShadcnSelectTrigger extends PrototypeTabsTrigger {
+export default class ShadcnTabsTrigger extends PrototypeTabsTrigger {
   // 用户添加的 class 属性
   private _class = '';
   // 组件自身的 class 属性
@@ -23,4 +23,4 @@ export default class ShadcnSelectTrigger extends PrototypeTabsTrigger {
   }
 }
 
-customElements.define('shadcn-tabs-trigger', ShadcnSelectTrigger);
+customElements.define('shadcn-tabs-trigger', ShadcnTabsTrigger);
