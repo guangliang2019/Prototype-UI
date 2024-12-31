@@ -199,7 +199,13 @@
               </div>
             </div>
             <div class="horizontal-divider"></div>
-            <div id="mail-inbox-detail"></div>
+            <div id="mail-inbox-detail">
+              <prototype-resizable>
+                <prototype-resizable-panel></prototype-resizable-panel>
+                <prototype-resizable-handle>handle</prototype-resizable-handle>
+                <prototype-resizable-panel></prototype-resizable-panel>
+              </prototype-resizable>
+            </div>
           </div>
         </div>
       </prototype-tabs-content>
@@ -500,7 +506,7 @@
     const mailInboxDetailRef = document.getElementById('mail-inbox-detail');
 
     const renderMailListItem = (mail) => {
-      return h(
+      const mailListItem = h(
         'div',
         {
           class:
@@ -528,6 +534,12 @@
           ]),
         ]
       );
+
+      mailListItem.addEventListener('click', () => {
+        console.log(mail);
+      });
+
+      return mailListItem;
     };
 
     const handleInboxTabChange = (tabValue) => {

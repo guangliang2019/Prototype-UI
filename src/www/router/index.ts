@@ -48,11 +48,6 @@ export const docsRoute: Record<string, { title: string; value: string; href: str
       href: '/components/prototype/transition',
     },
     {
-      title: 'Select',
-      value: 'prototype-select',
-      href: '/components/prototype/select',
-    },
-    {
       title: 'Form',
       value: 'prototype-form',
       href: '/components/prototype/form',
@@ -61,6 +56,16 @@ export const docsRoute: Record<string, { title: string; value: string; href: str
       title: 'Radio Group',
       value: 'prototype-radio-group',
       href: '/components/prototype/radio-group',
+    },
+    {
+      title: 'Select',
+      value: 'prototype-select',
+      href: '/components/prototype/select',
+    },
+    {
+      title: 'Resizable',
+      value: 'prototype-resizable',
+      href: '/components/prototype/resizable',
     },
     {
       title: 'Scroll Area',
