@@ -6,6 +6,8 @@
  * @date 2024-08-11
  */
 
+import { GlobalEvent } from '../global-event';
+
 interface ClickOutsideProps {
   onClickOutside: (event: MouseEvent) => void;
 }
@@ -19,11 +21,11 @@ export default class ClickOutside extends HTMLElement implements ClickOutsidePro
 
   connectedCallback() {
     this._handleClickOutside = this._handleClickOutside.bind(this);
-    window.addEventListener('mousedown', this._handleClickOutside);
+    GlobalEvent.addListener('mousedown', this._handleClickOutside as EventListener);
   }
 
   disconnectedCallback() {
-    window.removeEventListener('mousedown', this._handleClickOutside);
+    GlobalEvent.removeListener('mousedown', this._handleClickOutside as EventListener);
   }
 
   private _handleClickOutside(event: MouseEvent) {
