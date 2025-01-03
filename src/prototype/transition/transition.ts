@@ -115,7 +115,7 @@ export default class PrototypeTransition extends HTMLElement implements Transiti
     });
   }
 
-  // gl: this shuold be a arrow function, cause it's used in transitionend event listener's callback
+  // gl: this should be a arrow function, cause it's used in transitionend event listener's callback
   private _onTransitionEnd = () => {
     if (this._state === TransitionState.Entering) {
       this._transitionTo(TransitionState.Entered);

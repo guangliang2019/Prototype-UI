@@ -39,6 +39,11 @@ export default class PrototypeOverlayProvider
       }
     }
   }
+
+  disconnectedCallback(): void {
+    this.removeEventListener('overlay-open', this._handleOverlayOpen as EventListener);
+    super.disconnectedCallback();
+  }
 }
 
 customElements.define('prototype-overlay-provider', PrototypeOverlayProvider);

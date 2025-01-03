@@ -68,6 +68,7 @@ export default class MotionScroll<
 
   disconnectedCallback() {
     this._resizeObserver.disconnect();
+    this.removeEventListener('scroll', this._handleScroll);
     if (this._contentRef) {
       this._contentRef.removeEventListener('scroll', this._handleScroll);
     }

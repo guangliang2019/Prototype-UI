@@ -62,8 +62,8 @@ export default class PrototypeScrollThumb<
     this._direction = this._contextValues['prototype-scroll-rail'].direction;
 
     this._handleScroll(this._contextValues['motion-scroll']);
+    
     this.addContextListener('motion-scroll', this._handleScroll);
-
     this.addEventListener('mousedown', this._startDragging);
     document.addEventListener('mousemove', this._onDrag);
     document.addEventListener('mouseup', this._stopDragging);

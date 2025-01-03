@@ -17,11 +17,24 @@ export default class AppRoot extends HTMLElement {
     document.body.className = theme;
 
     // 监听系统主题变化
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-      const newTheme = event.matches ? 'dark' : 'light';
-      document.body.className = newTheme;
-    });
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', this._handleThemeChange);
     this._setup();
+  }
+
+  private _handleThemeChange = (event: MediaQueryListEvent) => {
+    const newTheme = event.matches ? 'dark' : 'light';
+    document.body.className = newTheme;
+  };
+
+  disconnectedCallback() {
+    Router.getInstance().removeGuard(this._handleRouteChange);
+    this._changeNav = () => {};
+    this._changeDocs = () => {};
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .removeEventListener('change', this._handleThemeChange);
   }
 
   private _changeNav: (value: string, focus?: boolean | undefined) => void = () => {};
@@ -64,7 +77,9 @@ export default class AppRoot extends HTMLElement {
       h('website-nav'),
       h('main', { class: 'flex-1 flex justify-center' }, [
         h('prototype-tabs-content', { value: 'docs' }, [docsTab]),
-        h('prototype-tabs-content', { style: 'display: none', value: 'components' }, ['components']),
+        h('prototype-tabs-content', { style: 'display: none', value: 'components' }, [
+          'components',
+        ]),
         h('prototype-tabs-content', { style: 'display: none', value: 'examples' }, [
           h('examples-page'),
         ]),
@@ -76,7 +91,7 @@ export default class AppRoot extends HTMLElement {
     const content = h('div', { id: 'app' }, [h('prototype-overlay-provider', {}, [navTab])]);
 
     this.appendChild(content);
-
+    console.log('app loaded');
     this._handleRouteChange({ 'from': '', 'to': window.location.pathname, 'action': 'push' });
   }
 }
