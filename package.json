@@ -14,10 +14,12 @@
     "tailwindcss": "^3.4.10",
     "tsc": "^2.0.4",
     "typescript": "^5.5.4",
+    "inquirer": "^12.3.1",
     "vite": "^5.4.0"
   },
   "scripts": {
     "dev": "vite",
+    "dev-cli": "node ./dev-cli/index.cjs",
     "build": "vite build --emptyOutDir",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -32,8 +34,5 @@
   "bugs": {
     "url": "https://github.com/guangliang2019/Prototype-UI/issues"
   },
-  "homepage": "https://github.com/guangliang2019/Prototype-UI#readme",
-  "dependencies": {
-    "ora": "^5.3.0"
-  }
+  "homepage": "https://github.com/guangliang2019/Prototype-UI#readme"
 }

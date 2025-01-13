@@ -29,7 +29,7 @@ export default class AppRoot extends HTMLElement {
   };
 
   disconnectedCallback() {
-    Router.getInstance().removeGuard(this._handleRouteChange);
+    // Router.getInstance().removeGuard(this._handleRouteChange);
     this._changeNav = () => {};
     this._changeDocs = () => {};
     window
@@ -63,7 +63,7 @@ export default class AppRoot extends HTMLElement {
   };
 
   private _setup() {
-    Router.getInstance().addGuard(this._handleRouteChange);
+    // Router.getInstance().addGuard(this._handleRouteChange);
 
     const docsTab = h(
       'prototype-tabs',
