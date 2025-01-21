@@ -1,6 +1,6 @@
 import { Doc, DocComponent } from '@/www/components/doc-component';
 import './resizable-basic';
-import '@/prototype/resizable';
+import '@/components/prototype/resizable';
 
 export default class ResizableDoc extends DocComponent {
   protected _doc: Doc = {

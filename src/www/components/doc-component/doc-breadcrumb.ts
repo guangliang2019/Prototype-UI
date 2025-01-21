@@ -1,4 +1,4 @@
-import { ContextConsumer } from '@/common';
+import { ContextConsumer } from '@/components/common';
 import { Div } from '@/www/utils/dom';
 import { DocContext } from './interface';
 

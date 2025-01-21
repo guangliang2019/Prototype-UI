@@ -3,7 +3,7 @@ import {
   PrototypeTabsContent,
   PrototypeTabsIndicator,
   PrototypeTabsTrigger,
-} from '@/prototype/tabs';
+} from '@/components/prototype/tabs';
 
 class DocTabs extends PrototypeTabs {
   connectedCallback() {

@@ -26,10 +26,10 @@ export default class ExamplesPage extends HTMLElement {
             h('shadcn-button', { variant: 'ghost', class: 'h-8 px-3 text-xs' }, ['Components']),
           ]),
         ]),
-        h('iframe', {
-          class: 'w-full h-[800px] rounded-[0.5rem] border bg-background shadow',
-          src: window.origin + '/examples/mail/index.html',
-        }),
+        // h('iframe', {
+        //   class: 'w-full h-[800px] rounded-[0.5rem] border bg-background shadow',
+        //   src: window.origin + '/examples/mail/index.html',
+        // }),
         h('footer', { class: 'py-6 md:px-8 md:py-0' }, [
           h(
             'div',

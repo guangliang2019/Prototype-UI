@@ -1,8 +1,8 @@
 import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
-import '@/shadcn';
-import { ShadcnButton } from '@/shadcn';
-import PrototypeTransition from '@/prototype/transition/transition';
+import '@/components/shadcn';
+import { ShadcnButton } from '@/components/shadcn';
+import PrototypeTransition from '@/components/prototype/transition/transition';
 import { HIGHLIGHT_RULE } from '@/www/utils/regex';
 
 export default class MotionScrollTest extends DocCode {

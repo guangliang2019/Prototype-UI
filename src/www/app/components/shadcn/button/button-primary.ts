@@ -1,6 +1,6 @@
 import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
-import '@/shadcn';
+import '@/components/shadcn';
 import { HIGHLIGHT_RULE } from '@/www/utils/regex';
 
 export default class ShadcnButtonPrimary extends DocCode {

@@ -1,7 +1,7 @@
 import { Doc, DocComponent } from '@/www/components/doc-component';
 import './radio-group-basic';
-import '@/prototype/select';
-import '@/shadcn/button';
+import '@/components/prototype/select';
+import '@/components/shadcn/button';
 
 export default class SelectDoc extends DocComponent {
   protected _doc: Doc = {

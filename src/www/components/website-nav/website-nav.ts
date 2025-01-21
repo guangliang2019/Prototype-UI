@@ -1,4 +1,4 @@
-import '@/prototype/tabs';
+import '@/components/prototype/tabs';
 import './github-button';
 import { Div, h, Nav, PrototypeTabsTrigger, Span } from '@/www/utils/dom';
 

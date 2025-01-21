@@ -1,6 +1,6 @@
 import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
-import { ShadcnScrollArea } from '@/shadcn';
+import { ShadcnScrollArea } from '@/components/shadcn';
 
 export default class ShadcnScrollAreaBasic extends DocCode {
   protected _code = 'Code component is in development';

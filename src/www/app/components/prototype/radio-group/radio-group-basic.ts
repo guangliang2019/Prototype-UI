@@ -1,6 +1,6 @@
 import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
-import { ShadcnButton } from '@/shadcn';
+import { ShadcnButton } from '@/components/shadcn';
 
 export default class RadioGroupBasic extends DocCode {
   protected _code = 'Code component is in development';
