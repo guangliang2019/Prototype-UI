@@ -13,64 +13,64 @@ export const docsRoute: Record<string, { title: string; value: string; href: str
     {
       title: 'Button',
       value: 'shadcn-button',
-      href: '/components/shadcn/button',
+      href: '/shadcn/button',
     },
     {
       title: 'Tabs',
       value: 'shadcn-tabs',
-      href: '/components/shadcn/tabs',
+      href: '/shadcn/tabs',
     },
     {
       title: 'Select',
       value: 'shadcn-select',
-      href: '/components/shadcn/select',
+      href: '/shadcn/select',
     },
     {
       title: 'Input',
       value: 'shadcn-input',
-      href: '/components/shadcn/input',
+      href: '/shadcn/input',
     },
     {
       title: 'Scroll Area',
       value: 'shadcn-scroll-area',
-      href: '/components/shadcn/scroll-area',
+      href: '/shadcn/scroll-area',
     },
   ],
   'Prototype UI': [
     {
       title: 'Tabs',
       value: 'prototype-tabs',
-      href: '/components/prototype/tabs',
+      href: '/prototype/tabs',
     },
     {
       title: 'Transition',
       value: 'prototype-transition',
-      href: '/components/prototype/transition',
+      href: '/prototype/transition',
     },
     {
       title: 'Form',
       value: 'prototype-form',
-      href: '/components/prototype/form',
+      href: '/prototype/form',
     },
     {
       title: 'Radio Group',
       value: 'prototype-radio-group',
-      href: '/components/prototype/radio-group',
+      href: '/prototype/radio-group',
     },
     {
       title: 'Select',
       value: 'prototype-select',
-      href: '/components/prototype/select',
+      href: '/prototype/select',
     },
     {
       title: 'Resizable',
       value: 'prototype-resizable',
-      href: '/components/prototype/resizable',
+      href: '/prototype/resizable',
     },
     {
       title: 'Scroll Area',
       value: 'prototype-scroll-area',
-      href: '/components/prototype/scroll-area',
+      href: '/prototype/scroll-area',
     },
   ],
 };
