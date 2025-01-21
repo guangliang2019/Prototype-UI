@@ -1,14 +1,14 @@
 import { h } from '@/www/utils/dom';
 import '@/www/components';
-import '@/prototype';
-import '@/motion';
+import '@/components/prototype';
+import '@/components/motion';
 import './docs';
 import './components/shadcn';
 import './components/prototype';
 import './examples';
 
-import '@/lucide/chevrons-up-down';
-import { PrototypeTabs } from '@/prototype';
+import '@/components/lucide/chevrons-up-down';
+import { PrototypeTabs } from '@/components/prototype';
 import { RouteChange, Router } from '../router';
 
 export default class AppRoot extends HTMLElement {

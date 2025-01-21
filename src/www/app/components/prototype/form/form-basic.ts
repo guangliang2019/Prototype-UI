@@ -1,4 +1,4 @@
-import { PrototypeForm } from '@/prototype/form';
+import { PrototypeForm } from '@/components/prototype/form';
 import { Div, h } from '@/www/utils/dom';
 import { HIGHLIGHT_RULE } from '@/www/utils/regex';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';

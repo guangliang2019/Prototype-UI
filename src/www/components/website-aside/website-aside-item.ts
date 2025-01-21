@@ -11,7 +11,7 @@ class WebsiteAsideItem extends HTMLElement {
     this._href = this.getAttribute('href') || '';
     this._setup();
     this.onclick = () => {
-      // Router.getInstance().push(this._href);
+      Router.getInstance().push(this._href);
     };
   }
 

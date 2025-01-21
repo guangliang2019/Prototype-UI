@@ -1,6 +1,6 @@
 import { Doc, DocComponent } from '@/www/components/doc-component';
 import './scroll-area-basic';
-import '@/prototype/scroll-area';
+import '@/components/prototype/scroll-area';
 
 export default class ScrollAreaDoc extends DocComponent {
   protected _doc: Doc = {

@@ -1,6 +1,6 @@
 import { Doc, DocComponent } from '@/www/components/doc-component';
 import './form-basic';
-import '@/prototype/form';
+import '@/components/prototype/form';
 
 export default class FormDoc extends DocComponent {
   protected _doc: Doc = {

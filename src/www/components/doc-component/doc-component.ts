@@ -1,4 +1,4 @@
-import { ContextProvider } from '@/common';
+import { ContextProvider } from '@/components/common';
 import { A, Div, h, Main, P, PrototypeTabsContent, Span } from '@/www/utils/dom';
 import { Doc, DocContext } from './interface';
 import markdown from './doc-section/markdown';

@@ -1,6 +1,6 @@
 import { Div, h, Span } from '@/www/utils/dom';
 import { DocContext } from '../interface';
-import { ContextConsumer } from '@/common';
+import { ContextConsumer } from '@/components/common';
 import { HighlightRule } from './interface';
 import { splitByHighlightRules } from '@/www/utils/regex';
 
