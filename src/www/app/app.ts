@@ -44,19 +44,26 @@ export default class AppRoot extends HTMLElement {
     const path = new URL(window.location.origin + reason.to).pathname
       .split('/')
       .filter((item) => item !== '');
+    console.log(path);
     switch (path[0]) {
       case 'docs':
         this._changeNav('docs');
         this._changeDocs(path[1] ? `docs-${path[1]}` : 'docs-introduction');
         break;
-      case 'components':
+      case 'shadcn':
         this._changeNav('docs');
-        this._changeDocs(path[1] ? `${path[1]}-${path[2]}` : 'shadcn-button');
+        this._changeDocs(`${path[0]}-${path[1]}`);
+        break;
+      case 'prototype':
+        this._changeNav('docs');
+        this._changeDocs(`${path[0]}-${path[1]}`);
         break;
       case 'examples':
         this._changeNav('examples');
         break;
       default:
+        this._changeNav('docs');
+        this._changeDocs('docs-introduction');
         break;
     }
     return true;
