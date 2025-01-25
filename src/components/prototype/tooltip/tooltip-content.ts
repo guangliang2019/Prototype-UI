@@ -1,4 +1,4 @@
-import { PrototypeOverlay } from '../overlay';
+import { PrototypeOverlay } from '../../common/overlay';
 import { TooltipContext } from './interface';
 
 export default class PrototypeTooltipContent extends PrototypeOverlay<{

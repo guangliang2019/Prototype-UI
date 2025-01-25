@@ -44,7 +44,7 @@ export default class AppRoot extends HTMLElement {
     const path = new URL(window.location.origin + reason.to).pathname
       .split('/')
       .filter((item) => item !== '');
-    console.log(path);
+
     switch (path[0]) {
       case 'docs':
         this._changeNav('docs');
@@ -98,7 +98,6 @@ export default class AppRoot extends HTMLElement {
     const content = h('div', { id: 'app' }, [h('prototype-overlay-provider', {}, [navTab])]);
 
     this.appendChild(content);
-    console.log('app loaded');
     this._handleRouteChange({ 'from': '', 'to': window.location.pathname, 'action': 'push' });
   }
 }

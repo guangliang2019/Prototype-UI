@@ -1,4 +1,4 @@
-import PrototypeOverlay from '@/components/prototype/overlay/overlay';
+import PrototypeOverlay from '@/components/common/overlay/overlay';
 import { ShadcnButton } from '@/components/shadcn';
 import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';

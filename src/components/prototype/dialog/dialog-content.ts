@@ -1,7 +1,7 @@
-import { PrototypeOverlay } from '../overlay';
+import { Overlay } from '@/components/common';
 import { DialogContext } from './interface';
 
-export default class PrototypeDialogContent extends PrototypeOverlay<{
+export default class PrototypeDialogContent extends Overlay<{
   'prototype-dialog': DialogContext;
 }> {
   protected _consumerKey = 'prototype-dialog';
