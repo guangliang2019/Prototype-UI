@@ -6,7 +6,6 @@ export {
   PrototypeDialogTrigger,
 } from './dialog';
 export { PrototypeSelect, PrototypeSelectTrigger, PrototypeSelectItem } from './select';
-export { PrototypeOverlay } from './overlay';
 export {
   PrototypeTabs,
   PrototypeTabsContent,

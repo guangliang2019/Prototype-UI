@@ -1,9 +1,9 @@
-import { PrototypeOverlay } from '../overlay';
+import { Overlay } from '@/components/common';
 import { PrototypeSelectContext } from './interface';
 
 export default class PrototypeSelectContent<
   T extends PrototypeSelectContext = PrototypeSelectContext,
-> extends PrototypeOverlay<T> {
+> extends Overlay<T> {
   protected _consumerKeys = ['prototype-select'];
 
   connectedCallback() {
