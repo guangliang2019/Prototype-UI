@@ -1,7 +1,8 @@
 const { default: inquirer } = require('inquirer');
-const add = require('./command/add.cjs');
+const addComponent = require('./command/add-component.cjs');
+const addDoc = require('./command/add-doc.cjs');
 // 定义可执行的命令
-const commands = ['添加组件', '查看说明'];
+const commands = ['添加组件', '添加文档', '查看说明'];
 
 async function main() {
   // 获取用户输入的命令
@@ -16,7 +17,10 @@ async function main() {
 
   switch (action) {
     case '添加组件':
-      add();
+      addComponent();
+      break;
+    case '添加文档':
+      addDoc();
       break;
 
     case '查看说明':

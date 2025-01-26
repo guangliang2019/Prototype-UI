@@ -2,7 +2,7 @@ const EXCLUDE_COMPONENT_TYPES = ['common', 'lucide', 'motion'];
 const { default: inquirer } = require('inquirer');
 const FileManager = require('../utils/file.cjs');
 
-const add = async (argv) => {
+const addComponent = async () => {
   const types = FileManager.getCurrentLevelContents('src/components').filter(
     (type) => !EXCLUDE_COMPONENT_TYPES.includes(type)
   );
@@ -55,28 +55,28 @@ src/components/${targetType}/${componentName}
       parts: componentParts ?? [],
     });
 
-    console.log('正在生成索引文件...');
+    console.info('正在生成索引文件...');
     FileManager.createFile({
       filename: 'index.ts',
       dir: `src/components/${targetType}/${componentName}`,
       content: codes.indexCode,
     });
 
-    console.log('正在生成类型声明文件...');
+    console.info('正在生成类型声明文件...');
     FileManager.createFile({
       filename: 'interface.ts',
       dir: `src/components/${targetType}/${componentName}`,
       content: codes.interfaceCode,
     });
 
-    console.log('正在生成主组件文件...');
+    console.info('正在生成主组件文件...');
     FileManager.createFile({
       filename: `${componentName}.ts`,
       dir: `src/components/${targetType}/${componentName}`,
       content: codes.rootCode,
     });
 
-    console.log('正在生成子组件文件...');
+    console.info('正在生成子组件文件...');
     componentParts.forEach((part, i) => {
       FileManager.createFile({
         filename: `${part}.ts`,
@@ -85,11 +85,11 @@ src/components/${targetType}/${componentName}
       });
     });
 
-    console.log('组件创建成功！');
+    console.info('组件创建成功！');
   } else {
-    console.log('取消创建组件');
+    console.info('取消创建组件');
     process.exit(0);
   }
 };
 
-module.exports = add;
+module.exports = addComponent;
