@@ -53,9 +53,55 @@ const addDoc = async () => {
 确认添加吗？`,
   });
 
-  if (confirm) {
-    // TODO: 添加文档
+  exampleNames.unshift(`${componentName}-basic`);
 
+  if (confirm && docType === 'prototype') {
+    // TODO: 添加文档
+    const codeFactory = require('../template/prototype-doc.cjs');
+    const codes = codeFactory({
+      name: componentName,
+      examples: exampleNames,
+      type: 'prototype',
+    });
+
+    console.info('正在生成索引文件...');
+    FileManager.createFile({
+      filename: 'index.ts',
+      dir: `src/www/app/components/${docType}/${componentName}`,
+      content: codes.indexCode,
+    });
+
+    console.info('正在生成组件根文档...');
+    FileManager.createFile({
+      filename: `${componentName}.ts`,
+      dir: `src/www/app/components/${docType}/${componentName}`,
+      content: codes.rootCode,
+    });
+
+    console.info('正在生成示例文档...');
+    exampleNames.forEach((name, i) => {
+      FileManager.createFile({
+        filename: `${name}.ts`,
+        dir: `src/www/app/components/${docType}/${componentName}`,
+        content: codes.exampleCode[i],
+      });
+    });
+
+    console.info('正在修改 prototype 类别路由');
+    FileManager.updateFile({
+      filename: 'prototype-docs.ts',
+      dir: 'src/www/app/components/prototype',
+      content: codes.prototypeDocsCode,
+    });
+
+    console.info('正在修改文档站路由');
+    FileManager.updateFile({
+      filename: 'index.json',
+      dir: 'src/www/router',
+      content: codes.routeCode,
+    });
+
+    console.info('文档添加完成');
   }
 };
 

@@ -9,6 +9,7 @@
     "target": "ES6",
     "module": "ESNext",
     "moduleResolution": "Node",
+    "resolveJsonModule": true,
     "declaration": true,
     "strict": true,
     "esModuleInterop": true,
