@@ -1,7 +1,7 @@
-import { ContextConsumer } from '@/components/common';
+import { Trigger } from '@/components/common';
 import { PrototypeFormItemContext } from '../form/interface';
 
-export default class PrototypeInput extends ContextConsumer<PrototypeFormItemContext> {
+export default class PrototypeInput extends Trigger<PrototypeFormItemContext> {
   protected _consumerKeys = ['prototype-form-item' as const];
 
   protected _inputRef = document.createElement('input');

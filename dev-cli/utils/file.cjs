@@ -22,7 +22,6 @@ class FileManager {
     }
 
     fs.writeFileSync(filePath, content, 'utf-8');
-    console.log(`文件已创建: ${filePath}`);
   }
 
   // 更新文件
@@ -31,12 +30,12 @@ class FileManager {
     const filePath = path.join(dir, filename);
 
     if (!fs.existsSync(filePath)) {
-      console.log(`文件不存在: ${filePath}`);
+      console.info(`文件不存在: ${filePath}`);
       return;
     }
 
     fs.writeFileSync(filePath, content, 'utf-8');
-    console.log(`文件已更新: ${filePath}`);
+    console.info(`文件已更新: ${filePath}`);
   }
 
   // 删除文件
@@ -44,12 +43,12 @@ class FileManager {
     const filePath = path.join(dir, filename);
 
     if (!fs.existsSync(filePath)) {
-      console.log(`文件不存在: ${filePath}`);
+      console.info(`文件不存在: ${filePath}`);
       return;
     }
 
     fs.unlinkSync(filePath);
-    console.log(`文件已删除: ${filePath}`);
+    console.info(`文件已删除: ${filePath}`);
   }
 
   // 只获取当前目录的文件和子目录
@@ -57,7 +56,7 @@ class FileManager {
     let results = [];
 
     if (!fs.existsSync(dir)) {
-      console.log(`目录不存在: ${dir}`);
+      console.info(`目录不存在: ${dir}`);
       return results;
     }
 
@@ -80,7 +79,7 @@ class FileManager {
     let results = [];
 
     if (!fs.existsSync(dir)) {
-      console.log(`目录不存在: ${dir}`);
+      console.info(`目录不存在: ${dir}`);
       return results;
     }
 
@@ -99,6 +98,21 @@ class FileManager {
     });
 
     return results;
+  }
+
+  static getFileContent(filePath) {
+    if (!fs.existsSync(filePath)) {
+      console.info(`文件不存在: ${filePath}`);
+      return null;
+    }
+  
+    try {
+      const content = fs.readFileSync(filePath, 'utf-8');
+      return content;
+    } catch (err) {
+      console.error(`读取文件失败: ${filePath}`, err);
+      return null;
+    }
   }
 }
 
