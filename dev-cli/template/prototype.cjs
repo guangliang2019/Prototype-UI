@@ -1,3 +1,5 @@
+const FileManager = require('../utils/file.cjs');
+
 const defaultOptions = {
   name: '',
   parts: [],
@@ -88,11 +90,14 @@ customElements.define('${prototype(part)}', ${bigCamel(prototype(part))});
 `
   );
 
+  const prototypeIndexCode = `${FileManager.getFileContent('src/components/prototype/index.ts')}export { ${bigCamel(prototype(name))}${parts.map((part) => ', ' + bigCamel(prototype(part)))} } from './${name}';\n`;
+
   return {
     indexCode,
     interfaceCode,
     rootCode,
     partCode,
+    prototypeIndexCode,
   };
 };
 

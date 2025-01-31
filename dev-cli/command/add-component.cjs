@@ -85,6 +85,13 @@ src/components/${targetType}/${componentName}
       });
     });
 
+    console.info('正在更改组件大类的索引文件...');
+    FileManager.updateFile({
+      filename: 'index.ts',
+      dir: `src/components/${targetType}`,
+      content: codes.prototypeIndexCode,
+    });
+
     console.info('组件创建成功！');
   } else {
     console.info('取消创建组件');
