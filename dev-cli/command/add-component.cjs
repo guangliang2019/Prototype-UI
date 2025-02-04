@@ -48,8 +48,19 @@ src/components/${targetType}/${componentName}
     },
   ]);
 
+  let codeFactory = null;
+
   if (confirm) {
-    const codeFactory = require('../template/prototype.cjs');
+    switch (targetType) {
+      case 'prototype':
+        codeFactory = require('../template/prototype-component.cjs');
+        break;
+      case 'shadcn':
+        codeFactory = require('../template/shadcn-component.cjs');
+        break;
+      default:
+        break;
+    }
     const codes = codeFactory({
       name: componentName,
       parts: componentParts ?? [],
@@ -89,7 +100,7 @@ src/components/${targetType}/${componentName}
     FileManager.updateFile({
       filename: 'index.ts',
       dir: `src/components/${targetType}`,
-      content: codes.prototypeIndexCode,
+      content: codes.typeIndexCode,
     });
 
     console.info('组件创建成功！');

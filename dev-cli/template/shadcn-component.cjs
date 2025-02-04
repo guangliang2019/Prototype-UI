@@ -1,3 +1,5 @@
+// 这个文件用于生成 shadcn 组件的代码
+// 代码的模版夹杂在 factory 方法内，并未完全抽出
 const FileManager = require('../utils/file.cjs');
 
 const defaultOptions = {
@@ -5,7 +7,7 @@ const defaultOptions = {
   parts: [],
 };
 
-const prototypeComponentCodeFactory = (options) => {
+const ShadcnComponentCodeFactory = (options) => {
   const { name, parts } = { ...defaultOptions, ...options };
 
   if (name === undefined) throw new Error('Component name is required');
@@ -13,6 +15,7 @@ const prototypeComponentCodeFactory = (options) => {
   if (!Array.isArray(parts)) throw new Error('Parts must be an string array');
 
   const prototype = (str) => `prototype-${str}`;
+  const shadcn = (str) => `shadcn-${str}`;
   const bigCamel = (str) =>
     str.split('-').reduce((prev, curr) => prev + curr.charAt(0).toUpperCase() + curr.slice(1), '');
 
@@ -33,27 +36,7 @@ export interface ${bigCamel(prototype(name))}Context extends Record<string, Obje
 }
 `;
 
-  const rootCode = `import { ContextProvider } from '@/components/common';
-import { ${bigCamel(prototype(name))}Context, ${bigCamel(name)}Props } from './interface';
-
-export default class ${bigCamel(prototype(name))}<
-    T extends Record<string, Object> & ${bigCamel(prototype(name))}Context = ${bigCamel(prototype(name))}Context,
-  >
-  extends ContextProvider<T> implements ${bigCamel(name)}Props
-{
-  protected _providerKeys = ['${prototype(name)}'];
-  protected _consumerKeys = [];
-
-  connectedCallback() {
-    super.connectedCallback();
-
-    this.setContext('${prototype(name)}', {
-      rootRef: this,
-    } as Partial<${bigCamel(prototype(name))}Context['${prototype(name)}']>);
-  }
-}
-
-customElements.define('${prototype(name)}', ${bigCamel(prototype(name))});
+  const rootCode = `
 `;
 
   const partCode = parts.map(
@@ -90,15 +73,15 @@ customElements.define('${prototype(part)}', ${bigCamel(prototype(part))});
 `
   );
 
-  const prototypeIndexCode = `${FileManager.getFileContent('src/components/prototype/index.ts')}export { ${bigCamel(prototype(name))}${parts.map((part) => ', ' + bigCamel(prototype(part)))} } from './${name}';\n`;
+  const typeIndexCode = `${FileManager.getFileContent('src/components/prototype/index.ts')}export { ${bigCamel(prototype(name))}${parts.map((part) => ', ' + bigCamel(prototype(part)))} } from './${name}';\n`;
 
   return {
     indexCode,
     interfaceCode,
     rootCode,
     partCode,
-    prototypeIndexCode,
+    typeIndexCode,
   };
 };
 
-module.exports = prototypeComponentCodeFactory;
+module.exports = ShadcnComponentCodeFactory;
