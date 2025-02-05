@@ -1,0 +1,1 @@
+const useContext = (key: string) => {}
