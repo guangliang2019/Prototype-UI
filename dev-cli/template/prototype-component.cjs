@@ -1,3 +1,7 @@
+// 这个文件用于生成 prototype 组件的代码
+// 代码的模版夹杂在 factory 方法内，并未完全抽出
+const FileManager = require('../utils/file.cjs');
+
 const defaultOptions = {
   name: '',
   parts: [],
@@ -88,11 +92,14 @@ customElements.define('${prototype(part)}', ${bigCamel(prototype(part))});
 `
   );
 
+  const typeIndexCode = `${FileManager.getFileContent('src/components/prototype/index.ts')}export { ${bigCamel(prototype(name))}, ${parts.map((part) => bigCamel(prototype(part))).join(', ')} } from './${name}';\n`;
+
   return {
     indexCode,
     interfaceCode,
     rootCode,
     partCode,
+    typeIndexCode,
   };
 };
 

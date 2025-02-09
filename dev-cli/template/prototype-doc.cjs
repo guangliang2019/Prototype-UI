@@ -1,3 +1,5 @@
+// 这个文件用于生成 prototype 组件的文档的代码
+// 代码的模版夹杂在 factory 方法内，并未完全抽出
 const FileManager = require('../utils/file.cjs');
 
 const defaultOptions = {

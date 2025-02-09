@@ -40,7 +40,7 @@ export default class PrototypeResizableHandle<
 
   private _handleMouseUp = (e: MouseEvent) => {
     this._isDragging = false;
-    document.body.style.cursor = this.style.cursor = 'default';
+    document.body.style.cursor = '';
   };
 
   private _handleMouseDown = (e: MouseEvent) => {

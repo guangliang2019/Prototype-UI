@@ -6,7 +6,8 @@
  * @date 2024-08-11
  */
 
-import { GlobalEvent } from '../global-event';
+import useClickOutside from '@/core/hooks/use-click-outside';
+import { defineComponent, useCreated } from '@/core';
 
 interface ClickOutsideProps {
   onClickOutside: (event: MouseEvent) => void;
@@ -16,23 +17,13 @@ const DEFAULT_CLICK_OUTSIDE_PROPS = {
   onClickOutside: (_: MouseEvent) => {},
 };
 
-export default class ClickOutside extends HTMLElement implements ClickOutsideProps {
-  public onClickOutside = DEFAULT_CLICK_OUTSIDE_PROPS['onClickOutside'];
+const ClickOutside = defineComponent<ClickOutsideProps>((self) => {
+  useCreated(self, () => {
+    self.onClickOutside = DEFAULT_CLICK_OUTSIDE_PROPS['onClickOutside'];
+  });
+  useClickOutside(self, (e) => self.onClickOutside(e));
+});
 
-  connectedCallback() {
-    this._handleClickOutside = this._handleClickOutside.bind(this);
-    GlobalEvent.addListener('mousedown', this._handleClickOutside as EventListener);
-  }
-
-  disconnectedCallback() {
-    GlobalEvent.removeListener('mousedown', this._handleClickOutside as EventListener);
-  }
-
-  private _handleClickOutside(event: MouseEvent) {
-    if (!this.contains(event.target as Node)) {
-      this.onClickOutside(event);
-    }
-  }
-}
+export default ClickOutside;
 
 customElements.define('click-outside', ClickOutside);

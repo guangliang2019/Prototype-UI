@@ -20,9 +20,7 @@
   "scripts": {
     "dev": "vite",
     "dev-cli": "node ./dev-cli/index.cjs",
-    "build": "vite build --emptyOutDir",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build": "vite build --emptyOutDir"
   },
   "repository": {
     "type": "git",

@@ -48,8 +48,19 @@ src/components/${targetType}/${componentName}
     },
   ]);
 
+  let codeFactory = null;
+
   if (confirm) {
-    const codeFactory = require('../template/prototype.cjs');
+    switch (targetType) {
+      case 'prototype':
+        codeFactory = require('../template/prototype-component.cjs');
+        break;
+      case 'shadcn':
+        codeFactory = require('../template/shadcn-component.cjs');
+        break;
+      default:
+        break;
+    }
     const codes = codeFactory({
       name: componentName,
       parts: componentParts ?? [],
@@ -83,6 +94,13 @@ src/components/${targetType}/${componentName}
         dir: `src/components/${targetType}/${componentName}`,
         content: codes.partCode[i],
       });
+    });
+
+    console.info('正在更改组件大类的索引文件...');
+    FileManager.updateFile({
+      filename: 'index.ts',
+      dir: `src/components/${targetType}`,
+      content: codes.typeIndexCode,
     });
 
     console.info('组件创建成功！');
