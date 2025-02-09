@@ -1,6 +1,21 @@
-import { canUseHooksFlag, connectedCallbacks, contextListeners, createdCallbacks, disconnectedCallbacks, handleRequestContext, initProps, listenKeys, listenValues, provideKeys, provideValues, requestContext, setContext, updateContext } from './constants';
+import {
+  canUseHooksFlag,
+  connectedCallbacks,
+  contextListeners,
+  createdCallbacks,
+  disconnectedCallbacks,
+  handleRequestContext,
+  initProps,
+  listenKeys,
+  listenValues,
+  provideKeys,
+  provideValues,
+  requestContext,
+  setContext,
+  updateContext,
+} from './constants';
 import { ContextManager } from './context';
-import { Component, RequestContextEventDetail } from './interface';
+import { Component, FC, Hook, RequestContextEventDetail } from './interface';
 
 /**
  * Define a web component with hooks.
@@ -11,9 +26,7 @@ import { Component, RequestContextEventDetail } from './interface';
  * Should return a `HTMLElement` or `void`.
  * @returns An anonymous class extends `HTMLElement`, can be used as a **web component** or other things.
  */
-export const defineComponent = <T>(
-  setup: (self: Component<T> & T) => HTMLElement | void
-): Constructor<Component<T>> => {
+export const defineComponent = <T>(setup: Hook<T> | FC<T>): Constructor<Component<T>> => {
   return class extends HTMLElement {
     [canUseHooksFlag] = true;
 

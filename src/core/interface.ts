@@ -122,3 +122,6 @@ export type RequestContextEventDetail = {
   key: string | symbol;
   consumer: Component<any>;
 };
+
+export type Hook<Props> = (self: Component<Props> & Props, ...args: any) => void;
+export type FC<Props> = (self: Component<Props> & Props, ...args: any) => HTMLElement;

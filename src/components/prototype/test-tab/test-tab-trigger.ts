@@ -1,4 +1,4 @@
-import { defineComponent, listenContext, useConnect, useDisconnect } from '@/core';
+import { defineComponent, getContext, listenContext, useConnect, useDisconnect } from '@/core';
 import { PrototypeTestTabContext, TestTabTriggerProps } from './interface';
 import { ContextConsumer } from '@/components/common';
 
@@ -29,17 +29,22 @@ export default class PrototypeTestTabTrigger<
   }
 }
 
-const PrototypeTestTabTrigger2 = defineComponent((self) => {
-  
-  
+const PrototypeTestTabTrigger2 = defineComponent<{ value: string }>((self) => {
+  listenContext(self, 'prototype-test-tab', (context, changedKeys) => {
+    if (context.value === self.value) {
+      self.setAttribute('data-active', '');
+    } else {
+      self.removeAttribute('data-active');
+    }
+  });
   useConnect(self, () => {
-    console.log('useDisconnect', contextGetter());
-  })
-  const contextGetter = listenContext(self, 'prototype-test-tab', (context) => {});
-  console.log(contextGetter(), 'context');
-  useConnect(self, () => {
-    console.log('useConnect', contextGetter());
-  })
+    const context = getContext(self, 'prototype-test-tab');
+    const value = self.getAttribute('value') || '';
+    self.value = value
+    self.addEventListener('click', () => {
+      context.setValue(self.value);
+    })
+  });
 });
 
 customElements.define('prototype-test-tab-trigger', PrototypeTestTabTrigger2);

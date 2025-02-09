@@ -21,9 +21,10 @@ export default class PrototypeTestTab<
 
 const PrototypeTestTab2 = defineComponent((self) => {
   provideContext<any>(self, 'prototype-test-tab', (setContext) => {
+    const defaultValue = self.getAttribute('default-value') || '';
     return {
       rootRef: self,
-      value: '',
+      value: defaultValue,
       setValue: (value: string) => {
         setContext({value})
       }

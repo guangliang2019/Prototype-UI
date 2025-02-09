@@ -22,7 +22,7 @@ export const listenContext = <T extends Record<string, any>>(
   self: Component,
   key: string | symbol,
   listener: (context: T, changedKeys: (keyof T)[]) => void
-): (() => T) => {
+) => {
   if (!self[listenKeys].has(key) && !self[contextListeners].get(key)) {
     self[listenKeys].add(key);
     self[contextListeners].set(key, new Set());
@@ -38,17 +38,19 @@ export const listenContext = <T extends Record<string, any>>(
       self[contextListeners].delete(key);
     }
   });
+};
 
-  if (!self[listenValues].get(key)) {
-    self[listenValues].set(key, {} as T);
-  }
-  return () => self[listenValues].get(key);
+export const getContext = <T extends Record<string, any>>(
+  self: Component,
+  key: string | symbol
+): T => {
+  return self[listenValues].get(key);
 };
 
 export const provideContext = <T>(
   self: Component,
   key: string | symbol,
-  contextBuilder: (update: (value: Partial<T>, notify?: boolean) => void) => T
+  contextBuilder: (updateContext: (value: Partial<T>, notify?: boolean) => void) => T
 ) => {
   useConnect(self, () => {
     if (!self[provideKeys].has(key)) {
