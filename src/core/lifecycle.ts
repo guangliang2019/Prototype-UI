@@ -1,10 +1,10 @@
 import {
   canUseHooksFlag,
-  Component,
   connectedCallbacks,
   createdCallbacks,
   disconnectedCallbacks,
-} from './define-component';
+} from './constants';
+import { Component } from './interface';
 
 export function useConnect<T>(self: Component<T>, callback: () => void) {
   if (self?.[canUseHooksFlag]) {

@@ -92,7 +92,7 @@ customElements.define('${prototype(part)}', ${bigCamel(prototype(part))});
 `
   );
 
-  const typeIndexCode = `${FileManager.getFileContent('src/components/prototype/index.ts')}export { ${bigCamel(prototype(name))}${parts.map((part) => ', ' + bigCamel(prototype(part)))} } from './${name}';\n`;
+  const typeIndexCode = `${FileManager.getFileContent('src/components/prototype/index.ts')}export { ${bigCamel(prototype(name))}, ${parts.map((part) => bigCamel(prototype(part))).join(', ')} } from './${name}';\n`;
 
   return {
     indexCode,

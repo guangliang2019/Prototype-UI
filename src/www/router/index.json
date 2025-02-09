@@ -73,6 +73,11 @@
       "title": "Button",
       "value": "prototype-button",
       "href": "/prototype/button"
+    },
+    {
+      "title": "Test-tab",
+      "value": "prototype-test-tab",
+      "href": "/prototype/test-tab"
     }
   ]
 }
