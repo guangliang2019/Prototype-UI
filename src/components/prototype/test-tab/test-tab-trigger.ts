@@ -1,6 +1,7 @@
-import { defineComponent, getContext, listenContext, useConnect, useDisconnect } from '@/core';
+import { definePrototype, getContext, listenContext, useConnect } from '@/core';
 import { PrototypeTestTabContext, TestTabTriggerProps } from './interface';
 import { ContextConsumer } from '@/components/common';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
 
 export const handleContextChangeSymbol = Symbol('prototype-test-tab');
 
@@ -29,22 +30,26 @@ export default class PrototypeTestTabTrigger<
   }
 }
 
-const PrototypeTestTabTrigger2 = defineComponent<{ value: string }>((self) => {
+const PrototypeTestTabTrigger2 = definePrototype<{ value: string }>((self) => {
   listenContext(self, 'prototype-test-tab', (context, changedKeys) => {
-    if (context.value === self.value) {
-      self.setAttribute('data-active', '');
+    // console.log('changedKeys', context);
+    if (context.value === self.componentRef.value) {
+      self.componentRef. setAttribute('data-active', '');
     } else {
-      self.removeAttribute('data-active');
+      self.componentRef.removeAttribute('data-active');
     }
   });
   useConnect(self, () => {
+    console.log(self.componentRef)
     const context = getContext(self, 'prototype-test-tab');
-    const value = self.getAttribute('value') || '';
-    self.value = value
-    self.addEventListener('click', () => {
-      context.setValue(self.value);
-    })
+    const value = self.componentRef.getAttribute('value') || '';
+    self.componentRef.value = value;
+    console.log('value', value)
+    self.componentRef.addEventListener('click', () => {
+      context.setValue(self.componentRef.value);
+      console.log('click', self.componentRef.value);
+    });
   });
 });
 
-customElements.define('prototype-test-tab-trigger', PrototypeTestTabTrigger2);
+customElements.define('prototype-test-tab-trigger', WebComponentAdapter(PrototypeTestTabTrigger2));

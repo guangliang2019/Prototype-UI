@@ -1,4 +1,5 @@
 import {
+  attributeListeners,
   canUseHooksFlag,
   connectedCallbacks,
   contextListeners,
@@ -15,7 +16,10 @@ import {
   updateContext,
 } from './constants';
 
-export interface Component<T = any> extends HTMLElement {
+export interface Prototype<T extends Record<string, any> = Record<string, any>>
+  extends Record<string | symbol, any> {
+  componentRef: Component<T> & T;
+
   /*********** Others ************/
   /**
    * A flag to indicate whether the component can use hooks. Just a simple judgment.
@@ -40,26 +44,9 @@ export interface Component<T = any> extends HTMLElement {
    */
   [disconnectedCallbacks]: Set<() => void>;
   /**
-   * Web component lifecycle hook.
+   * A Map, key is attribute name, value is a Set of callbacks that will be called when the attribute is changed.
    */
-  connectedCallback(): void;
-
-  /**
-   * Web component lifecycle hook.
-   */
-  disconnectedCallback(): void;
-
-  /**
-   * Web component lifecycle hook.
-   * @param {String} name The name of the attribute that changed.
-   * @param {String} oldValue string
-   * @param {String} newValue string
-   */
-  attributeChangedCallback(name: string, oldValue: string, newValue: string): void;
-  /**
-   * Web component lifecycle hook. This is called when the element is adopted into a new document.
-   */
-  adoptedCallback(): void;
+  [attributeListeners]: Map<string, Set<(oldValue: string, newValue: string) => void>>;
 
   /**
    * Custom lifecycle hook. This is called when the component is connected. Or when the component is updated.
@@ -118,10 +105,24 @@ export interface Component<T = any> extends HTMLElement {
   [provideValues]: Map<string | symbol, any>;
 }
 
+export interface Component<T extends Record<string, any> = Record<string, any>>
+  extends HTMLElement {
+  prototypeRef: Prototype<T>;
+}
+
 export type RequestContextEventDetail = {
   key: string | symbol;
-  consumer: Component<any>;
+  consumer: Prototype;
 };
 
-export type Hook<Props> = (self: Component<Props> & Props, ...args: any) => void;
-export type FC<Props> = (self: Component<Props> & Props, ...args: any) => HTMLElement;
+export type Hook<Props extends Record<string | symbol, any> = Record<string | symbol, any>> = (
+  prototype: Prototype<Props>,
+  ...args: any
+) => void;
+
+export type FC<Props extends Record<string | symbol, any> = Record<string | symbol, any>> = (
+  prototype: Prototype<Props>,
+  ...args: any
+) => HTMLElement;
+
+export type Constructor<T> = new (args: any) => T;

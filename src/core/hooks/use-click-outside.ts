@@ -1,10 +1,13 @@
 import { GlobalEvent } from '@/components/common/global-event';
 import { useConnect, useDisconnect } from '../lifecycle';
-import { Component } from '../interface';
+import { Prototype } from '../interface';
 
-const useClickOutside = <T>(self: Component<T>, callback: (e: MouseEvent) => void) => {
+const useClickOutside = <T extends Record<string | symbol, any>>(
+  self: Prototype<T>,
+  callback: (e: MouseEvent) => void
+) => {
   const _handleClickOutside = (event: MouseEvent) => {
-    if (!self.contains(event.target as Node)) {
+    if (!self.componentRef.contains(event.target as Node)) {
       callback(event);
     }
   };

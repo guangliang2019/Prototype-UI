@@ -14,12 +14,12 @@ import {
   setContext,
   updateContext,
 } from './constants';
-import { Component } from './interface';
+import { Prototype } from './interface';
 import { useConnect, useDisconnect } from './lifecycle';
 import { isComponent } from './utils/is';
 
-export const listenContext = <T extends Record<string, any>>(
-  self: Component,
+export const watchContext = <T extends Record<string, any>>(
+  self: Prototype,
   key: string | symbol,
   listener: (context: T, changedKeys: (keyof T)[]) => void
 ) => {
@@ -41,14 +41,14 @@ export const listenContext = <T extends Record<string, any>>(
 };
 
 export const getContext = <T extends Record<string, any>>(
-  self: Component,
+  self: Prototype,
   key: string | symbol
 ): T => {
   return self[listenValues].get(key);
 };
 
 export const provideContext = <T>(
-  self: Component,
+  self: Prototype,
   key: string | symbol,
   contextBuilder: (updateContext: (value: Partial<T>, notify?: boolean) => void) => T
 ) => {
@@ -69,10 +69,10 @@ type ContextRecord = Record<string | symbol, any>;
  * 由于 WeakSet 不能被遍历，因此额外维护一个 Set，切勿忘记同步更新
  */
 type ProviderEntry = WeakMap<
-  Component<any>,
-  { consumersWeakSet: WeakSet<Component>; consumersSet: Set<Component> }
+  Prototype,
+  { consumersWeakSet: WeakSet<Prototype>; consumersSet: Set<Prototype> }
 >;
-type ConsumerEntry = WeakMap<Component, Component>;
+type ConsumerEntry = WeakMap<Prototype, Prototype>;
 
 /**
  * 用于管理 provider 与 consumer 的关系
@@ -94,12 +94,11 @@ export class ContextManager {
    * 向 ContextManager 添加一个新的 Provider, 主动搜索其可以关联的 Consumer，并更新 Consumer 的数据，该行为需要在 Provider 创建时触发
    * @param provider Provider Web Component 实例
    */
-  addProvider(provider: Component) {
+  addProvider(provider: Prototype) {
     provider[provideKeys].forEach((key) => {
       if (!this._providerEntryMap.has(key)) {
         this._providerEntryMap.set(key, new WeakMap());
       }
-
       this._providerEntryMap
         .get(key)
         ?.set(provider, { consumersWeakSet: new WeakSet(), consumersSet: new Set() });
@@ -124,7 +123,7 @@ export class ContextManager {
    * 删除一个 Provider, 通知其关联的 Consumer 重新触发 request-context，该行为需要在 Provider 被销毁时触发
    * @param provider Provider Web Component 实例
    */
-  removeProvider(provider: Component) {
+  removeProvider(provider: Prototype) {
     provider[provideKeys].forEach((key) => {
       // 通知所有 consumer，需要重新寻找新的 provider
       const entry = this._providerEntryMap.get(key)?.get(provider);
@@ -145,7 +144,7 @@ export class ContextManager {
    * @param provider Provider Web Component 实例
    * @param consumer Consumer Web Component 实例
    */
-  addConsumer(key: keyof any, provider: Component, consumer: Component) {
+  addConsumer(key: keyof any, provider: Prototype, consumer: Prototype) {
     if (!this._providerEntryMap.get(key)?.get(provider)) {
       throw new Error(`ContextManager: No provider found for consumer: ${String(consumer)}`);
     }
@@ -164,7 +163,7 @@ export class ContextManager {
    * 删除一个 Consumer, 该行为需要在 Consumer 被销毁时触发
    * @param consumer Consumer Web Component 实例
    */
-  private _removeConsumer(consumer: Component<any>) {
+  private _removeConsumer(consumer: Prototype) {
     consumer[listenKeys].forEach((key) => {
       const existingProvider = this._consumerEntryMap.get(key)?.get(consumer);
 
@@ -184,12 +183,12 @@ export class ContextManager {
    * @param provider Provider Web Component 实例
    * @returns 适用的 Consumer 数组
    */
-  private _findConsumers(provider: Component<any>): Record<keyof ContextRecord, Component<any>[]> {
-    const consumersRecord = {} as Record<keyof ContextRecord, Component<any>[]>;
+  private _findConsumers(provider: Prototype): Record<keyof ContextRecord, Prototype[]> {
+    const consumersRecord = {} as Record<keyof ContextRecord, Prototype[]>;
     provider[provideKeys].forEach((key) => {
       consumersRecord[key] = [];
     });
-    const queue: unknown[] = [provider];
+    const queue: Element[] = [provider.componentRef];
     const keyFlags: (keyof ContextRecord)[][] = [Array.from(provider[provideKeys])];
 
     while (queue.length) {
@@ -202,20 +201,21 @@ export class ContextManager {
       if (!node || keyFlag.length === 0) continue;
       // @ts-ignore
       if (!isComponent(node)) continue;
+      const prototype = node.prototypeRef;
 
       // 如果遇到相同 key 的 Provider，并且不是自己，
       // 该分支的 keyFlag 减少当前 key，若 KeyFlag size 为 0，则停止搜索
-      if (node[provideKeys].size > 0 && node !== provider) {
+      if (prototype[provideKeys].size > 0 && prototype !== provider) {
         keyFlag.forEach((key) => {
-          if (node[provideKeys].has(key)) keyFlag.splice(keyFlag.indexOf(key), 1);
+          if (prototype[provideKeys].has(key)) keyFlag.splice(keyFlag.indexOf(key), 1);
         });
         if (keyFlag.length === 0) continue;
       }
 
-      if (node[listenKeys].size > 0) {
+      if (prototype[listenKeys].size > 0) {
         keyFlag.forEach((key) => {
-          if (node[listenKeys].has(key)) {
-            consumersRecord[key].push(node);
+          if (prototype[listenKeys].has(key)) {
+            consumersRecord[key].push(prototype);
           }
         });
       }
@@ -237,7 +237,7 @@ export class ContextManager {
    */
   updateContext<T>(
     key: keyof ContextRecord,
-    provider: Component<any>,
+    provider: Prototype,
     value: Partial<T>,
     changedKeys: string[]
   ) {
@@ -249,7 +249,7 @@ export class ContextManager {
     });
   }
 
-  getConsumers(key: keyof any, provider: Component): Component[] {
+  getConsumers(key: keyof any, provider: Prototype): Prototype[] {
     return Array.from(this._providerEntryMap.get(key)?.get(provider)?.consumersSet || []);
   }
 }
