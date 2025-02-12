@@ -1,11 +1,13 @@
 import { ContextProvider } from '@/components/common';
 import { PrototypeTestTabContext, TestTabProps } from './interface';
-import { defineComponent, provideContext } from '@/core';
+import { definePrototype, provideContext } from '@/core';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
 
 export default class PrototypeTestTab<
     T extends Record<string, Object> & PrototypeTestTabContext = PrototypeTestTabContext,
   >
-  extends ContextProvider<T> implements TestTabProps
+  extends ContextProvider<T>
+  implements TestTabProps
 {
   protected _providerKeys = ['prototype-test-tab'];
   protected _consumerKeys = [];
@@ -19,17 +21,17 @@ export default class PrototypeTestTab<
   }
 }
 
-const PrototypeTestTab2 = defineComponent((self) => {
+const PrototypeTestTab2 = definePrototype((self) => {
   provideContext<any>(self, 'prototype-test-tab', (setContext) => {
-    const defaultValue = self.getAttribute('default-value') || '';
+    const defaultValue = self.componentRef.getAttribute('default-value') || '';
     return {
       rootRef: self,
       value: defaultValue,
       setValue: (value: string) => {
-        setContext({value})
-      }
-    }
-  })
-})
+        setContext({ value });
+      },
+    };
+  });
+});
 
-customElements.define('prototype-test-tab', PrototypeTestTab2);
+customElements.define('prototype-test-tab', WebComponentAdapter(PrototypeTestTab2));

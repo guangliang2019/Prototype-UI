@@ -7,7 +7,8 @@
  */
 
 import useClickOutside from '@/core/hooks/use-click-outside';
-import { defineComponent, useCreated } from '@/core';
+import { definePrototype, useCreated } from '@/core';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
 
 interface ClickOutsideProps {
   onClickOutside: (event: MouseEvent) => void;
@@ -17,13 +18,13 @@ const DEFAULT_CLICK_OUTSIDE_PROPS = {
   onClickOutside: (_: MouseEvent) => {},
 };
 
-const ClickOutside = defineComponent<ClickOutsideProps>((self) => {
+const ClickOutside = definePrototype<ClickOutsideProps>((self) => {
   useCreated(self, () => {
-    self.onClickOutside = DEFAULT_CLICK_OUTSIDE_PROPS['onClickOutside'];
+    self.componentRef.onClickOutside = DEFAULT_CLICK_OUTSIDE_PROPS['onClickOutside'];
   });
   useClickOutside(self, (e) => self.onClickOutside(e));
 });
 
 export default ClickOutside;
 
-customElements.define('click-outside', ClickOutside);
+customElements.define('click-outside', WebComponentAdapter(ClickOutside));

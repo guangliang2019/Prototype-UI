@@ -3,6 +3,7 @@
 export const connectedCallbacks = Symbol('hooked-web-component connectedCallbacks');
 export const disconnectedCallbacks = Symbol('hooked-web-component disconnectedCallbacks');
 export const createdCallbacks = Symbol('hooked-web-component createdCallbacks');
+export const attributeListeners = Symbol('hooked-web-component attributeListeners');
 
 // props
 export const initProps = Symbol('hooked-web-component initProps');
