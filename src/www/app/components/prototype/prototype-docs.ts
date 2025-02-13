@@ -9,6 +9,7 @@ import './radio-group';
 import './resizable';
 import './button';
 import './test-tab';
+import './test-button';
 import { h } from '@/www/utils/dom';
 
 export default class PrototypeDoc extends HTMLElement {
@@ -27,6 +28,7 @@ export default class PrototypeDoc extends HTMLElement {
 		fragment.appendChild(h('resizable-doc'));
 		fragment.appendChild(h('button-doc'));
 		fragment.appendChild(h('test-tab-doc'));
+		fragment.appendChild(h('test-button-doc'));
 
     this.appendChild(fragment);
     this.className = 'w-full';

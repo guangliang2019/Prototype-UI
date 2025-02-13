@@ -7,7 +7,7 @@
  */
 
 import { Component, Hook } from '../interface';
-import { watchAttribute, useConnect, useCreated } from '../lifecycle';
+import { watchAttribute, useConnect, useCreated, useDisconnect } from '../lifecycle';
 import { dfsFindElement } from '../utils/dom';
 
 export const asTriggerFlag = Symbol('asTriggerFlag');

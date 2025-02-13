@@ -126,3 +126,6 @@ export type FC<Props extends Record<string | symbol, any> = Record<string | symb
 ) => HTMLElement;
 
 export type Constructor<T> = new (args: any) => T;
+
+export type DataState<T extends DataStateType> = { value: T };
+export type DataStateType = string | boolean | number;

@@ -34,7 +34,6 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
 
     connectedCallback() {
       const prototype = this.prototypeRef;
-      console.log(prototype);
       prototype[listenKeys].forEach((key) => {
         prototype[requestContext](key);
       });
