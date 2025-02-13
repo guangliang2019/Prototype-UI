@@ -1,5 +1,9 @@
+import { definePrototype } from '@/core';
 import { ButtonProps } from './interface';
 import { Trigger } from '@/components/common';
+import { defineProps, useAttributeState, watchAttribute } from '@/core/lifecycle';
+import useEventListener, { useHover } from '@/core/hooks/use-event-listener';
+import { asTrigger } from '@/core/hooks/as-trigger';
 
 export default class PrototypeButton<T extends Record<string, Object> = {}>
   extends Trigger<T>
@@ -131,5 +135,26 @@ export default class PrototypeButton<T extends Record<string, Object> = {}>
     return ['disabled'];
   }
 }
+
+const PrototypeButton2 = definePrototype<ButtonProps>((p) => {
+  asTrigger(p);
+
+  defineProps(p, {
+    disabled: false,
+    autoFocus: false,
+    onClick: () => {},
+  });
+
+  const hoverState = useAttributeState<boolean>(p, 'hover', false);
+
+  useHover(
+    p,
+    () => (hoverState.value = true),
+    () => (hoverState.value = false)
+  );
+
+  watchAttribute(p, 'disabled', (oldValue, newValue) => {});
+  watchAttribute(p, 'tabindex', (oldValue, newValue) => {});
+});
 
 customElements.define('prototype-button', PrototypeButton);
