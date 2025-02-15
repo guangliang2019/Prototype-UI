@@ -27,7 +27,6 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
       const prototype = new prototypeConstructor(args);
       this.prototypeRef = prototype;
       prototype.componentRef = this as any;
-      console.log(this);
       prototype[initProps] = args;
       prototype[createdCallbacks].forEach((callback) => callback());
     }
@@ -65,7 +64,6 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
     adoptedCallback() {}
 
     static get observedAttributes() {
-      console.log(Array.from(staticPrototype[attributeListeners].keys()), 'observedAttributes');
       return Array.from(staticPrototype[attributeListeners].keys());
     }
 

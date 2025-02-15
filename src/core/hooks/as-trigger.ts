@@ -65,7 +65,7 @@ const blurFactory = (component: Component, state: TriggerState) => {
 };
 
 const isTrigger = (el: any): boolean => {
-  return el[asTriggerFlag] === true;
+  return el?.prototypeRef?.[asTriggerFlag] === true;
 };
 
 interface TriggerState {
