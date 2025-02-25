@@ -1,44 +1,40 @@
-import { ContextConsumer } from '@/components/common';
 import { PrototypeSelectContext, SelectValueProps } from './interface';
+import { definePrototype, useConnect } from '@/core';
+import { getContext, watchContext } from '@/core/context';
+import { defineProps } from '@/core/lifecycle';
+import { clearContent } from '@/core/utils/dom';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { requestRender } from '@/core/render';
 
-export default class PrototypeSelectValue<T extends PrototypeSelectContext = PrototypeSelectContext>
-  extends ContextConsumer<T>
-  implements SelectValueProps
-{
-  protected _consumerKeys = ['prototype-select'];
+const SelectValue = definePrototype<SelectValueProps>((p) => {
+  defineProps(p, {
+    renderValue: (value: string) => {
+      const span = document.createElement('span');
+      span.textContent = value;
+      return span;
+    },
+  });
 
-  protected _content: HTMLElement = document.createElement('span');
+  watchContext<PrototypeSelectContext>(p, 'prototype-select', (context, keys) => {
+    console.log('watch select value', context, keys);
+    if (keys.includes('value')) {
+      requestRender(p);
+    }
+  });
 
-  renderValue: (value: string) => HTMLElement = (value) => {
-    const span = document.createElement('span');
-    span.textContent = value;
-    return span;
+  useConnect(p, () => {
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    context.valueRef = p.componentRef;
+  });
+
+  return (h) => {
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    return h('span', {}, [context.value]);
   };
+});
 
-  private _handlePrototypeSelectContextChange = (
-    _: T['prototype-select'],
-    keys: (keyof T['prototype-select'])[]
-  ) => {
-    if (keys.includes('value')) this._setup();
-  };
+const PrototypeSelectValue = WebComponentAdapter(SelectValue);
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._contextValues['prototype-select'].valueRef = this;
-    this._setup();
-    this.addContextListener('prototype-select', this._handlePrototypeSelectContextChange);
-  }
-
-  disconnectedCallback() {
-    this.removeContextListener('prototype-select', this._handlePrototypeSelectContextChange);
-  }
-
-  protected _setup() {
-    if (this.firstChild) this.removeChild(this._content);
-    const contextValue = this._contextValues['prototype-select'];
-    this._content = this.renderValue(contextValue.value);
-    this.appendChild(this._content);
-  }
-}
+export default PrototypeSelectValue;
 
 customElements.define('prototype-select-value', PrototypeSelectValue);

@@ -21,12 +21,13 @@ import { isComponent } from './utils/is';
 export const watchContext = <T extends Record<string, any>>(
   self: Prototype,
   key: string | symbol,
-  listener: (context: T, changedKeys: (keyof T)[]) => void
+  listener?: (context: T, changedKeys: (keyof T)[]) => void
 ) => {
   if (!self[listenKeys].has(key) && !self[contextListeners].get(key)) {
     self[listenKeys].add(key);
     self[contextListeners].set(key, new Set());
   }
+  if (!listener) return;
   useConnect(self, () => {
     self[contextListeners].get(key)!.add(listener);
   });

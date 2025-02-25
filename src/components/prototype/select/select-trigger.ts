@@ -1,21 +1,33 @@
+import { definePrototype, useConnect } from '@/core';
 import { PrototypeSelectContext } from './interface';
-import { Trigger } from '@/components/common';
+import { asTrigger } from '@/core/hooks/as-trigger';
+import { getContext, watchContext } from '@/core/context';
+import useEventListener from '@/core/hooks/use-event-listener';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
 
-export default class PrototypeSelectTrigger<
-  T extends PrototypeSelectContext = PrototypeSelectContext,
-> extends Trigger<T> {
-  protected _consumerKeys = ['prototype-select'];
+const SelectTrigger = definePrototype((p) => {
+  // role
+  asTrigger(p);
+  // context
+  watchContext(p, 'prototype-select');
+  useConnect(p, () => {
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const component = p.componentRef;
+    context.width = component.offsetWidth;
+    context.triggerRef = component;
+    context.focus = component.focus;
+  });
 
-  private _handleMouseDown = (event: MouseEvent): void => {
-    const context = this._contextValues['prototype-select'];
-    context.width = this.offsetWidth;
+  const _handleMouseDown = (event: MouseEvent): void => {
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const component = p.componentRef;
+    context.width = component.offsetWidth;
 
     // Check if the click is on the trigger or its children
-    if (event.target instanceof Node && this.contains(event.target)) {
-      if (document.activeElement === this) {
+    if (event.target instanceof Node && component.contains(event.target)) {
+      if (document.activeElement === component) {
         context.selecting ? context.close() : context.open();
-
-        this._focusSelectedItem(context);
+        _focusSelectedItem(context);
       }
     } else if (context.selecting) {
       // If the click is outside and the select is open, close it
@@ -23,22 +35,7 @@ export default class PrototypeSelectTrigger<
     }
   };
 
-  private _handleKeydown = (event: KeyboardEvent): void => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this._handleFocus();
-    }
-  };
-
-  private _handleFocus = (): void => {
-    const context = this._contextValues['prototype-select'];
-    context.width = this.offsetWidth;
-    context.selecting ? context.close() : context.open();
-
-    this._focusSelectedItem(context);
-  };
-
-  private _focusSelectedItem(context: PrototypeSelectContext['prototype-select']): void {
+  const _focusSelectedItem = (context: PrototypeSelectContext): void => {
     const index = context.items.indexOf(context.value);
     if (index !== -1 && Array.isArray(context.itemsRefs) && context.itemsRefs.length > index) {
       requestAnimationFrame(() => {
@@ -55,25 +52,30 @@ export default class PrototypeSelectTrigger<
       // -1 index appears when no item is selected, add this message for better debugging
       console.debug(`Invalid index ${index} or itemsRefs not properly initialized.`);
     }
-  }
+  };
 
-  connectedCallback() {
-    super.connectedCallback();
-    const context = this._contextValues['prototype-select'];
-    context.triggerRef = this;
-    context.focus = this.focus.bind(this);
+  const _handleKeydown = (event: KeyboardEvent): void => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      _handleFocus();
+    }
+  };
 
-    this.addEventListener('mousedown', this._handleMouseDown as EventListener);
-    this.addEventListener('focus', this._handleFocus);
+  const _handleFocus = (): void => {
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const component = p.componentRef;
+    context.width = component.offsetWidth;
+    context.selecting ? context.close() : context.open();
+    _focusSelectedItem(context);
+  };
 
-    this.addEventListener('keydown', this._handleKeydown as EventListener);
-  }
+  useEventListener(p, 'focus', _handleFocus);
+  useEventListener(p, 'mousedown', _handleMouseDown as EventListener);
+  useEventListener(p, 'keydown', _handleKeydown as EventListener);
+});
 
-  disconnectedCallback() {
-    this.removeEventListener('mousedown', this._handleMouseDown as EventListener);
-    this.removeEventListener('focus', this._handleFocus);
-    this.removeEventListener('keydown', this._handleKeydown as EventListener);
-  }
-}
+const PrototypeSelectTrigger = WebComponentAdapter(SelectTrigger);
+
+export default PrototypeSelectTrigger;
 
 customElements.define('prototype-select-trigger', PrototypeSelectTrigger);

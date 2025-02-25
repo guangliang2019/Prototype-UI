@@ -6,7 +6,7 @@
  * @date 2025-02-10
  */
 
-import { Component, Hook } from '../interface';
+import { Component, Prototype } from '../interface';
 import { watchAttribute, useConnect, useCreated, useDisconnect } from '../lifecycle';
 import { dfsFindElement } from '../utils/dom';
 
@@ -83,7 +83,7 @@ interface TriggerState {
  *
  * 同理，在连接进 DOM 之前，dispatchEvent 会被暂存，在 connected 时触发
  */
-export const asTrigger: Hook = (p) => {
+export const asTrigger = (p: Prototype) => {
   const state: TriggerState = {
     _target: null,
     _pendingEventListeners: [],

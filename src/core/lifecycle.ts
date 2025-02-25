@@ -89,6 +89,7 @@ export const defineProps = <T extends Record<string, any>, K extends keyof T = k
           const component = p.componentRef;
           component[key] = newValue as (Component<T> & T)[K];
         });
+        break;
 
       case 'number':
         watchAttribute(p, key as string, (oldValue, newValue) => {
@@ -96,6 +97,7 @@ export const defineProps = <T extends Record<string, any>, K extends keyof T = k
           const component = p.componentRef;
           component[key] = Number(newValue) as (Component<T> & T)[K];
         });
+        break;
 
       default:
         // 除了 boolean, string, number 之外, 其他类型的属性, 不做处理

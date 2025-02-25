@@ -18,9 +18,10 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
   prototypeConstructor: Constructor<Prototype<Props>>
 ): Constructor<WebComponent<Props>> => {
   const staticPrototype = new prototypeConstructor({});
-  
+
   return class WebComponent extends HTMLElement {
     prototypeRef: Prototype<Props> = null as any;
+    content: HTMLElement | null = null;
 
     constructor(args: any) {
       super();
@@ -42,6 +43,7 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
         this.addEventListener('request-context', prototype[handleRequestContext] as EventListener);
         ContextManager.getInstance().addProvider(prototype);
       }
+      this.render();
     }
 
     disconnectedCallback() {
@@ -69,6 +71,57 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
 
     update(): void {}
 
-    render(): void {}
+    render(): void {
+      const prototype = this.prototypeRef;
+      if (!prototype.render) return;
+      if (!this.content) {
+        this.content = prototype.render(h);
+        this.appendChild(this.content);
+      } else {
+        const newContent = prototype.render(h);
+        this.content.replaceWith(newContent);
+        this.content = newContent;
+      }
+    }
   };
 };
+
+type Props = {
+  [key: string]: any;
+  children?: (Node | string)[];
+};
+
+export function h<T extends HTMLElement>(
+  tag: string,
+  props: Props = {},
+  children: (Node | string)[] = []
+): T {
+  const element = document.createElement(tag) as T;
+
+  if (props) {
+    Object.entries(props).forEach(([key, value]) => {
+      if (key !== 'children') {
+        if (key.slice(0, 2) === 'on') {
+          // @ts-ignore
+          element[key] = value;
+        } else {
+          element.setAttribute(key, value as string);
+        }
+      }
+    });
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  children.forEach((child) => {
+    if (typeof child === 'string') {
+      fragment.appendChild(document.createTextNode(child));
+    } else if (child instanceof Node) {
+      fragment.appendChild(child);
+    }
+  });
+
+  element.appendChild(fragment);
+
+  return element;
+}

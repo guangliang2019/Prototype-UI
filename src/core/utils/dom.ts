@@ -66,3 +66,25 @@ export function dfsFindElement(
   // 如果没有找到，返回 null
   return null;
 }
+
+/**
+ * 比较两个 DOM 节点的位置。
+ * @param a - 第一个 DOM 节点
+ * @param b - 第二个 DOM 节点
+ * @returns 负数表示 a 在 b 前，0 表示相同，正数表示 a 在 b 后
+ */
+export function compareDOM(a: Node, b: Node): number {
+  const position = a.compareDocumentPosition(b);
+  if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+    return -1; // a 在 b 前
+  } else if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+    return 1; // a 在 b 后
+  }
+  return 0; // a 和 b 相同
+}
+
+export function clearContent(element: HTMLElement) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+}

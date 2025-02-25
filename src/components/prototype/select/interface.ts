@@ -1,14 +1,11 @@
-import PrototypeSelect from './select';
-import PrototypeSelectContent from './select-content';
-import PrototypeSelectItem from './select-item';
-import PrototypeSelectTrigger from './select-trigger';
-import PrototypeSelectValue from './select-value';
+import { Component } from '@/core/interface';
+import { ButtonProps } from '../button';
 
 export interface PrototypeSelectProps {
   defaultValue?: string;
 }
 
-export interface SelectItemProps {
+export interface SelectItemProps extends ButtonProps {
   value: string;
 }
 
@@ -16,29 +13,27 @@ export interface SelectValueProps {
   renderValue: (value: string) => HTMLElement | string;
 }
 
-export interface PrototypeSelectContext extends Record<string, Object> {
-  'prototype-select': {
-    index: number;
-    value: string;
+export interface PrototypeSelectContext {
+  index: number;
+  value: string;
 
-    width: number;
+  width: number;
 
-    focused: boolean;
-    focus: () => void;
+  focused: boolean;
+  focus: () => void;
 
-    open: () => void;
-    close: () => void;
+  open: () => void;
+  close: () => void;
 
-    items: string[];
-    defaultValue: string;
-    changeValue: (value: string, focus?: boolean) => void;
+  items: string[];
+  defaultValue: string;
+  changeValue: (value: string, focus?: boolean) => void;
 
-    selecting: boolean;
+  selecting: boolean;
 
-    rootRef: PrototypeSelect<any>;
-    triggerRef: PrototypeSelectTrigger<any>;
-    itemsRefs: PrototypeSelectItem<any>[];
-    valueRef: PrototypeSelectValue<any>;
-    contentRef: PrototypeSelectContent<any>;
-  };
+  rootRef: Component;
+  triggerRef: Component;
+  itemsRefs: Component[];
+  valueRef: Component;
+  contentRef: Component;
 }

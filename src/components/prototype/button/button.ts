@@ -4,8 +4,9 @@ import { defineProps, useAttributeState, useConnect } from '@/core/lifecycle';
 import useEventListener, { useFocus, useHover } from '@/core/hooks/use-event-listener';
 import { asTrigger } from '@/core/hooks/as-trigger';
 import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { Prototype } from '@/core/interface';
 
-const PrototypeButton = definePrototype<ButtonProps>((p) => {
+export const asButton = (p: Prototype): void => {
   // role
   asTrigger(p);
   // props
@@ -69,7 +70,9 @@ const PrototypeButton = definePrototype<ButtonProps>((p) => {
     const component = p.componentRef;
     if (component.autoFocus) component.focus();
   });
-});
+};
+
+const PrototypeButton = definePrototype<ButtonProps>(asButton);
 
 const Button = WebComponentAdapter(PrototypeButton);
 

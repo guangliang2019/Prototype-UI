@@ -1,74 +1,55 @@
-import { ContextProvider } from '@/components/common';
 import { PrototypeSelectContext, PrototypeSelectProps } from './interface';
-import PrototypeSelectItem from './select-item';
-import { PrototypeFormItemContext } from '../form/interface';
+import { definePrototype, getContext, provideContext } from '@/core';
+import { Component } from '@/core/interface';
+import { defineProps, useAttributeState } from '@/core/lifecycle';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
 
-export default class PrototypeSelect<
-    T extends Record<string, Object> & PrototypeSelectContext = PrototypeSelectContext,
-  >
-  extends ContextProvider<T, PrototypeFormItemContext>
-  implements PrototypeSelectProps
-{
-  protected _providerKeys = ['prototype-select'];
-  protected _consumerKeys = ['prototype-form-item'];
-  private _defaultValue: string = '';
+const Select = definePrototype<PrototypeSelectProps>((p) => {
+  const _itemRefs: PrototypeSelectContext['itemsRefs'] = [];
 
-  get defaultValue(): string {
-    return this._defaultValue;
-  }
+  defineProps(p, {
+    defaultValue: '',
+  });
 
-  private _index: number = -1;
-  private _value: string = '';
-  private _items: string[] = [];
-  private _selecting: boolean = false;
-  private _itemRefs: PrototypeSelectItem<any>[] = [];
+  useAttributeState(p, 'open', false);
 
-  constructor() {
-    super();
-    const defaultContext: Partial<PrototypeSelectContext['prototype-select']> = {
+  provideContext<PrototypeSelectContext>(p, 'prototype-select', (updateContext) => {
+    const component = p.componentRef;
+
+    const context: PrototypeSelectContext = {
+      width: -1,
+      open: () => {},
+      close: () => {},
+      focus: () => {},
+      focused: false,
+      changeValue: (value, focus = false) => {
+        console.log(context);
+        updateContext({
+          index: context.items.indexOf(value),
+          value: value,
+        });
+
+        if (focus) context.focus?.();
+        context.close?.();
+      },
+      triggerRef: null as unknown as Component,
+      defaultValue: p.defaultValue,
+      index: -1,
+      value: p.defaultValue,
       items: [],
+      selecting: false,
+      rootRef: component,
+      itemsRefs: _itemRefs,
+      valueRef: null as unknown as Component,
+      contentRef: null as unknown as Component,
     };
 
-    this.setContext('prototype-select', defaultContext);
-  }
+    return context;
+  });
+});
 
-  private _handleFormAction = () => {
-    if (this._contextValues['prototype-form-item']) {
-      this._contextValues['prototype-form-item'].changeFormItemValue(this._value);
-    }
-  };
+const PrototypeSelect = WebComponentAdapter(Select);
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._defaultValue = this.getAttribute('default-value') || '';
-    this._value = this._defaultValue;
-    this.setAttribute('data-state', 'close');
-    this._handleFormAction();
-
-    this.setContext('prototype-select', {
-      defaultValue: this._defaultValue,
-      index: this._index,
-      value: this._value,
-      items: this._items,
-      selecting: this._selecting,
-      changeValue: (value, focus = false) => {
-        this._value = value;
-        this._index = this._items.indexOf(value);
-
-        this.setContext('prototype-select', {
-          index: this._index,
-          value: this._value,
-        } as Partial<PrototypeSelectContext['prototype-select']>);
-        this._handleFormAction();
-        if (focus) {
-          this._provideValues['prototype-select'].focus();
-        }
-        this._provideValues['prototype-select'].close();
-      },
-      itemsRefs: this._itemRefs,
-      rootRef: this,
-    } as Partial<PrototypeSelectContext['prototype-select']>);
-  }
-}
+export default PrototypeSelect;
 
 customElements.define('prototype-select', PrototypeSelect);

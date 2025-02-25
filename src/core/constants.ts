@@ -1,4 +1,3 @@
-
 // lifecycle
 export const connectedCallbacks = Symbol('hooked-web-component connectedCallbacks');
 export const disconnectedCallbacks = Symbol('hooked-web-component disconnectedCallbacks');
@@ -21,3 +20,6 @@ export const handleRequestContext = Symbol('hooked-web-component handleRequestCo
 export const requestContext = Symbol('hooked-web-component requestContext');
 export const setContext = Symbol('hooked-web-component setContext');
 export const updateContext = Symbol('hooked-web-component updateContext');
+
+// render
+export const renderContent = Symbol('hooked-web-component renderContent');

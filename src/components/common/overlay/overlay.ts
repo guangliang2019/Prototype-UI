@@ -1,4 +1,4 @@
-import { ClickOutside, ContextConsumer } from '@/components/common';
+import { ContextConsumer } from '@/components/common';
 import { OverlayProps, OpenOverlayEventDetail } from './interface';
 
 export default class PrototypeOverlay<T extends Record<string, Object> = {}>

@@ -16,7 +16,7 @@ import {
   updateContext,
 } from './constants';
 import { ContextManager } from './context';
-import { FC, Hook, Prototype, Constructor, RequestContextEventDetail } from './interface';
+import { FC, Prototype, Constructor, RequestContextEventDetail } from './interface';
 
 const throwShouldBeOverwritten = (functionName: string) => {
   throw new Error(`${functionName} should be overwritten with adapter.`);
@@ -32,7 +32,7 @@ const throwShouldBeOverwritten = (functionName: string) => {
  * @returns A Object, should be used by adapter.
  */
 export const definePrototype = <T extends Record<string, any>>(
-  setup: Hook<T> | FC<T>
+  setup: FC<T>
 ): Constructor<Prototype<T>> => {
   return class implements Prototype<T> {
     componentRef = null as any;
@@ -93,11 +93,11 @@ export const definePrototype = <T extends Record<string, any>>(
         );
     };
 
-    render = () => throwShouldBeOverwritten('render') as Prototype<T>['render'];
+    render = null as Prototype<T>['render'];
     update = () => throwShouldBeOverwritten('update') as Prototype<T>['update'];
 
     constructor() {
-      setup(this);
+      this.render = setup(this) ?? null;
     }
   };
 };

@@ -1,43 +1,42 @@
-import { Overlay } from '@/components/common';
 import { PrototypeSelectContext } from './interface';
+import { definePrototype, getContext, useConnect } from '@/core';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { watchContext } from '@/core/context';
+import { asOverlay } from '@/core/hooks/as-overlay';
 
-export default class PrototypeSelectContent<
-  T extends PrototypeSelectContext = PrototypeSelectContext,
-> extends Overlay<T> {
-  protected _consumerKeys = ['prototype-select'];
+const SelectContent = definePrototype((p) => {
+  // context
+  watchContext(p, 'prototype-select');
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._contextValues['prototype-select'].contentRef = this;
-    const context = this._contextValues['prototype-select'];
-    context.open = this.open.bind(this);
-    context.close = this.close.bind(this);
-  }
+  asOverlay(p, (visible) => {
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const component = p.componentRef;
+    switch (visible) {
+      case true:
+        if (context.selecting) return;
+        context.rootRef.setAttribute('data-state', 'open');
+        context.selecting = true;
+        component.style.width = context.width + 'px';
+        break;
+      case false:
+        if (!context.selecting) return;
+        context.rootRef.setAttribute('data-state', 'close');
+        context.triggerRef.focus();
+        context.selecting = false;
+        break;
+    }
+  });
+  useConnect(p, () => {
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const component = p.componentRef;
 
-  open() {
-    const context = this._contextValues['prototype-select'];
-    if (context.selecting) return;
-    this.style.width = context.width + 'px';
-    context.selecting = true;
-    context.rootRef.setAttribute('data-state', 'open');
-    super.open();
-  }
+    context.open = component.show
+    context.close = component.hide
+  });
+});
 
-  close() {
-    const context = this._contextValues['prototype-select'];
-    if (!context.selecting) return;
-    super.close();
-    context.rootRef.setAttribute('data-state', 'close');
-    context.triggerRef.focus();
-    // Return focus to the trigger
-    context.selecting = false;
-  }
+const PrototypeSelectContent = WebComponentAdapter(SelectContent);
 
-  onClickOutside = (e: MouseEvent) => {
-    const context = this._contextValues['prototype-select'];
-    if (e.target === context.triggerRef) return;
-    this.close();
-  };
-}
+export default PrototypeSelectContent;
 
 customElements.define('prototype-select-content', PrototypeSelectContent);

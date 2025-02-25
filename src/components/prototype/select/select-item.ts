@@ -1,37 +1,51 @@
 import { PrototypeSelectContext, SelectItemProps } from './interface';
-import { PrototypeButton } from '../button';
-import { binarySearch } from '@/www/utils/search';
-import { compareDOM } from '@/www/utils/dom';
+import { definePrototype, getContext } from '@/core';
+import { asButton } from '../button/button';
+import { defineProps, useAttributeState, useConnect, useDisconnect } from '@/core/lifecycle';
+import { watchContext } from '@/core/context';
+import { binarySearch } from '@/core/utils/search';
+import { compareDOM } from '@/core/utils/dom';
+import useEventListener from '@/core/hooks/use-event-listener';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
 
-export default class PrototypeSelectItem<T extends PrototypeSelectContext = PrototypeSelectContext>
-  extends PrototypeButton<T>
-  implements SelectItemProps
-{
-  protected _consumerKeys = ['prototype-select'];
-  private _value = '';
-  get value(): string {
-    return this._value;
-  }
+const SelectItem = definePrototype<SelectItemProps>((p) => {
+  // role
+  asButton(p);
 
-  private _handleSelectItemMouseEnter = () => {
-    this.focus();
-  };
-  private _handleSelectItemMouseLeave = () => {
-    this.blur();
-  };
-  private _handlePrototypeSelectContextChange = (
-    context: PrototypeSelectContext['prototype-select']
-  ) => {
-    if (this.value === context.value) {
-      this.setAttribute('data-selected', '');
-    } else {
-      this.removeAttribute('data-selected');
-    }
-  };
+  // props
+  defineProps(p, { value: ' ' });
 
-  private _handleKeydown = (event: KeyboardEvent) => {
-    const context = this._contextValues['prototype-select'];
-    const currentIndex = context.items.indexOf(this._value);
+  // state
+  const selected = useAttributeState<boolean>(p, 'selected', false);
+
+  // context
+  watchContext(p, 'prototype-select', (context: PrototypeSelectContext) => {
+    if (p.componentRef.value === context.value) selected.value = true;
+    else selected.value = false;
+  });
+  useConnect(p, () => {
+    const component = p.componentRef;
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const insertIndex = binarySearch(context.itemsRefs, component, compareDOM);
+    context.itemsRefs.splice(insertIndex, 0, component);
+    context.items.splice(insertIndex, 0, component.value);
+  });
+  useDisconnect(p, () => {
+    const component = p.componentRef;
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const removeIndex = binarySearch(context.itemsRefs, component, compareDOM);
+    context.items.splice(removeIndex, 1);
+    context.itemsRefs.splice(removeIndex, 1);
+  });
+
+  // events
+  const _handleSelectItemMouseEnter = () => p.componentRef.focus();
+  const _handleSelectItemMouseLeave = () => p.componentRef.blur();
+
+  const _handleKeydown = (event: KeyboardEvent) => {
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const component = p.componentRef;
+    const currentIndex = context.itemsRefs.indexOf(component);
     const nextIndex = (currentIndex + 1) % context.items.length;
     const prevIndex = (currentIndex - 1 + context.items.length) % context.items.length;
 
@@ -47,7 +61,7 @@ export default class PrototypeSelectItem<T extends PrototypeSelectContext = Prot
 
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      context.changeValue(this._value, true);
+      context.changeValue(component.value, true);
     }
 
     if (event.key === 'Tab') {
@@ -55,47 +69,20 @@ export default class PrototypeSelectItem<T extends PrototypeSelectContext = Prot
     }
   };
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.tabIndex = -1;
-    const context = this._contextValues['prototype-select'];
-
-    this._value = this.getAttribute('value') || '';
-    if (context.defaultValue === this.value) this.setAttribute('data-selected', '');
-
-    const insertIndex = binarySearch(context.itemsRefs, this, compareDOM);
-    context.itemsRefs.splice(insertIndex, 0, this);
-    context.items.splice(insertIndex, 0, this._value);
-    // Event Listeners
-    this.addEventListener('mouseenter', this._handleSelectItemMouseEnter);
-    this.addEventListener('mouseleave', this._handleSelectItemMouseLeave);
-
-    this.addEventListener('keydown', this._handleKeydown as EventListener);
-
-    // Context Listeners
-    this.addContextListener('prototype-select', this._handlePrototypeSelectContextChange);
-
-    this.onClick = () => {
-      context.changeValue(this.value, true);
+  useEventListener(p, 'mouseenter', _handleSelectItemMouseEnter);
+  useEventListener(p, 'mouseleave', _handleSelectItemMouseLeave);
+  useEventListener(p, 'keydown', _handleKeydown as EventListener);
+  useConnect(p, () => {
+    const component = p.componentRef;
+    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    component.onClick = () => {
+      context.changeValue(component.value, true);
     };
-  }
+  });
+});
 
-  disconnectedCallback() {
-    this.removeEventListener('mouseenter', this._handleSelectItemMouseEnter);
-    this.removeEventListener('mouseleave', this._handleSelectItemMouseLeave);
+const PrototypeSelectItem = WebComponentAdapter(SelectItem);
 
-    this.removeEventListener('keydown', this._handleKeydown as EventListener);
-
-    this.removeContextListener('prototype-select', this._handlePrototypeSelectContextChange);
-
-    const context = this._contextValues['prototype-select'];
-
-    const removeIndex = binarySearch(context.itemsRefs, this, compareDOM);
-    context.items.splice(removeIndex, 1);
-    context.itemsRefs.splice(removeIndex, 1);
-
-    super.disconnectedCallback();
-  }
-}
+export default PrototypeSelectItem;
 
 customElements.define('prototype-select-item', PrototypeSelectItem);
