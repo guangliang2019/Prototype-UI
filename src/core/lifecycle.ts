@@ -58,7 +58,7 @@ export const defineProps = <T extends Record<string, any>, K extends keyof T = k
   keys.forEach((key) => {
     useCreated(p, () => {
       const component = p.componentRef;
-
+      // TODO: 如果该 props 已经定义过，需要更新定义，当前的代码会导致重定义失败
       Object.defineProperty(component, key as K, {
         get: () => _props[key],
         set: (value) => {
@@ -129,7 +129,7 @@ const handleAttributeState = <T extends DataStateType>(
   }
 };
 
-export const useAttributeState = <T extends DataStateType>(
+export const useAttributeState = <T extends string | boolean | number>(
   p: Prototype,
   stateName: string,
   defaultValue: T
@@ -138,11 +138,16 @@ export const useAttributeState = <T extends DataStateType>(
     throw new Error('useDataState can only be used inside defineComponent');
 
   const state = { value: defaultValue };
+
+  useConnect(p, () => {
+    handleAttributeState(p, `data-${stateName}`, defaultValue);
+  });
+
   return new Proxy(state, {
     set(target, _, value) {
-      handleAttributeState(p, `state-${stateName}`, value);
+      handleAttributeState(p, `data-${stateName}`, value);
       target.value = value;
-      return true;
+      return Reflect.set(target, _, value);
     },
   });
 };

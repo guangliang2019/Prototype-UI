@@ -68,7 +68,7 @@ export const definePrototype = <T extends Record<string, any>>(
         event.stopPropagation(); // 阻止事件传播到外部 provider
         ContextManager.getInstance().addConsumer(key, this, consumer);
         if (this[provideValues].get(key) === undefined) this[provideValues].set(key, {});
-        ContextManager.getInstance().updateContext(key, this, this[provideValues].get(key), []);
+        consumer[setContext](key, this[provideValues].get(key), []);
       }
     };
     [setContext] = <C>(key: string | symbol, value: Partial<C>, changedKeys: string[]) => {

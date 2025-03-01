@@ -1,14 +1,14 @@
-import { PrototypeSelectContext, SelectItemProps } from './interface';
-import { definePrototype, getContext } from '@/core';
-import { asButton } from '../button/button';
+import { SelectContext, SelectItemProps } from './interface';
+import { getContext } from '@/core';
 import { defineProps, useAttributeState, useConnect, useDisconnect } from '@/core/lifecycle';
 import { watchContext } from '@/core/context';
 import { binarySearch } from '@/core/utils/search';
 import { compareDOM } from '@/core/utils/dom';
 import useEventListener from '@/core/hooks/use-event-listener';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { asButton } from '@/core/components/button';
+import { Prototype } from '@/core/interface';
 
-const SelectItem = definePrototype<SelectItemProps>((p) => {
+const asSelectItem = (p: Prototype<SelectItemProps>) => {
   // role
   asButton(p);
 
@@ -19,20 +19,20 @@ const SelectItem = definePrototype<SelectItemProps>((p) => {
   const selected = useAttributeState<boolean>(p, 'selected', false);
 
   // context
-  watchContext(p, 'prototype-select', (context: PrototypeSelectContext) => {
+  watchContext(p, 'select', (context: SelectContext, keys) => {
     if (p.componentRef.value === context.value) selected.value = true;
     else selected.value = false;
   });
   useConnect(p, () => {
     const component = p.componentRef;
-    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const context = getContext<SelectContext>(p, 'select');
     const insertIndex = binarySearch(context.itemsRefs, component, compareDOM);
     context.itemsRefs.splice(insertIndex, 0, component);
     context.items.splice(insertIndex, 0, component.value);
   });
   useDisconnect(p, () => {
     const component = p.componentRef;
-    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const context = getContext<SelectContext>(p, 'select');
     const removeIndex = binarySearch(context.itemsRefs, component, compareDOM);
     context.items.splice(removeIndex, 1);
     context.itemsRefs.splice(removeIndex, 1);
@@ -43,7 +43,7 @@ const SelectItem = definePrototype<SelectItemProps>((p) => {
   const _handleSelectItemMouseLeave = () => p.componentRef.blur();
 
   const _handleKeydown = (event: KeyboardEvent) => {
-    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const context = getContext<SelectContext>(p, 'select');
     const component = p.componentRef;
     const currentIndex = context.itemsRefs.indexOf(component);
     const nextIndex = (currentIndex + 1) % context.items.length;
@@ -74,15 +74,11 @@ const SelectItem = definePrototype<SelectItemProps>((p) => {
   useEventListener(p, 'keydown', _handleKeydown as EventListener);
   useConnect(p, () => {
     const component = p.componentRef;
-    const context = getContext<PrototypeSelectContext>(p, 'prototype-select');
+    const context = getContext<SelectContext>(p, 'select');
     component.onClick = () => {
       context.changeValue(component.value, true);
     };
   });
-});
+};
 
-const PrototypeSelectItem = WebComponentAdapter(SelectItem);
-
-export default PrototypeSelectItem;
-
-customElements.define('prototype-select-item', PrototypeSelectItem);
+export default asSelectItem;

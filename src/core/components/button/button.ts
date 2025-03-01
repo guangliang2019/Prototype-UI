@@ -1,12 +1,10 @@
-import { definePrototype } from '@/core';
-import { ButtonProps } from './interface';
-import { defineProps, useAttributeState, useConnect } from '@/core/lifecycle';
-import useEventListener, { useFocus, useHover } from '@/core/hooks/use-event-listener';
-import { asTrigger } from '@/core/hooks/as-trigger';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
 import { Prototype } from '@/core/interface';
+import { asTrigger } from '../trigger';
+import { defineProps, useAttributeState, useConnect, useDisconnect } from '@/core/lifecycle';
+import useEventListener, { useFocus, useHover } from '@/core/hooks/use-event-listener';
+import { ButtonProps } from './interface';
 
-export const asButton = (p: Prototype): void => {
+const asButton = (p: Prototype<ButtonProps>): void => {
   // role
   asTrigger(p);
   // props
@@ -29,7 +27,6 @@ export const asButton = (p: Prototype): void => {
       }
     }
   );
-
   // ui-state
   const _hover = useAttributeState<boolean>(p, 'hover', false);
   const _focus = useAttributeState<boolean>(p, 'focus', false);
@@ -45,6 +42,7 @@ export const asButton = (p: Prototype): void => {
       _focus.value = false;
     }
   });
+
   useEventListener(p, 'mousedown', () => (_active.value = true));
   useEventListener(p, 'mouseup', () => (_active.value = false));
 
@@ -72,10 +70,4 @@ export const asButton = (p: Prototype): void => {
   });
 };
 
-const PrototypeButton = definePrototype<ButtonProps>(asButton);
-
-const Button = WebComponentAdapter(PrototypeButton);
-
-export default Button;
-
-customElements.define('prototype-button', Button);
+export default asButton;

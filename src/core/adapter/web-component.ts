@@ -76,9 +76,11 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
       if (!prototype.render) return;
       if (!this.content) {
         this.content = prototype.render(h);
+        if (!this.content) return;
         this.appendChild(this.content);
       } else {
         const newContent = prototype.render(h);
+        if (!newContent) return;
         this.content.replaceWith(newContent);
         this.content = newContent;
       }
@@ -95,7 +97,7 @@ export function h<T extends HTMLElement>(
   tag: string,
   props: Props = {},
   children: (Node | string)[] = []
-): T {
+): T | null {
   const element = document.createElement(tag) as T;
 
   if (props) {

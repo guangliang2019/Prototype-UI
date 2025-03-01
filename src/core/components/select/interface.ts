@@ -1,9 +1,12 @@
-import { Component } from '@/core/interface';
+import { Component, DataState } from '@/core/interface';
 import { ButtonProps } from '../button';
+import { OverlayProps } from '@/core/components/overlay/interface';
 
-export interface PrototypeSelectProps {
+export interface SelectProps {
   defaultValue?: string;
 }
+
+export interface SelectContentProps extends OverlayProps {}
 
 export interface SelectItemProps extends ButtonProps {
   value: string;
@@ -13,13 +16,12 @@ export interface SelectValueProps {
   renderValue: (value: string) => HTMLElement | string;
 }
 
-export interface PrototypeSelectContext {
+export interface SelectContext {
   index: number;
   value: string;
 
   width: number;
 
-  focused: boolean;
   focus: () => void;
 
   open: () => void;
@@ -29,7 +31,8 @@ export interface PrototypeSelectContext {
   defaultValue: string;
   changeValue: (value: string, focus?: boolean) => void;
 
-  selecting: boolean;
+  selecting: DataState<boolean>;
+  focused: DataState<boolean>;
 
   rootRef: Component;
   triggerRef: Component;
