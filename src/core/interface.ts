@@ -51,7 +51,7 @@ export interface Prototype<T extends Record<string, any> = Record<string, any>>
   /**
    * Custom lifecycle hook. This is called when the component is connected. Or when the component is updated.
    */
-  render(): void;
+  render: null | ((h: RenderFunction) => Component | null);
 
   /**
    * Custom lifecycle hook. This is called when the component is updated.
@@ -108,6 +108,7 @@ export interface Prototype<T extends Record<string, any> = Record<string, any>>
 export interface Component<T extends Record<string, any> = Record<string, any>>
   extends HTMLElement {
   prototypeRef: Prototype<T>;
+  render: () => void;
 }
 
 export type RequestContextEventDetail = {
@@ -115,17 +116,17 @@ export type RequestContextEventDetail = {
   consumer: Prototype;
 };
 
-export type Hook<Props extends Record<string | symbol, any> = Record<string | symbol, any>> = (
-  prototype: Prototype<Props>,
-  ...args: any
-) => void;
-
 export type FC<Props extends Record<string | symbol, any> = Record<string | symbol, any>> = (
-  prototype: Prototype<Props>,
-  ...args: any
-) => HTMLElement;
+  prototype: Prototype<Props>
+) => ((h: RenderFunction) => Component | null) | void;
 
 export type Constructor<T> = new (args: any) => T;
 
 export type DataState<T extends DataStateType> = { value: T };
 export type DataStateType = string | boolean | number;
+
+export type RenderFunction = (
+  tag: string,
+  props: Record<string, any>,
+  children: (Component | string)[]
+) => Component | null;

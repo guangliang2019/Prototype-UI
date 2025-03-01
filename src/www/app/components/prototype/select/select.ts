@@ -1,6 +1,5 @@
 import { Doc, DocComponent } from '@/www/components/doc-component';
 import './select-basic';
-import '@/components/prototype/select';
 
 export default class SelectDoc extends DocComponent {
   protected _doc: Doc = {

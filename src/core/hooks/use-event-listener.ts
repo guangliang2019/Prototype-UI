@@ -14,14 +14,20 @@ const useEventListener = <K extends keyof DocumentEventMap>(
   });
 };
 
-export const useHover = (p: Prototype, onMouseEnter: () => void, onMouseLeave: () => void) => {
-  useEventListener(p, 'mouseenter', onMouseEnter);
-  useEventListener(p, 'mouseleave', onMouseLeave);
+export const useHover = (
+  p: Prototype,
+  handleHoverChange: (hover: boolean, e: MouseEvent) => void
+) => {
+  useEventListener(p, 'mouseenter', (e) => handleHoverChange(true, e as MouseEvent));
+  useEventListener(p, 'mouseleave', (e) => handleHoverChange(false, e as MouseEvent));
 };
 
-export const useFocus = (p: Prototype, onFocus: () => void, onBlur: () => void) => {
-  useEventListener(p, 'focus', onFocus);
-  useEventListener(p, 'blur', onBlur);
+export const useFocus = (
+  p: Prototype,
+  handleFocusChange: (hover: boolean, e: FocusEvent) => void
+) => {
+  useEventListener(p, 'focus', (e) => handleFocusChange(true, e as FocusEvent));
+  useEventListener(p, 'blur', (e) => handleFocusChange(false, e as FocusEvent));
 };
 
 export default useEventListener;

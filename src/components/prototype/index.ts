@@ -5,7 +5,13 @@ export {
   PrototypeDialogContent,
   PrototypeDialogTrigger,
 } from './dialog';
-export { PrototypeSelect, PrototypeSelectTrigger, PrototypeSelectItem } from './select';
+export {
+  PrototypeSelect,
+  PrototypeSelectContent,
+  PrototypeSelectTrigger,
+  PrototypeSelectItem,
+  PrototypeSelectValue,
+} from './select';
 export {
   PrototypeTabs,
   PrototypeTabsContent,
@@ -15,4 +21,4 @@ export {
 export { PrototypeTransition } from './transition';
 export { PrototypeResizable, PrototypeResizableHandle, PrototypeResizablePanel } from './resizable';
 export { PrototypeTestTab, PrototypeTestTabTrigger, PrototypeTestTabContent } from './test-tab';
-export { PrototypeTestButton,  } from './test-button';
+export { PrototypeTestButton } from './test-button';

@@ -1,4 +1,5 @@
-import { ButtonProps } from '@/components/prototype/button';
+import { ButtonProps } from "@/core/components/button";
+
 
 export interface ShadcnButtonProps extends ButtonProps {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'link' | 'destructive';

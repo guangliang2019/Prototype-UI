@@ -22,7 +22,7 @@ export default class PrototypeDoc extends HTMLElement {
 
     fragment.appendChild(h('transition-doc'));
 		fragment.appendChild(h('select-doc'));
-		fragment.appendChild(h('form-doc'));
+		// fragment.appendChild(h('form-doc'));
 		fragment.appendChild(h('scroll-area-doc'));
 		fragment.appendChild(h('radio-group-doc'));
 		fragment.appendChild(h('resizable-doc'));

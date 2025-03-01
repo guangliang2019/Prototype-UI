@@ -1,5 +1,5 @@
 export interface ButtonProps {
-  onClick?: () => void;
+  onClick?: (e: Event) => void;
   disabled?: boolean;
   readonly autoFocus?: boolean;
 }

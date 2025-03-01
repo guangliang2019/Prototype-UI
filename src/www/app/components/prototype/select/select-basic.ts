@@ -17,6 +17,8 @@ export default class SelectBasic extends DocCode {
           h('prototype-select-item', { value: 'Option 1' }, ['Option 1']),
           h('prototype-select-item', { value: 'Option 2' }, ['Option 2']),
           h('prototype-select-item', { value: 'Option 3' }, ['Option 3']),
+          h('prototype-select-item', { value: 'Option 4' }, ['Option 4']),
+          h('prototype-select-item', { value: 'Option 5' }, ['Option 5']),
         ]
       ),
     ]);

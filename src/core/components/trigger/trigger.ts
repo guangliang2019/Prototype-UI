@@ -6,9 +6,9 @@
  * @date 2025-02-10
  */
 
-import { Component, Hook } from '../interface';
-import { watchAttribute, useConnect, useCreated, useDisconnect } from '../lifecycle';
-import { dfsFindElement } from '../utils/dom';
+import { Component, Prototype } from '@/core/interface';
+import { useConnect, useCreated, watchAttribute } from '@/core/lifecycle';
+import { dfsFindElement } from '@/core/utils/dom';
 
 export const asTriggerFlag = Symbol('asTriggerFlag');
 const _super = HTMLElement.prototype;
@@ -65,7 +65,7 @@ const blurFactory = (component: Component, state: TriggerState) => {
 };
 
 const isTrigger = (el: any): boolean => {
-  return el[asTriggerFlag] === true;
+  return el?.prototypeRef?.[asTriggerFlag] === true;
 };
 
 interface TriggerState {
@@ -83,7 +83,7 @@ interface TriggerState {
  *
  * 同理，在连接进 DOM 之前，dispatchEvent 会被暂存，在 connected 时触发
  */
-export const asTrigger: Hook = (p) => {
+const asTrigger = (p: Prototype) => {
   const state: TriggerState = {
     _target: null,
     _pendingEventListeners: [],
@@ -132,3 +132,5 @@ export const asTrigger: Hook = (p) => {
     }
   });
 };
+
+export default asTrigger;

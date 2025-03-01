@@ -1,57 +1,34 @@
-import { PrototypeButton } from '@/components/prototype/button';
 import { ShadcnButtonProps, SHADCN_BUTTON_DEFAULT_PROPS } from './interface';
 import { CONFIG } from '../_config';
 import { optimizeTailwindClasses } from '@/www/utils/tailwind';
+import { definePrototype } from '@/core';
+import { defineProps, useConnect, useDisconnect } from '@/core/lifecycle';
+import { requestRender } from '@/core/render';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { asButton } from '@/core/components/button';
 
-export default class ShadcnButton<T extends Record<string, Object> = {}>
-  extends PrototypeButton<T>
-  implements ShadcnButtonProps
-{
-  private _iconOnly = SHADCN_BUTTON_DEFAULT_PROPS['iconOnly'];
-  private _variant = SHADCN_BUTTON_DEFAULT_PROPS['variant'];
-  // 用户添加的 class 属性
-  private _class = '';
-  // 组件自身的 class 属性
-  private _computedClass = '';
+const Button = definePrototype<ShadcnButtonProps>((p) => {
+  // role
+  asButton(p);
+  // props
+  defineProps(p, { variant: 'secondary', iconOnly: false }, (key, _) => {
+    if (key === 'variant') requestRender(p);
+  });
 
-  static get observedAttributes() {
-    return [...super.observedAttributes, 'variant', 'icon-only'];
-  }
+  let _originalCls = '';
+  useConnect(p, () => {
+    _originalCls = p.componentRef.className;
+  });
 
-  attributeChangedCallback(name: string, oldValue: any, newValue: any) {
-    super.attributeChangedCallback(name, oldValue, newValue);
-    const mapping: Record<string, any> = {
-      'variant': () => (this._variant = newValue),
-      'icon-only': () => (this._iconOnly = newValue !== null),
-    };
+  return () => {
+    const component = p.componentRef;
+    const { iconOnly, disabled, variant } = component;
 
-    mapping[name]?.();
-
-    // 响应式属性变化进行重新渲染 (初始化时不会触发), onClick 变化不会重新渲染,
-    if (oldValue !== newValue && oldValue !== null) {
-      if (name === 'variant' || name === 'icon-only' || name === 'disabled') {
-        this._setup();
-      }
-    }
-  }
-
-  connectedCallback() {
-    this._class = this.className || '';
-    super.connectedCallback();
-
-    this._variant =
-      (this.getAttribute('variant') as ShadcnButtonProps['variant']) ||
-      SHADCN_BUTTON_DEFAULT_PROPS['variant'];
-    this._iconOnly = this.hasAttribute('icon-only');
-    this._setup();
-  }
-
-  private _setup() {
     let basicCls = 'select-none whitespace-nowrap';
     let flexCls = 'inline-flex items-center justify-center gap-2';
     let shapeCls = 'rounded-md';
-    let sizeCls = this._iconOnly ? 'h-9 w-9' : 'h-9 px-4 py-2';
-    let cursorCls = this.disabled ? 'cursor-arrow' : 'cursor-pointer';
+    let sizeCls = iconOnly ? 'h-9 w-9' : 'h-9 px-4 py-2';
+    let cursorCls = disabled ? 'cursor-arrow' : 'cursor-pointer';
     let fontCls = 'text-sm font-medium';
     let animationCls = 'transition-colors';
     let disabledCls = 'disabled:pointer-events-none disabled:opacity-50';
@@ -61,7 +38,7 @@ export default class ShadcnButton<T extends Record<string, Object> = {}>
     let borderCls = '';
     let extraCls = '';
 
-    switch (this._variant) {
+    switch (variant) {
       case 'primary':
         colorCls = 'bg-primary text-primary-foreground hover:bg-primary/90';
         shadowCls = 'shadow-lg';
@@ -84,11 +61,16 @@ export default class ShadcnButton<T extends Record<string, Object> = {}>
         break;
     }
     // prettier-ignore
-    this._computedClass = [basicCls, flexCls, shapeCls, sizeCls, cursorCls, fontCls, animationCls, disabledCls, focusCls, shadowCls, colorCls, borderCls, extraCls].join(' ').trimEnd();
-    this.className = optimizeTailwindClasses(
-      [this._computedClass, this._class].join(' ').trimEnd()
+    const _computedClass = [basicCls, flexCls, shapeCls, sizeCls, cursorCls, fontCls, animationCls, disabledCls, focusCls, shadowCls, colorCls, borderCls, extraCls].join(' ').trimEnd();
+    component.className = optimizeTailwindClasses(
+      [_computedClass, _originalCls].join(' ').trimEnd()
     );
-  }
-}
+
+    return null;
+  };
+});
+
+const ShadcnButton = WebComponentAdapter(Button);
+export default ShadcnButton;
 
 customElements.define(`${CONFIG.shadcn.prefix}-button`, ShadcnButton);
