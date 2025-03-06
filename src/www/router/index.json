@@ -4,6 +4,11 @@
       "title": "Introduction",
       "value": "docs-introduction",
       "href": "/docs/introduction"
+    },
+    {
+      "title": "PDSL",
+      "value": "docs-pdsl",
+      "href": "/docs/pdsl"
     }
   ],
   "Shadcn UI": [

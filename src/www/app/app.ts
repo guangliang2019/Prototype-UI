@@ -8,8 +8,9 @@ import './components/prototype';
 import './examples';
 
 import '@/components/lucide/chevrons-up-down';
-import { PrototypeTabs } from '@/components/prototype';
-import { RouteChange, Router } from '../router';
+import { RouteChange } from '../router';
+import { WebComponent } from '@/core/adapter/web-component';
+import { TabsProps } from '@/core/components/tabs';
 
 export default class AppRoot extends HTMLElement {
   connectedCallback() {
@@ -78,23 +79,24 @@ export default class AppRoot extends HTMLElement {
         'default-value': 'docs-introduction',
         class: 'container flex-1 items-start',
       },
-      [h('website-aside'), h('doc-introduction'), h('shadcn-docs'), h('prototype-docs')]
-    ) as PrototypeTabs;
+      [
+        h('website-aside'),
+        h('doc-introduction'),
+        h('doc-pdsl'),
+        h('shadcn-docs'),
+        h('prototype-docs'),
+      ]
+    ) as WebComponent<TabsProps>;
     const navTab = h('prototype-tabs', { 'default-value': 'docs' }, [
       h('website-nav'),
       h('main', { class: 'flex-1 flex justify-center' }, [
         h('prototype-tabs-content', { value: 'docs' }, [docsTab]),
-        h('prototype-tabs-content', { style: 'display: none', value: 'components' }, [
-          'components',
-        ]),
-        h('prototype-tabs-content', { style: 'display: none', value: 'examples' }, [
-          h('examples-page'),
-        ]),
+        h('prototype-tabs-content', { value: 'components' }, ['components']),
+        h('prototype-tabs-content', { value: 'examples' }, [h('examples-page')]),
       ]),
-    ]) as PrototypeTabs;
-
-    this._changeNav = navTab.changTab;
-    this._changeDocs = docsTab.changTab;
+    ]) as WebComponent<TabsProps>;
+    this._changeNav = navTab.changTab ?? (() => {});
+    this._changeDocs = docsTab.changTab ?? (() => {});
     const content = h('div', { id: 'app' }, [h('prototype-overlay-provider', {}, [navTab])]);
 
     this.appendChild(content);

@@ -23,7 +23,7 @@ export default class ShadcnTabsBasic extends DocCode {
           ]),
         ]),
       ]),
-      h('shadcn-tabs-content', { value: 'password', style: 'display: none' }, [
+      h('shadcn-tabs-content', { value: 'password' }, [
         h('div', { class: 'rounded-xl border bg-card text-card-foreground shadow mt-2' }, [
           h('div', { class: 'flex flex-col space-y-1.5 p-6' }, [
             h('h3', { class: 'font-semibold leading-none tracking-tight' }, ['Password']),

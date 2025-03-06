@@ -105,10 +105,12 @@ export interface Prototype<T extends Record<string, any> = Record<string, any>>
   [provideValues]: Map<string | symbol, any>;
 }
 
-export interface Component<T extends Record<string, any> = Record<string, any>>
+export interface Component<Props extends Record<string, any> = Record<string, any>>
   extends HTMLElement {
-  prototypeRef: Prototype<T>;
-  render: () => void;
+  readonly prototypeRef: Prototype<Props>;
+  readonly render: () => void;
+  readonly props: Props;
+  readonly context: Prototype<Props>[typeof listenValues];
 }
 
 export type RequestContextEventDetail = {

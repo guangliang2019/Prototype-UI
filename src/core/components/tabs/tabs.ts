@@ -22,17 +22,15 @@ const asTabs = (p: Prototype<TabsProps>) => {
   // context
   provideContext<TabsContext>(p, 'tabs', (updateContext) => {
     const component = p.componentRef;
-    return {
+    const context: TabsContext = {
       tabValue: component.defaultValue ?? '',
       defaultValue: component.defaultValue ?? '',
       tabs: [],
       tabRefs: [],
       index: -1,
       changeTab: (value, focus = false) => {
-        const context = getContext<TabsContext>(p, 'tabs');
         const _index = context.tabs.indexOf(value);
         updateContext({ index: _index, tabValue: value });
-
         component.onTabChange(context);
         if (focus) {
           const _targetIndex = context.tabs.findIndex((tab) => tab === value);
@@ -40,6 +38,7 @@ const asTabs = (p: Prototype<TabsProps>) => {
         }
       },
     };
+    return context;
   });
 };
 

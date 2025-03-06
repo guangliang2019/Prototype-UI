@@ -6,13 +6,20 @@ import {
   handleRequestContext,
   initProps,
   listenKeys,
+  listenValues,
   provideKeys,
   requestContext,
 } from '../constants';
 import { ContextManager } from '../context';
 import { Component, Constructor, Prototype } from '../interface';
 
-export type WebComponent<Props extends object> = HTMLElement & Component<Props>;
+export type WebComponent<Props extends object> = HTMLElement &
+  Component<Props> & {
+    connectedCallback(): void;
+    disconnectedCallback(): void;
+    attributeChangedCallback(name: string, oldValue: string, newValue: string): void;
+    adoptedCallback(): void;
+  } & Props;
 
 export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
   prototypeConstructor: Constructor<Prototype<Props>>
@@ -22,6 +29,7 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
   return class WebComponent extends HTMLElement {
     prototypeRef: Prototype<Props> = null as any;
     content: HTMLElement | null = null;
+    _props: Props = {} as Props;
 
     constructor(args: any) {
       super();
@@ -30,6 +38,14 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
       prototype.componentRef = this as any;
       prototype[initProps] = args;
       prototype[createdCallbacks].forEach((callback) => callback());
+    }
+
+    get props() {
+      return this._props;
+    }
+
+    get context() {
+      return this.prototypeRef[listenValues];
     }
 
     connectedCallback() {
@@ -85,7 +101,7 @@ export const WebComponentAdapter = <Props extends Record<string, any> = {}>(
         this.content = newContent;
       }
     }
-  };
+  } as unknown as Constructor<WebComponent<Props>>;
 };
 
 type Props = {

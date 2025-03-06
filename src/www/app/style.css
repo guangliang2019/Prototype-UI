@@ -142,3 +142,7 @@
 .data-\[state\=active\]\:text-foreground[data-state="active"] {
   color: hsl(var(--foreground));
 }
+
+.data-\[state\=inactive\]\:hidden[data-state='inactive'] {
+  display: none;
+}

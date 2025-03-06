@@ -18,8 +18,11 @@ import { Prototype } from './interface';
 import { useConnect, useDisconnect } from './lifecycle';
 import { isComponent } from './utils/is';
 
-export const watchContext = <T extends Record<string, any>>(
-  self: Prototype,
+export const watchContext = <
+  T extends Record<string, any>,
+  Props extends Record<string, any> = Record<string, any>,
+>(
+  self: Prototype<Props>,
   key: string | symbol,
   listener?: (context: T, changedKeys: (keyof T)[]) => void
 ) => {
@@ -42,10 +45,11 @@ export const watchContext = <T extends Record<string, any>>(
 };
 
 export const getContext = <T extends Record<string, any>>(
-  self: Prototype,
+  p: Prototype,
   key: string | symbol
 ): T => {
-  return self[listenValues].get(key);
+  if (!p[listenKeys].has(key) && p[provideKeys].has(key)) return p[provideValues].get(key);
+  return p[listenValues].get(key);
 };
 
 export const provideContext = <T>(

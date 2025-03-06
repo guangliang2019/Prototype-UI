@@ -7,7 +7,6 @@ export default class RadioGroupBasic extends DocCode {
 
   protected _preview = () => {
     const button = h('shadcn-button', {}, ['Button']);
-    button.onClick = () => console.log('clicked');
 
     return Div({ class: 'flex flex-col items-center justify-center' }, [button]);
   };
