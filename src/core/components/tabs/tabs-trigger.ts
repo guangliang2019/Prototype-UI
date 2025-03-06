@@ -12,15 +12,20 @@ const asTabsTrigger = (p: Prototype<TabsTriggerProps>) => {
   // ui-state
   const state = useAttributeState<'active' | 'inactive'>(p, 'state', 'inactive');
   // context
-  watchContext(p, 'tabs', (context, _) => {
+
+  const _handleContextChange = (context: TabsContext) => {
     const component = p.componentRef;
     if (context.tabValue === component.value) {
       component.tabIndex = 0;
       state.value = 'active';
+      if (context.index === -1) context.index = context.tabs.indexOf(component.value);
     } else {
       component.tabIndex = -1;
       state.value = 'inactive';
     }
+  };
+  watchContext<TabsContext>(p, 'tabs', (context, keys) => {
+    if (keys.includes('tabValue')) _handleContextChange(context);
   });
   useConnect(p, () => {
     const context = getContext<TabsContext>(p, 'tabs');
@@ -28,6 +33,7 @@ const asTabsTrigger = (p: Prototype<TabsTriggerProps>) => {
     const insertIndex = binarySearch(context.tabRefs, component, compareDOM);
     context.tabRefs.splice(insertIndex, 0, component);
     context.tabs.splice(insertIndex, 0, component.value);
+    _handleContextChange(context);
   });
   useDisconnect(p, () => {
     const context = getContext<TabsContext>(p, 'tabs');

@@ -25,7 +25,7 @@ export default abstract class DocComponent extends ContextProvider<{
     }
 
     const sections = this._doc.sections;
-    const content = PrototypeTabsContent({ value: this._doc.id, style: 'display: none' }, [
+    const content = PrototypeTabsContent({ value: this._doc.id }, [
       Main(
         {
           class:

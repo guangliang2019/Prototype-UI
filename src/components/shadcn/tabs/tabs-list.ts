@@ -1,24 +1,28 @@
-import { ContextConsumer } from '@/components/common';
+import { definePrototype, useConnect } from '@/core';
+import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { watchContext } from '@/core/context';
 
-export default class ShadcnTabsList extends ContextConsumer<Record<string, Object>> {
-  protected _consumerKeys = ['prototype-tabs'];
-  // 用户添加的 class 属性
-  private _class = '';
-  // 组件自身的 class 属性
-  private _computedClass = '';
-  connectedCallback() {
-    super.connectedCallback();
-    this._class = this.className || '';
+const TabsList = definePrototype((p) => {
+  watchContext(p, 'tabs');
 
-    this._setup();
-  }
+  let _originalCls = '';
 
-  private _setup() {
-    this._computedClass =
+  useConnect(p, () => {
+    _originalCls = p.componentRef.className;
+  });
+
+  return () => {
+    const component = p.componentRef;
+    const _computedClass =
       'h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground grid w-full grid-cols-2';
+    component.className = [_computedClass, _originalCls].join(' ').trimEnd();
 
-    this.className = [this._computedClass, this._class].join(' ').trimEnd();
-  }
-}
+    return null;
+  };
+});
+
+const ShadcnTabsList = WebComponentAdapter(TabsList);
+
+export default ShadcnTabsList;
 
 customElements.define('shadcn-tabs-list', ShadcnTabsList);

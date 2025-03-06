@@ -64,7 +64,7 @@ export const defineProps = <T extends Record<string, any>, K extends keyof T = k
         set: (value) => {
           _props[key] = value;
           // 同步到 attribute
-          if (typeof key === 'string') handleAttributeState(p, key, value);
+          if (typeof key === 'string') handleAttributeState(p, camelCaseToKebabCase(key), value);
           onChange(key, value);
         },
       });
@@ -76,7 +76,7 @@ export const defineProps = <T extends Record<string, any>, K extends keyof T = k
     // 根据 defaultValue 的类型，决定如何初始化，以及如何监听 attribute 的变化
     switch (typeof defaultProps[key]) {
       case 'boolean':
-        watchAttribute(p, key as string, (oldValue, newValue) => {
+        watchAttribute(p, camelCaseToKebabCase(key), (oldValue, newValue) => {
           if (oldValue === newValue) return;
           const component = p.componentRef;
           component[key] = (newValue !== null) as (Component<T> & T)[K];
@@ -84,7 +84,7 @@ export const defineProps = <T extends Record<string, any>, K extends keyof T = k
         break;
 
       case 'string':
-        watchAttribute(p, key as string, (oldValue, newValue) => {
+        watchAttribute(p, camelCaseToKebabCase(key), (oldValue, newValue) => {
           if (oldValue === newValue) return;
           const component = p.componentRef;
           component[key] = newValue as (Component<T> & T)[K];
@@ -92,7 +92,7 @@ export const defineProps = <T extends Record<string, any>, K extends keyof T = k
         break;
 
       case 'number':
-        watchAttribute(p, key as string, (oldValue, newValue) => {
+        watchAttribute(p, camelCaseToKebabCase(key), (oldValue, newValue) => {
           if (oldValue === newValue) return;
           const component = p.componentRef;
           component[key] = Number(newValue) as (Component<T> & T)[K];
@@ -150,4 +150,8 @@ export const useAttributeState = <T extends string | boolean | number>(
       return Reflect.set(target, _, value);
     },
   });
+};
+
+const camelCaseToKebabCase = (str: string) => {
+  return str.replace(/([A-Z])/g, '-$1').toLowerCase();
 };

@@ -34,7 +34,7 @@ export default abstract class DocCode extends ContextConsumer<{
           'code',
           {
             class:
-              'flex flex-col relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm max-w-[calc(100vw-960px-6rem)]',
+              'flex flex-col relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm',
           },
           this._code
             .trim()
@@ -68,7 +68,7 @@ export default abstract class DocCode extends ContextConsumer<{
             h('doc-tabs-indicator', {}, []),
           ]
         ),
-        h('doc-tabs-content', { value: 'Preview', style: 'display: none' }, [
+        h('doc-tabs-content', { value: 'Preview' }, [
           Div(
             {
               class:
@@ -87,7 +87,7 @@ export default abstract class DocCode extends ContextConsumer<{
             ]
           ),
         ]),
-        h('doc-tabs-content', { value: 'Code', style: 'display: none' }, [this._renderCodeBlock()]),
+        h('doc-tabs-content', { value: 'Code' }, [this._renderCodeBlock()]),
       ]),
     ]);
 
