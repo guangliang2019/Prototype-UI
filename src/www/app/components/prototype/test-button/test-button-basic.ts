@@ -9,6 +9,12 @@ export default class TestButtonBasic extends DocCode {
   protected _preview = () => {
     return Div({ class: 'flex flex-col items-center justify-center' }, [
       h('div', { class: 'text-2xl' }, ['Hello, Test-button!']),
+      h('prototype-test-button', {
+        class: 'w-10 h-10',
+        onClick: () => {
+          console.log('clicked');
+        },
+      },['Click me']),
     ]);
   };
 }
