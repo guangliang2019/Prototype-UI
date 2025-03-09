@@ -1,21 +1,13 @@
-import { ContextProvider } from '@/components/common';
-import { PrototypeTestButtonContext, TestButtonProps } from './interface';
+import { asButton } from '@/next-core/behaviors/as-button';
+import { TestButtonProps } from './interface';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
 
-export default class PrototypeTestButton<
-    T extends Record<string, Object> & PrototypeTestButtonContext = PrototypeTestButtonContext,
-  >
-  extends ContextProvider<T> implements TestButtonProps
-{
-  protected _providerKeys = ['prototype-test-button'];
-  protected _consumerKeys = [];
+const ButtonPrototype = definePrototype<TestButtonProps>({}, (hooks) => {
+  asButton(hooks);
+});
 
-  connectedCallback() {
-    super.connectedCallback();
+const Button = WebComponentAdapter(ButtonPrototype);
 
-    this.setContext('prototype-test-button', {
-      rootRef: this,
-    } as Partial<PrototypeTestButtonContext['prototype-test-button']>);
-  }
-}
+export default Button;
 
-customElements.define('prototype-test-button', PrototypeTestButton);
+customElements.define('prototype-test-button', Button);

@@ -49,7 +49,7 @@ export interface Prototype<T extends Record<string, any> = Record<string, any>>
   [attributeListeners]: Map<string, Set<(oldValue: string, newValue: string) => void>>;
 
   /**
-   * Custom lifecycle hook. This is called when the component is connected. Or when the component is updated.
+   * The render function of the component.
    */
   render: null | ((h: RenderFunction) => Component | null);
 
