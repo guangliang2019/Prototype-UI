@@ -21,8 +21,33 @@ export interface PrototypeHooks<Props = any> {
   /** 更新时的回调 */
   useUpdated(callback: () => void): void;
 
+  /**
+   * 将组件标记为 trigger
+   * 标记后，该组件的所有事件都会被代理到最内层的 trigger
+   */
+  markAsTrigger(): void;
+
   /** 监听属性变化 */
   watchAttribute<T = any>(name: string, callback: (oldValue: T, newValue: T) => void): void;
+
+  /**
+   * 注册事件监听器
+   * @param eventName 事件名称
+   * @param handler 事件处理器
+   * @param options 事件选项
+   */
+  useEvent<T = any>(
+    eventName: string,
+    handler: EventHandler<T>,
+    options?: EventOptions
+  ): void;
+
+  /**
+   * 触发事件
+   * @param eventName 事件名称
+   * @param detail 事件详情
+   */
+  emitEvent<T = any>(eventName: string, detail: T): void;
 
   /**
    * 创建状态
@@ -106,9 +131,61 @@ export interface PrototypeOptions<Props = Record<string, any>> {
 }
 
 /**
+ * 渲染器 API 接口
+ */
+export interface RendererAPI {
+  /**
+   * 创建元素
+   * @param tag 标签名或组件
+   * @param props 属性
+   * @param children 子元素
+   */
+  createElement: (tag: string | Function, props?: any, children?: any[]) => Element;
+
+  /**
+   * 创建文本节点
+   * @param content 文本内容
+   */
+  createText: (content: string) => Text;
+
+  /**
+   * 创建注释节点
+   * @param content 注释内容
+   */
+  createComment: (content: string) => Comment;
+}
+
+/**
+ * 原型设置函数的返回值
+ */
+export interface PrototypeSetupResult<P = Record<string, any>> {
+  /**
+   * 组件状态
+   */
+  state?: Record<string, State<any>>;
+
+  /**
+   * 组件动作/方法
+   */
+  actions?: Record<string, (...args: any[]) => any>;
+
+  /**
+   * 暴露给外部的接口
+   */
+  expose?: Record<string, any>;
+
+  /**
+   * 渲染函数
+   */
+  render?: (h: RendererAPI) => Element;
+}
+
+/**
  * 原型设置函数
  */
-export type PrototypeSetup<Props = Record<string, any>> = (hooks: PrototypeHooks<Props>) => unknown;
+export type PrototypeSetup<Props = Record<string, any>> = (
+  hooks: PrototypeHooks<Props>
+) => PrototypeSetupResult<Props> | void;
 
 /**
  * 组件原型
@@ -118,4 +195,68 @@ export interface Prototype<Props = Record<string, any>> {
   readonly options: PrototypeOptions<Props>;
   /** 设置函数 */
   readonly setup: PrototypeSetup<Props>;
+}
+
+/**
+ * 事件处理器类型
+ */
+export type EventHandler<T = any> = (event: T) => void;
+
+/**
+ * 事件选项
+ */
+export interface EventOptions {
+  once?: boolean;
+  capture?: boolean;
+  passive?: boolean;
+}
+
+/**
+ * 事件管理器接口
+ */
+export interface EventManager {
+  /**
+   * 注册事件监听器
+   */
+  on<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void;
+
+  /**
+   * 移除事件监听器
+   */
+  off<T = any>(eventName: string, handler: EventHandler<T>): void;
+
+  /**
+   * 触发事件
+   */
+  emit<T = any>(eventName: string, detail: T): void;
+
+  /**
+   * 注册一次性事件监听器
+   */
+  once<T = any>(eventName: string, handler: EventHandler<T>): void;
+
+  /**
+   * 清除所有事件监听器
+   */
+  clearAll(): void;
+
+  /**
+   * 将组件标记为 trigger
+   */
+  markAsTrigger(): void;
+
+  /**
+   * 组件挂载时调用
+   */
+  mount(): void;
+
+  /**
+   * 组件卸载时调用
+   */
+  unmount(): void;
+
+  /**
+   * 销毁事件管理器
+   */
+  destroy(): void;
 }

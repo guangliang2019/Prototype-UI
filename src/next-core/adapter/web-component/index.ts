@@ -1,15 +1,18 @@
-import { ComponentInstance } from '../interface';
+import { Component } from '../interface';
 import {
   WebAttributeManager,
   WebLifecycleManager,
   WebRenderManager,
   WebStateManager,
   WebPropsManager,
+  WebEventManager,
 } from './managers';
 import { ContextManager } from '../context';
 import type { Context } from '../context';
 import type { PropType, State } from '../interface';
 import { Prototype, PrototypeHooks } from '@/next-core';
+import { EventHandler, EventOptions } from '@/next-core/interface';
+import { PrototypeSetupResult, RendererAPI } from '../../interface';
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -19,23 +22,33 @@ type Constructor<T> = new (...args: any[]) => T;
  */
 export const WebComponentAdapter = <Props extends Record<string, PropType>>(
   prototype: Prototype<Props>
-): Constructor<HTMLElement & { props: Props }> => {
-  return class extends HTMLElement implements ComponentInstance {
+): Constructor<HTMLElement & Component> => {
+  return class extends HTMLElement implements Component {
     private _lifecycle = new WebLifecycleManager();
     private _attributeManager = new WebAttributeManager();
-    private _states: WebStateManager;
-    private _render: WebRenderManager;
-    private _propsManager: WebPropsManager<Props>;
+    private _states = new WebStateManager(this, this._attributeManager);
+    private _render = new WebRenderManager(this);
+    private _propsManager = new WebPropsManager<Props>(this, prototype.options);
+    private _eventManager = new WebEventManager(this);
     private _isDestroyed = false;
     private _pendingContextRequests = new Set<symbol>();
+    private _setupResult: PrototypeSetupResult | void;
 
-    // ComponentInstance 接口实现
-    get componentRef(): Element {
+    // Component 接口实现
+    get element(): Element {
       return this;
     }
 
-    useDestroy(callback: () => void): void {
-      this._lifecycle.add('destroyed', callback);
+    get eventManager() {
+      return this._eventManager;
+    }
+
+    get props() {
+      return this._propsManager;
+    }
+
+    get state() {
+      return this._states;
     }
 
     contextChanged?: (key: symbol, value: any, changedKeys: string[]) => void;
@@ -43,28 +56,11 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     constructor() {
       super();
 
-      this._states = new WebStateManager(this, this._attributeManager);
-      this._render = new WebRenderManager(this);
-      this._propsManager = new WebPropsManager<Props>(this, prototype.options);
-
-      // 创建钩子
-      const hooks = this.createHooks();
-
-      // 执行 setup 以注册钩子
-      prototype.setup(hooks);
+      // 执行 setup 获取结果
+      this._setupResult = prototype.setup(this.createHooks());
 
       // 触发 created 回调
       this._lifecycle.trigger('created');
-      console.log(this);
-    }
-
-    // 代理 props 的访问
-    get props(): Props {
-      return this._propsManager.getProps();
-    }
-
-    set props(value: Props) {
-      this._propsManager.setProps(value);
     }
 
     private createHooks(): PrototypeHooks<Props> {
@@ -75,8 +71,25 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
         useUnmounted: (cb) => this._lifecycle.add('unmounted', cb),
         useUpdated: (cb) => this._lifecycle.add('updated', cb),
 
+        markAsTrigger: () => {
+          this._eventManager.markAsTrigger();
+        },
+
         watchAttribute: (name, callback) => {
           this._attributeManager.watch(name, callback);
+        },
+
+        useEvent: <T>(eventName: string, handler: EventHandler<T>, options?: EventOptions) => {
+          this._eventManager.on(eventName, handler, options);
+
+          // 在组件销毁时自动移除事件监听
+          this._lifecycle.add('destroyed', () => {
+            this._eventManager.off(eventName, handler);
+          });
+        },
+
+        emitEvent: <T>(eventName: string, detail: T) => {
+          this._eventManager.emit(eventName, detail);
         },
 
         useState: (initial, attribute, options) =>
@@ -238,12 +251,19 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       // 同步所有待处理的属性
       this._states.flushAttributes();
 
+      // 挂载事件管理器
+      this._eventManager.mount();
+
       this._lifecycle.trigger('mounted');
       this.update();
     }
 
     disconnectedCallback() {
       if (this._isDestroyed) return;
+
+      // 卸载事件管理器
+      this._eventManager.unmount();
+
       this._lifecycle.trigger('unmounted');
     }
 
@@ -255,11 +275,44 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     private update() {
       if (this._isDestroyed) return;
 
-      // 执行 setup 获取渲染结果
-      const result = prototype.setup(this.createHooks());
+      // 如果有 render 函数，使用它来更新
+      if (this._setupResult?.render) {
+        const element = this._setupResult.render({
+          createElement: (
+            tag: string | Function,
+            props?: Record<string, unknown>,
+            children?: (Node | string | number | boolean | null | undefined)[]
+          ) => {
+            // 实现 createElement
+            const el = typeof tag === 'string' ? document.createElement(tag) : new (tag as any)();
 
-      if (result instanceof Node) {
-        this._render.update(result);
+            if (props) {
+              Object.entries(props).forEach(([key, value]) => {
+                if (key.startsWith('on') && typeof value === 'function') {
+                  el.addEventListener(key.slice(2).toLowerCase(), value);
+                } else {
+                  el.setAttribute(key, String(value));
+                }
+              });
+            }
+
+            if (children) {
+              children.flat().forEach((child) => {
+                if (child instanceof Node) {
+                  el.appendChild(child);
+                } else if (child != null) {
+                  el.appendChild(document.createTextNode(String(child)));
+                }
+              });
+            }
+
+            return el;
+          },
+          createText: (content: string) => document.createTextNode(content),
+          createComment: (content: string) => document.createComment(content),
+        } as RendererAPI);
+
+        this._render.update(element);
       }
     }
 
@@ -286,6 +339,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       this._lifecycle.clear();
       this._states.clear();
       this._render.clear();
+      this._eventManager.clearAll();
     }
   };
 };

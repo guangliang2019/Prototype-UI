@@ -1,6 +1,5 @@
 import { State } from '@/next-core/adapter/interface';
 import { PrototypeHooks } from '..';
-import { useEventListener } from '../hooks/use-event-listener';
 
 export interface ButtonProps {
   /** 是否禁用 */
@@ -41,6 +40,8 @@ export function asButton<P extends ButtonProps>(
   state: ButtonState;
   actions: ButtonActions;
 } {
+  // 标记为触发器
+  hooks.markAsTrigger();
   // 状态管理
   const hover = hooks.useState<boolean>(false, 'data-hover');
   const focus = hooks.useState<boolean>(false, 'data-focus');
@@ -82,30 +83,33 @@ export function asButton<P extends ButtonProps>(
 
   // 注册事件监听
   // 鼠标悬停
-  useEventListener(hooks, 'mouseenter', () => hover.set(true));
-  useEventListener(hooks, 'mouseleave', () => hover.set(false));
+  hooks.useEvent('mouseenter', () => {
+    console.log('mouseenter');
+    hover.set(true);
+  });
+  hooks.useEvent('mouseleave', () => hover.set(false));
   // 鼠标按下
-  useEventListener(hooks, 'mousedown', () => active.set(true));
+  hooks.useEvent('mousedown', () => active.set(true));
   // 鼠标释放
-  useEventListener(hooks, 'mouseup', () => active.set(false));
+  hooks.useEvent('mouseup', () => active.set(false));
   // 聚焦
-  useEventListener(hooks, 'focus', () => {
+  hooks.useEvent('focus', () => {
     focus.set(true);
     focusVisible.set(active.value);
   });
-  useEventListener(hooks, 'blur', () => {
+  hooks.useEvent('blur', () => {
     focus.set(false);
     focusVisible.set(false);
   });
   // 点击
-  useEventListener(hooks, 'click', (e) => {
+  hooks.useEvent('click', (e) => {
     const props = hooks.getProps();
     console.log(props);
     if (!focus.value || props.disabled) return;
     props.onClick?.(e as MouseEvent);
   });
   // 键盘按下
-  useEventListener(hooks, 'keydown', (e) => {
+  hooks.useEvent('keydown', (e) => {
     const props = hooks.getProps();
     if (!focus.value || props.disabled) return;
     const event = e as KeyboardEvent;
