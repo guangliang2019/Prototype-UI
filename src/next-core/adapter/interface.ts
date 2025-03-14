@@ -1,4 +1,5 @@
 import { Prototype } from '../interface';
+import type { EventManager } from '../interface';
 
 /**
  * Props 的基本类型定义
@@ -145,23 +146,38 @@ export interface RenderManager {
 }
 
 /**
- * 组件实例的基本结构
+ * 组件实例接口
  */
-export interface ComponentInstance {
+export interface Component {
   /**
-   * 组件的实际渲染元素引用
+   * 组件的渲染元素
    */
-  componentRef: Element;
+  readonly element: Element;
 
   /**
-   * 注册销毁回调
+   * 事件管理器
    */
-  useDestroy?: (callback: () => void) => void;
+  readonly eventManager: EventManager;
+
+  /**
+   * 属性管理器
+   */
+  readonly props: PropsManager;
+
+  /**
+   * 状态管理器
+   */
+  readonly state: StateManager;
 
   /**
    * Context 变更回调
    */
   contextChanged?: (key: symbol, value: any, changedKeys: string[]) => void;
+
+  /**
+   * 销毁组件
+   */
+  destroy(): void;
 }
 
 /**
@@ -172,17 +188,17 @@ export interface ComponentTreeWalker {
   /**
    * 获取父组件
    */
-  getParent(instance: ComponentInstance): ComponentInstance | null;
+  getParent(instance: Component): Component | null;
 
   /**
    * 获取子组件列表
    */
-  getChildren(instance: ComponentInstance): ComponentInstance[];
+  getChildren(instance: Component): Component[];
 
   /**
    * 判断是否是组件实例
    */
-  isComponent(element: any): element is ComponentInstance;
+  isComponent(element: any): element is Component;
 }
 
 /**
@@ -192,13 +208,13 @@ export interface ContextEventHandler {
   /**
    * 发送 Context 请求事件
    */
-  dispatchRequestContext(instance: ComponentInstance, contextKey: symbol): void;
+  dispatchRequestContext(instance: Component, contextKey: symbol): void;
 
   /**
    * 监听 Context 请求事件
    */
   listenRequestContext(
-    instance: ComponentInstance,
-    callback: (event: { contextKey: symbol; consumer: ComponentInstance }) => void
+    instance: Component,
+    callback: (event: { contextKey: symbol; consumer: Component }) => void
   ): () => void;
 }
