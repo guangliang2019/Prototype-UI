@@ -1,4 +1,4 @@
-import type { ComponentInstance, ComponentTreeWalker, ContextEventHandler } from './interface';
+import type { Component, ComponentTreeWalker, ContextEventHandler } from '@/next-core/interface';
 
 export interface ContextOptions<T> {
   /**
@@ -54,13 +54,13 @@ export class ContextManager {
   }
 
   // provider -> context value map
-  private providerMap = new WeakMap<ComponentInstance, Map<symbol, any>>();
+  private providerMap = new WeakMap<Component, Map<symbol, any>>();
 
   // consumer -> provider map
-  private consumerMap = new WeakMap<ComponentInstance, Map<symbol, ComponentInstance>>();
+  private consumerMap = new WeakMap<Component, Map<symbol, Component>>();
 
   // provider -> consumers set map
-  private subscriberMap = new WeakMap<ComponentInstance, Map<symbol, Set<ComponentInstance>>>();
+  private subscriberMap = new WeakMap<Component, Map<symbol, Set<Component>>>();
 
   private setupContextRequestListener(): void {
     this.eventHandler.listenRequestContext(
@@ -83,7 +83,7 @@ export class ContextManager {
   /**
    * 注册一个 provider
    */
-  registerProvider<T>(provider: ComponentInstance, context: Context<T>, value: T): void {
+  registerProvider<T>(provider: Component, context: Context<T>, value: T): void {
     if (!this.providerMap.has(provider)) {
       this.providerMap.set(provider, new Map());
     }
@@ -103,7 +103,7 @@ export class ContextManager {
   /**
    * 通知子树中的节点重新请求 context
    */
-  private notifySubtreeToRequestContext(provider: ComponentInstance, contextKey: symbol): void {
+  private notifySubtreeToRequestContext(provider: Component, contextKey: symbol): void {
     const queue = this.treeWalker.getChildren(provider);
     while (queue.length > 0) {
       const current = queue.shift()!;
@@ -127,11 +127,7 @@ export class ContextManager {
   /**
    * 注册一个 consumer
    */
-  registerConsumer(
-    consumer: ComponentInstance,
-    provider: ComponentInstance,
-    contextKey: symbol
-  ): void {
+  registerConsumer(consumer: Component, provider: Component, contextKey: symbol): void {
     // 如果 consumer 已经有 provider，且不是当前的 provider，
     // 则需要先取消旧的订阅
     const existingProvider = this.consumerMap.get(consumer)?.get(contextKey);
@@ -151,7 +147,7 @@ export class ContextManager {
   /**
    * 注销一个 provider
    */
-  unregisterProvider(provider: ComponentInstance, contextKey: symbol): void {
+  unregisterProvider(provider: Component, contextKey: symbol): void {
     const subscribers = this.subscriberMap.get(provider)?.get(contextKey);
     if (subscribers) {
       subscribers.forEach((consumer) => {
@@ -167,7 +163,7 @@ export class ContextManager {
   /**
    * 注销一个 consumer
    */
-  unregisterConsumer(consumer: ComponentInstance, contextKey: symbol): void {
+  unregisterConsumer(consumer: Component, contextKey: symbol): void {
     const provider = this.consumerMap.get(consumer)?.get(contextKey);
     if (provider) {
       this.subscriberMap.get(provider)?.get(contextKey)?.delete(consumer);
@@ -178,7 +174,7 @@ export class ContextManager {
   /**
    * 获取 context 值
    */
-  getValue<T>(provider: ComponentInstance, context: Context<T>): T {
+  getValue<T>(provider: Component, context: Context<T>): T {
     return this.providerMap.get(provider)?.get(context.key) ?? context.defaultValue;
   }
 
@@ -186,7 +182,7 @@ export class ContextManager {
    * 设置 context 值并通知所有订阅者
    */
   setValue<T>(
-    provider: ComponentInstance,
+    provider: Component,
     context: Context<T>,
     partialValue: Partial<T>,
     notify: boolean = true
@@ -213,14 +209,14 @@ export class ContextManager {
   /**
    * 获取 consumer 对应的 provider
    */
-  getProvider(consumer: ComponentInstance, contextKey: symbol): ComponentInstance | undefined {
+  getProvider(consumer: Component, contextKey: symbol): Component | undefined {
     return this.consumerMap.get(consumer)?.get(contextKey);
   }
 
   /**
    * 发送 context 请求事件
    */
-  dispatchContextRequest(consumer: ComponentInstance, contextKey: symbol): void {
+  dispatchContextRequest(consumer: Component, contextKey: symbol): void {
     this.eventHandler.dispatchRequestContext(consumer, contextKey);
   }
 

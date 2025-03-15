@@ -1,4 +1,4 @@
-import { EventManager as IEventManager, EventHandler, EventOptions } from '../../../interface';
+import { EventManager as IEventManager, EventHandler, EventOptions } from '@/next-core/interface';
 import { getComponent } from '../../../utils/component';
 
 interface EventItem {

@@ -1,4 +1,4 @@
-import { Component } from '../interface';
+import { Component } from '@/next-core/interface';
 import {
   WebAttributeManager,
   WebLifecycleManager,
@@ -7,12 +7,17 @@ import {
   WebPropsManager,
   WebEventManager,
 } from './managers';
-import { ContextManager } from '../context';
-import type { Context } from '../context';
-import type { PropType, State } from '../interface';
-import { Prototype, PrototypeHooks } from '@/next-core';
+import type {
+  ElementChildren,
+  ElementProps,
+  ElementType,
+  PropType,
+  State,
+} from '@/next-core/interface';
+import { Context, ContextManager, Prototype, PrototypeHooks } from '@/next-core';
 import { EventHandler, EventOptions } from '@/next-core/interface';
-import { PrototypeSetupResult, RendererAPI } from '../../interface';
+import { PrototypeSetupResult, RendererAPI } from '@/next-core/interface';
+import { WebRenderer } from './renderer';
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -30,6 +35,15 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     private _render = new WebRenderManager(this);
     private _propsManager = new WebPropsManager<Props>(this, prototype.options);
     private _eventManager = new WebEventManager(this);
+
+    private _renderer = new WebRenderer({
+      eventManager: this._eventManager,
+      attributeManager: this._attributeManager,
+      lifecycleManager: this._lifecycle,
+      stateManager: this._states,
+      propsManager: this._propsManager,
+    });
+
     private _isDestroyed = false;
     private _pendingContextRequests = new Set<symbol>();
     private _setupResult: PrototypeSetupResult | void;
@@ -117,8 +131,8 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           });
         },
 
-        h: (type: string, props: any, ...children: any[]) => {
-          return this._render.createElement(type, props, ...children);
+        h: (type: ElementType, props?: ElementProps, children?: ElementChildren[]) => {
+          return this._renderer.createElement(type, props, children);
         },
 
         // Context hooks
@@ -277,40 +291,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
 
       // 如果有 render 函数，使用它来更新
       if (this._setupResult?.render) {
-        const element = this._setupResult.render({
-          createElement: (
-            tag: string | Function,
-            props?: Record<string, unknown>,
-            children?: (Node | string | number | boolean | null | undefined)[]
-          ) => {
-            // 实现 createElement
-            const el = typeof tag === 'string' ? document.createElement(tag) : new (tag as any)();
-
-            if (props) {
-              Object.entries(props).forEach(([key, value]) => {
-                if (key.startsWith('on') && typeof value === 'function') {
-                  el.addEventListener(key.slice(2).toLowerCase(), value);
-                } else {
-                  el.setAttribute(key, String(value));
-                }
-              });
-            }
-
-            if (children) {
-              children.flat().forEach((child) => {
-                if (child instanceof Node) {
-                  el.appendChild(child);
-                } else if (child != null) {
-                  el.appendChild(document.createTextNode(String(child)));
-                }
-              });
-            }
-
-            return el;
-          },
-          createText: (content: string) => document.createTextNode(content),
-          createComment: (content: string) => document.createComment(content),
-        } as RendererAPI);
+        const element = this._setupResult.render(this._renderer);
 
         this._render.update(element);
       }

@@ -1,4 +1,4 @@
-import { RenderManager } from '../../interface';
+import { RenderManager } from '@/next-core/interface';
 
 /**
  * Web Components 渲染管理器

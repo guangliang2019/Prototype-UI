@@ -1,10 +1,6 @@
 import { Prototype } from '../interface';
-import type { EventManager } from '../interface';
-
-/**
- * Props 的基本类型定义
- */
-export type PropType = string | number | boolean | object | Function;
+import { Component } from './component';
+import { PropType } from './props';
 
 /**
  * Props 管理器接口
@@ -146,62 +142,6 @@ export interface RenderManager {
 }
 
 /**
- * 组件实例接口
- */
-export interface Component {
-  /**
-   * 组件的渲染元素
-   */
-  readonly element: Element;
-
-  /**
-   * 事件管理器
-   */
-  readonly eventManager: EventManager;
-
-  /**
-   * 属性管理器
-   */
-  readonly props: PropsManager;
-
-  /**
-   * 状态管理器
-   */
-  readonly state: StateManager;
-
-  /**
-   * Context 变更回调
-   */
-  contextChanged?: (key: symbol, value: any, changedKeys: string[]) => void;
-
-  /**
-   * 销毁组件
-   */
-  destroy(): void;
-}
-
-/**
- * 组件树遍历器
- * 不同框架可以提供不同的实现
- */
-export interface ComponentTreeWalker {
-  /**
-   * 获取父组件
-   */
-  getParent(instance: Component): Component | null;
-
-  /**
-   * 获取子组件列表
-   */
-  getChildren(instance: Component): Component[];
-
-  /**
-   * 判断是否是组件实例
-   */
-  isComponent(element: any): element is Component;
-}
-
-/**
  * Context 事件处理
  */
 export interface ContextEventHandler {
@@ -217,4 +157,68 @@ export interface ContextEventHandler {
     instance: Component,
     callback: (event: { contextKey: symbol; consumer: Component }) => void
   ): () => void;
+}
+
+/**
+ * 事件处理器类型
+ */
+export type EventHandler<T = any> = (event: T) => void;
+
+/**
+ * 事件选项
+ */
+export interface EventOptions {
+  once?: boolean;
+  capture?: boolean;
+  passive?: boolean;
+}
+
+/**
+ * 事件管理器接口
+ */
+export interface EventManager {
+  /**
+   * 注册事件监听器
+   */
+  on<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void;
+
+  /**
+   * 移除事件监听器
+   */
+  off<T = any>(eventName: string, handler: EventHandler<T>): void;
+
+  /**
+   * 触发事件
+   */
+  emit<T = any>(eventName: string, detail: T): void;
+
+  /**
+   * 注册一次性事件监听器
+   */
+  once<T = any>(eventName: string, handler: EventHandler<T>): void;
+
+  /**
+   * 清除所有事件监听器
+   */
+  clearAll(): void;
+
+  /**
+   * 将组件标记为 trigger
+   */
+  markAsTrigger(): void;
+
+  /**
+   * 组件挂载时调用
+   */
+  mount(): void;
+
+  /**
+   * 组件卸载时调用
+   */
+  unmount(): void;
+
+  /**
+   * 销毁事件管理器
+   */
+  destroy(): void;
 }

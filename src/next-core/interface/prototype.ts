@@ -1,5 +1,12 @@
-import type { Context } from './adapter/context';
-import type { State } from './adapter/interface';
+import { Context } from '../adapter/context';
+import { EventHandler, EventOptions, State } from './managers';
+import {
+  ElementChildren,
+  ElementProps,
+  ElementType,
+  RendererAPI,
+  VirtualElement,
+} from './renderer';
 
 /**
  * 可以通过属性监听的类型
@@ -36,11 +43,7 @@ export interface PrototypeHooks<Props = any> {
    * @param handler 事件处理器
    * @param options 事件选项
    */
-  useEvent<T = any>(
-    eventName: string,
-    handler: EventHandler<T>,
-    options?: EventOptions
-  ): void;
+  useEvent<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void;
 
   /**
    * 触发事件
@@ -79,7 +82,11 @@ export interface PrototypeHooks<Props = any> {
   onPropsChange(props: (keyof Props)[], callback: (changedProps: Partial<Props>) => void): void;
 
   /** 创建元素 */
-  h(type: string, props?: any, ...children: any[]): unknown;
+  h(
+    type: ElementType,
+    props?: ElementProps,
+    children?: ElementChildren[]
+  ): Element | VirtualElement;
 
   /**
    * 提供 context
@@ -131,31 +138,6 @@ export interface PrototypeOptions<Props = Record<string, any>> {
 }
 
 /**
- * 渲染器 API 接口
- */
-export interface RendererAPI {
-  /**
-   * 创建元素
-   * @param tag 标签名或组件
-   * @param props 属性
-   * @param children 子元素
-   */
-  createElement: (tag: string | Function, props?: any, children?: any[]) => Element;
-
-  /**
-   * 创建文本节点
-   * @param content 文本内容
-   */
-  createText: (content: string) => Text;
-
-  /**
-   * 创建注释节点
-   * @param content 注释内容
-   */
-  createComment: (content: string) => Comment;
-}
-
-/**
  * 原型设置函数的返回值
  */
 export interface PrototypeSetupResult<P = Record<string, any>> {
@@ -177,7 +159,7 @@ export interface PrototypeSetupResult<P = Record<string, any>> {
   /**
    * 渲染函数
    */
-  render?: (h: RendererAPI) => Element;
+  render?: (renderer: RendererAPI) => Element;
 }
 
 /**
@@ -195,68 +177,4 @@ export interface Prototype<Props = Record<string, any>> {
   readonly options: PrototypeOptions<Props>;
   /** 设置函数 */
   readonly setup: PrototypeSetup<Props>;
-}
-
-/**
- * 事件处理器类型
- */
-export type EventHandler<T = any> = (event: T) => void;
-
-/**
- * 事件选项
- */
-export interface EventOptions {
-  once?: boolean;
-  capture?: boolean;
-  passive?: boolean;
-}
-
-/**
- * 事件管理器接口
- */
-export interface EventManager {
-  /**
-   * 注册事件监听器
-   */
-  on<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void;
-
-  /**
-   * 移除事件监听器
-   */
-  off<T = any>(eventName: string, handler: EventHandler<T>): void;
-
-  /**
-   * 触发事件
-   */
-  emit<T = any>(eventName: string, detail: T): void;
-
-  /**
-   * 注册一次性事件监听器
-   */
-  once<T = any>(eventName: string, handler: EventHandler<T>): void;
-
-  /**
-   * 清除所有事件监听器
-   */
-  clearAll(): void;
-
-  /**
-   * 将组件标记为 trigger
-   */
-  markAsTrigger(): void;
-
-  /**
-   * 组件挂载时调用
-   */
-  mount(): void;
-
-  /**
-   * 组件卸载时调用
-   */
-  unmount(): void;
-
-  /**
-   * 销毁事件管理器
-   */
-  destroy(): void;
 }

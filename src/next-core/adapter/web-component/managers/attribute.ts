@@ -1,4 +1,5 @@
-import { AttributeManager } from '../../interface';
+import { AttributeManager } from "@/next-core/interface";
+
 
 /**
  * Web Components 属性管理器

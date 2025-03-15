@@ -38,6 +38,5 @@ export function definePrototype<Props = Record<string, any>>(
 export * from './interface';
 
 // 导出适配器相关内容
-export * from './adapter/interface';
 export * from './adapter/context';
 export { WebComponentAdapter } from './adapter/web-component';

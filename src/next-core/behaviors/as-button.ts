@@ -1,5 +1,4 @@
-import { State } from '@/next-core/adapter/interface';
-import { PrototypeHooks } from '..';
+import { PrototypeHooks, State } from '../interface';
 
 export interface ButtonProps {
   /** 是否禁用 */
@@ -31,7 +30,7 @@ export interface ButtonActions {
 }
 
 /**
- * Button 行为增强器
+ * 让使用了 asButton 的组件具有按钮的行为
  * @param hooks 原型钩子
  */
 export function asButton<P extends ButtonProps>(
