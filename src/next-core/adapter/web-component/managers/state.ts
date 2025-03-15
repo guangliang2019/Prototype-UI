@@ -1,5 +1,5 @@
 import { isValidKebabCase, kebabToCamel } from '@/next-core/utils/naming';
-import { AttributeManager, State, StateManager } from '../../interface';
+import { AttributeManager, State, StateManager } from '@/next-core/interface';
 
 /**
  * Web Components 状态管理器
@@ -195,11 +195,11 @@ export class WebStateManager implements StateManager {
         return (value !== null) as T;
       }
     }
-    
+
     // 尝试解析数字
     if (/^-?\d+$/.test(value)) return parseInt(value, 10) as T;
     if (/^-?\d*\.\d+$/.test(value)) return parseFloat(value) as T;
-    
+
     // 其他情况返回原始字符串
     return value as T;
   };

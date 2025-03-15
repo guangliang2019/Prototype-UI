@@ -1,4 +1,4 @@
-import { LifecycleManager } from "../../interface";
+import { LifecycleManager } from "@/next-core/interface";
 
 /**
  * Web Components 生命周期管理器

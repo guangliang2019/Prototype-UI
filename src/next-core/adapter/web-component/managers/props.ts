@@ -1,7 +1,6 @@
-import { PropType } from '../../interface';
-import type { PropsManager, PropsOptions, SerializationRule } from '../../props';
-import { defaultSerializationRules } from '../../props';
+import { PropType, PropsManager, PropsOptions, SerializationRule } from '@/next-core/interface';
 import { camelToKebab, kebabToCamel } from '@/next-core/utils/naming';
+import { defaultSerializationRules } from '../../props';
 
 /**
  * Web Components 的 Props 管理器实现
