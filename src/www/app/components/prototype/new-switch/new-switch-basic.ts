@@ -10,12 +10,15 @@ export default class NewSwitchBasic extends DocCode {
 
     protected _preview = () => {
         return Div({ class: 'flex flex-col items-center justify-center gap-6 p-6' }, [
-            // 基础用法
+            
             Div({ class: 'w-full flex flex-col gap-4' }, [
                 h('h3', { class: 'text-lg font-medium' }, ['基础用法']),
+                
                 Div({ class: 'flex items-center gap-2' }, [
-                    h('prototype-new-switch', { checked: true }),
-                    h('span', {}, ['选中状态'])
+                    h('prototype-new-switch', { checked: true, style: 'position: relative; width: 40px; height: 20px; border-radius: 10px; background-color: #ccc; display: inline-block; --switch-width: 40px; --switch-height: 20px; --switch-thumb-size: 16px;' }, [
+                        h('prototype-new-switch-thumb', {})
+                    ]),
+                    h('span', {}, [''])
                 ])
             ]),
 

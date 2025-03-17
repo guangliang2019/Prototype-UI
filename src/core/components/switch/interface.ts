@@ -1,6 +1,6 @@
 export interface SwitchProps {
-    onClick?: (e: Event) => void;
+    onChange?: (e: CustomEvent) => void;
     disabled?: boolean;
-    readonly autoFocus?: boolean;
     checked?: boolean;
+    label?: string;
 }

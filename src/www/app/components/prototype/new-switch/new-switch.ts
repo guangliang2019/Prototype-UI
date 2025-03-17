@@ -19,6 +19,12 @@ export default class NewSwitchDoc extends DocComponent {
                         title: '基本介绍',
                         content: `Switch组件提供了一个简单的接口来表示开关状态`
                     },
+                    {
+                        type: 'code',
+                        key: 'basic-usage',
+                        title: '基础用法',
+                        content: 'new-switch-basic',
+                    },
                 ],
             },
             
