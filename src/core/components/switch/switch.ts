@@ -3,6 +3,10 @@ import { asTrigger } from '../trigger';
 import { defineProps, useAttributeState, useConnect, useDisconnect } from '@/core/lifecycle';
 import useEventListener from '@/core/hooks/use-event-listener';
 import { SwitchProps } from './interface';
+import { provideContext, watchContext } from '@/core/context';
+
+// 创建上下文键
+const SwitchStateContext = Symbol('SwitchState');
 
 const asSwitch = (p: Prototype<SwitchProps>): void => {
 
@@ -10,6 +14,32 @@ const asSwitch = (p: Prototype<SwitchProps>): void => {
     const _disabled = useAttributeState<boolean>(p, 'disabled', false);
 
     asTrigger(p)
+
+    provideContext(p, SwitchStateContext, (updateContext) => {
+        _checked.value = !!p.props?.checked;
+        _disabled.value = !!p.props?.disabled;
+
+        const originalCheckedSetter = Object.getOwnPropertyDescriptor(_checked, 'value')?.set;
+        if (originalCheckedSetter) {
+            Object.defineProperty(_checked, 'value', {
+                set(v) {
+                    originalCheckedSetter.call(_checked, v);
+                    if (v) {
+                        p.componentRef.setAttribute('checked', '');
+                    } else {
+                        p.componentRef.removeAttribute('checked');
+                    }
+                    // 状态变化时更新上下文
+                    updateContext({ checked: _checked, disabled: _disabled });
+                },
+                get: () => Object.getOwnPropertyDescriptor(_checked, 'value')?.get?.call(_checked)
+            });
+        }
+
+        return { checked: _checked, disabled: _disabled };
+    });
+    
+    
 
     defineProps(
         p,
@@ -53,8 +83,6 @@ const asSwitch = (p: Prototype<SwitchProps>): void => {
             detail: { checked: _checked.value }
         }));
     };
-
-
     const _handleKeyDown = (e: KeyboardEvent) => {
         if (_disabled.value) return;
         if (e.key === 'Enter' || e.key === ' ') {
@@ -77,74 +105,32 @@ const asSwitch = (p: Prototype<SwitchProps>): void => {
 
 
 export const asSwitchThumb = (p: Prototype<SwitchProps>): void => {
-    let observer: MutationObserver;
-
-    const updateThumbState = () => {
+    const updateThumbState = (state: { checked: { value: boolean }, disabled: { value: boolean } }) => {
         const component = p.componentRef;
         if (!component) return;
 
-        const parentSwitch = component.closest('prototype-new-switch');
-        if (!parentSwitch) return;
-
-        const isChecked = parentSwitch.hasAttribute('checked');
-        const isDisabled = parentSwitch.hasAttribute('disabled');
-
-        
-        component.setAttribute('data-state', isChecked ? 'checked' : 'unchecked');
-        component.setAttribute('data-disabled', isDisabled ? 'true' : 'false');
-
-       
-        if (parentSwitch instanceof HTMLElement) {
-            parentSwitch.style.backgroundColor = isChecked ? '#4f46e5' : '#ccc';
-        }
+        // 更新数据属性
+        component.setAttribute('data-state', state.checked.value ? 'checked' : 'unchecked');
+        component.setAttribute('data-disabled', state.disabled.value ? 'true' : 'false');
     };
 
     useConnect(p, () => {
-        const component = p.componentRef;
-        if (!component) return;
-
-       
-        const shadow = component.attachShadow({ mode: 'open' });
-        const style = document.createElement('style');
-        style.textContent = `
-            :host {
-                display: block;
-                position: absolute;
-                top: calc((var(--switch-height, 20px) - var(--switch-thumb-size, 16px)) / 2);
-                left: calc((var(--switch-height, 20px) - var(--switch-thumb-size, 16px)) / 2);
-                width: var(--switch-thumb-size, 16px);
-                height: var(--switch-thumb-size, 16px);
-                background-color: white;
-                border-radius: 50%;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-                pointer-events: none;
-                transform: translateX(0);
-                transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-                z-index: 1;
-            }
-            
-            :host([data-state="checked"]) {
-                transform: translateX(calc(var(--switch-width, 40px) - var(--switch-height, 20px)));
-            }
-            
-            :host([data-disabled="true"]) {
-                opacity: 0.5;
-            }
-        `;
-        shadow.appendChild(style);
-
         
-        updateThumbState();
-        
-        const parentSwitch = component.closest('prototype-new-switch');
-        if (parentSwitch) {
-            observer = new MutationObserver(updateThumbState);
-            observer.observe(parentSwitch, { attributes: true, attributeFilter: ['checked', 'disabled'] });
+        p.watchContext(SwitchStateContext, updateThumbState);
+
+   
+        try {
+            const state = p.useContext(SwitchStateContext);
+            if (state) {
+                updateThumbState(state);
+            }
+        } catch (e) {
+            console.warn('无法获取Switch状态上下文', e);
         }
     });
 
     useDisconnect(p, () => {
-        observer?.disconnect();
+
     });
 };
 
