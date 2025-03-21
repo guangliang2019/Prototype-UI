@@ -1,5 +1,4 @@
 import { Prototype } from '../interface';
-import { Component } from './component';
 import { PropType } from './props';
 
 /**
@@ -142,24 +141,6 @@ export interface RenderManager {
 }
 
 /**
- * Context 事件处理
- */
-export interface ContextEventHandler {
-  /**
-   * 发送 Context 请求事件
-   */
-  dispatchRequestContext(instance: Component, contextKey: symbol): void;
-
-  /**
-   * 监听 Context 请求事件
-   */
-  listenRequestContext(
-    instance: Component,
-    callback: (event: { contextKey: symbol; consumer: Component }) => void
-  ): () => void;
-}
-
-/**
  * 事件处理器类型
  */
 export type EventHandler<T = any> = (event: T) => void;
@@ -221,4 +202,55 @@ export interface EventManager {
    * 销毁事件管理器
    */
   destroy(): void;
+}
+
+export interface ContextOptions {
+  shared: boolean;    // 是否共享内存引用
+  mutable: boolean;   // 是否允许 Consumer 静默修改
+  name?: string;      // Context 的标识名称，用于调试
+}
+
+export interface Context<T = any> {
+  id: symbol;
+  options: ContextOptions;
+  __type: T;  // 用于类型推导
+  displayName: string;
+}
+
+export interface ContextManager {
+  /**
+   * 获取当前组件提供的所有 Context
+   */
+  getProvidedContexts(): Set<Context>;
+
+  /**
+   * 获取当前组件消费的所有 Context
+   */
+  getConsumedContexts(): Set<Context>;
+
+  /**
+   * 提供 Context
+   * @param context Context 实例
+   * @param value Context 值
+   */
+  provideContext<T>(context: Context<T>, value: T): void;
+
+  /**
+   * 消费 Context
+   * @param context Context 实例
+   * @param value Context 值
+   */
+  consumeContext<T>(context: Context<T>, value: T): void;
+
+  /**
+   * 获取当前组件提供的 Context 值
+   * @param context Context 实例
+   */
+  getProvidedValue<T>(context: Context<T>): T | undefined;
+
+  /**
+   * 获取当前组件消费的 Context 值
+   * @param context Context 实例
+   */
+  getConsumedValue<T>(context: Context<T>): T | undefined;
 }

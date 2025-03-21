@@ -1,238 +1,289 @@
-import type { Component, ComponentTreeWalker, ContextEventHandler } from '@/next-core/interface';
-
-export interface ContextOptions<T> {
-  /**
-   * 是否允许 consumer 在初次订阅时修改 context
-   * 这在一些特殊场景下很有用，比如 consumer 需要向 context 中注入自己的能力
-   */
-  allowConsumerModify?: boolean;
-}
-
-export interface Context<T> {
-  readonly key: symbol;
-  readonly defaultValue: T;
-  readonly options: ContextOptions<T>;
-}
+import { Component, Context, ContextOptions } from '../interface';
+import { getComponent, isComponentRoot } from '../utils/component';
 
 /**
- * 创建一个 Context 定义
+ * 创建新的 Context
+ * @param options Context 配置选项
+ * @returns Context 实例
  */
-export function defineContext<T>(defaultValue: T, options: ContextOptions<T> = {}): Context<T> {
+export function createContext<T>(name: string, options?: ContextOptions): Context<T> {
+  options = options || {
+    shared: true,
+    mutable: true,
+  };
+  options.name = name || 'AnonymousContext';
+
   return {
-    key: Symbol('context'),
-    defaultValue,
+    id: Symbol(name),
     options,
+    __type: null as T,
+    displayName: name,
   };
 }
 
-/**
- * Context 管理器，负责处理 provider 和 consumer 之间的关系
- */
-export class ContextManager {
-  private static instance: ContextManager;
-  private constructor(
-    private treeWalker: ComponentTreeWalker,
-    private eventHandler: ContextEventHandler
-  ) {
-    // 监听 context 请求事件
-    this.setupContextRequestListener();
-  }
+interface ProviderEntry {
+  consumers: WeakSet<Component>;
+  consumersSet: Set<Component>; // 用于遍历
+}
 
-  static init(treeWalker: ComponentTreeWalker, eventHandler: ContextEventHandler): void {
-    if (!this.instance) {
-      this.instance = new ContextManager(treeWalker, eventHandler);
+interface ConsumerEntry {
+  provider: Component;
+}
+
+export class WebContextCenter {
+  private static instance: WebContextCenter;
+  private providerMap: Map<Context, Map<Component, ProviderEntry>> = new Map();
+  private consumerMap: Map<Context, WeakMap<Component, Component>> = new Map();
+  private pendingUpdates: Set<Component> = new Set();
+
+  private constructor() {}
+
+  static getInstance(): WebContextCenter {
+    if (!WebContextCenter.instance) {
+      WebContextCenter.instance = new WebContextCenter();
     }
-  }
-
-  static getInstance(): ContextManager {
-    if (!this.instance) {
-      throw new Error(
-        'ContextManager not initialized. ' + 'Please call ContextManager.init() first.'
-      );
-    }
-    return this.instance;
-  }
-
-  // provider -> context value map
-  private providerMap = new WeakMap<Component, Map<symbol, any>>();
-
-  // consumer -> provider map
-  private consumerMap = new WeakMap<Component, Map<symbol, Component>>();
-
-  // provider -> consumers set map
-  private subscriberMap = new WeakMap<Component, Map<symbol, Set<Component>>>();
-
-  private setupContextRequestListener(): void {
-    this.eventHandler.listenRequestContext(
-      // 这里传入 null 是因为我们需要监听所有组件的请求
-      null as any,
-      ({ contextKey, consumer }) => {
-        // 找到最近的 provider
-        let current = this.treeWalker.getParent(consumer);
-        while (current) {
-          if (this.providerMap.get(current)?.has(contextKey)) {
-            this.registerConsumer(consumer, current, contextKey);
-            break;
-          }
-          current = this.treeWalker.getParent(current);
-        }
-      }
-    );
+    return WebContextCenter.instance;
   }
 
   /**
-   * 注册一个 provider
+   * 注册 Provider
+   * @param component Provider 组件实例
    */
-  registerProvider<T>(provider: Component, context: Context<T>, value: T): void {
-    if (!this.providerMap.has(provider)) {
-      this.providerMap.set(provider, new Map());
-    }
-    this.providerMap.get(provider)!.set(context.key, value);
+  registerProvider(component: Component): void {
+    const providedContexts = component.context.getProvidedContexts();
 
-    if (!this.subscriberMap.has(provider)) {
-      this.subscriberMap.set(provider, new Map());
-    }
-    if (!this.subscriberMap.get(provider)!.has(context.key)) {
-      this.subscriberMap.get(provider)!.set(context.key, new Set());
-    }
-
-    // 通知子树中的所有节点重新请求 context
-    this.notifySubtreeToRequestContext(provider, context.key);
-  }
-
-  /**
-   * 通知子树中的节点重新请求 context
-   */
-  private notifySubtreeToRequestContext(provider: Component, contextKey: symbol): void {
-    const queue = this.treeWalker.getChildren(provider);
-    while (queue.length > 0) {
-      const current = queue.shift()!;
-
-      // 如果遇到了另一个提供相同 context 的 provider，
-      // 则不继续遍历其子树
-      if (current !== provider && this.providerMap.get(current)?.has(contextKey)) {
-        continue;
+    providedContexts.forEach((context) => {
+      if (!this.providerMap.has(context)) {
+        this.providerMap.set(context, new Map());
       }
 
-      // 如果当前节点是一个 consumer，触发重新请求
-      if (this.consumerMap.get(current)?.has(contextKey)) {
-        this.dispatchContextRequest(current, contextKey);
-      }
-
-      // 将子节点加入队列
-      queue.push(...this.treeWalker.getChildren(current));
-    }
-  }
-
-  /**
-   * 注册一个 consumer
-   */
-  registerConsumer(consumer: Component, provider: Component, contextKey: symbol): void {
-    // 如果 consumer 已经有 provider，且不是当前的 provider，
-    // 则需要先取消旧的订阅
-    const existingProvider = this.consumerMap.get(consumer)?.get(contextKey);
-    if (existingProvider && existingProvider !== provider) {
-      this.unregisterConsumer(consumer, contextKey);
-    }
-
-    if (!this.consumerMap.has(consumer)) {
-      this.consumerMap.set(consumer, new Map());
-    }
-    this.consumerMap.get(consumer)!.set(contextKey, provider);
-
-    const subscribers = this.subscriberMap.get(provider)!.get(contextKey)!;
-    subscribers.add(consumer);
-  }
-
-  /**
-   * 注销一个 provider
-   */
-  unregisterProvider(provider: Component, contextKey: symbol): void {
-    const subscribers = this.subscriberMap.get(provider)?.get(contextKey);
-    if (subscribers) {
-      subscribers.forEach((consumer) => {
-        this.consumerMap.get(consumer)?.delete(contextKey);
-        // 触发重新寻找 provider
-        this.eventHandler.dispatchRequestContext(consumer, contextKey);
+      const contextProviders = this.providerMap.get(context)!;
+      contextProviders.set(component, {
+        consumers: new WeakSet(),
+        consumersSet: new Set(),
       });
-      this.subscriberMap.get(provider)?.delete(contextKey);
-    }
-    this.providerMap.get(provider)?.delete(contextKey);
-  }
-
-  /**
-   * 注销一个 consumer
-   */
-  unregisterConsumer(consumer: Component, contextKey: symbol): void {
-    const provider = this.consumerMap.get(consumer)?.get(contextKey);
-    if (provider) {
-      this.subscriberMap.get(provider)?.get(contextKey)?.delete(consumer);
-      this.consumerMap.get(consumer)?.delete(contextKey);
-    }
-  }
-
-  /**
-   * 获取 context 值
-   */
-  getValue<T>(provider: Component, context: Context<T>): T {
-    return this.providerMap.get(provider)?.get(context.key) ?? context.defaultValue;
-  }
-
-  /**
-   * 设置 context 值并通知所有订阅者
-   */
-  setValue<T>(
-    provider: Component,
-    context: Context<T>,
-    partialValue: Partial<T>,
-    notify: boolean = true
-  ): void {
-    if (!this.providerMap.has(provider)) return;
-
-    const currentValue = this.getValue(provider, context);
-    const newValue = { ...currentValue, ...partialValue } as T;
-    this.providerMap.get(provider)!.set(context.key, newValue);
-
-    if (notify) {
-      const subscribers = this.subscriberMap.get(provider)?.get(context.key);
-      if (subscribers) {
-        const changedKeys = this.getChangedKeys(currentValue, newValue);
-        subscribers.forEach((consumer) => {
-          if (consumer.contextChanged) {
-            consumer.contextChanged(context.key, newValue, changedKeys);
-          }
-        });
-      }
-    }
-  }
-
-  /**
-   * 获取 consumer 对应的 provider
-   */
-  getProvider(consumer: Component, contextKey: symbol): Component | undefined {
-    return this.consumerMap.get(consumer)?.get(contextKey);
-  }
-
-  /**
-   * 发送 context 请求事件
-   */
-  dispatchContextRequest(consumer: Component, contextKey: symbol): void {
-    this.eventHandler.dispatchRequestContext(consumer, contextKey);
-  }
-
-  private getChangedKeys(oldValue: any, newValue: any): string[] {
-    if (oldValue === newValue) return [];
-    if (!oldValue || !newValue) return Object.keys(newValue || oldValue);
-
-    const changedKeys: string[] = [];
-    const allKeys = new Set([...Object.keys(oldValue), ...Object.keys(newValue)]);
-
-    allKeys.forEach((key) => {
-      if (oldValue[key] !== newValue[key]) {
-        changedKeys.push(key);
-      }
     });
 
-    return changedKeys;
+    // 检查是否是中途插入的 Provider
+    const isMidProcessInsert = component.element.parentElement !== null;
+
+    if (isMidProcessInsert) {
+      // 如果是中途插入，需要搜索子树更新订阅关系
+      this.markSubtreeForUpdate(component);
+
+      if (this.pendingUpdates.size > 0) {
+        requestAnimationFrame(() => this.processPendingUpdates());
+      }
+    }
+    // 如果是首次渲染，不需要主动搜索，Consumer 会在挂载时自动查找最近的 Provider
+  }
+
+  /**
+   * 移除 Provider
+   * @param component Provider 组件实例
+   */
+  removeProvider(component: Component): void {
+    const providedContexts = component.context.getProvidedContexts();
+
+    providedContexts.forEach((context) => {
+      const contextProviders = this.providerMap.get(context);
+      if (!contextProviders) return;
+
+      const entry = contextProviders.get(component);
+      if (!entry) return;
+
+      // 通知所有 Consumer 重新查找 Provider
+      entry.consumersSet.forEach((consumer) => {
+        this.unlinkConsumer(context, component, consumer);
+        // 重新查找 Provider
+        const newProvider = this.findNearestProvider(context, consumer);
+        if (newProvider) {
+          this.linkConsumer(context, newProvider, consumer);
+        }
+      });
+
+      contextProviders.delete(component);
+    });
+  }
+
+  /**
+   * 更新 Context 值
+   * @param context Context 实例
+   * @param provider Provider 组件实例
+   * @param value 新的 Context 值
+   */
+  updateContext<T>(context: Context<T>, provider: Component, value: T): void {
+    const contextProviders = this.providerMap.get(context);
+    if (!contextProviders) return;
+
+    const entry = contextProviders.get(provider);
+    if (!entry) return;
+
+    // 通知所有 Consumer
+    entry.consumersSet.forEach((consumer) => {
+      consumer.context.consumeContext(context, value);
+    });
+  }
+
+  /**
+   * 获取 Provider 的所有 Consumer
+   * @param context Context 实例
+   * @param provider Provider 组件实例
+   */
+  getConsumers<T>(context: Context<T>, provider: Component): Component[] {
+    const contextProviders = this.providerMap.get(context);
+    if (!contextProviders) return [];
+
+    const entry = contextProviders.get(provider);
+    if (!entry) return [];
+
+    return Array.from(entry.consumersSet);
+  }
+
+  /**
+   * 标记子树中需要更新的 Consumer
+   */
+  private markSubtreeForUpdate(component: Component): void {
+    const queue: Element[] = [component.element];
+    let consumerCount = 0;
+
+    while (queue.length) {
+      const element = queue.shift();
+      if (!element) continue;
+
+      if (isComponentRoot(element)) {
+        const potentialConsumer = getComponent(element);
+        if (potentialConsumer && potentialConsumer.context.getConsumedContexts().size > 0) {
+          this.pendingUpdates.add(potentialConsumer);
+          consumerCount++;
+        }
+      }
+
+      Array.from(element.children).forEach((child) => queue.push(child));
+    }
+
+    // 当发现需要更新的 Consumer 数量较多时发出警告
+    if (consumerCount > 10) {
+      console.warn(
+        `Warning: Found ${consumerCount} consumers that need to update their context subscriptions. ` +
+          'This may cause performance issues, especially with large DOM trees. ' +
+          '\n\nConsider these optimizations:' +
+          '\n1. Register providers during component initialization' +
+          '\n2. Use state management instead of dynamic provider registration' +
+          '\n3. Break down large components into smaller ones' +
+          '\n4. Use context composition instead of dynamic registration'
+      );
+    }
+  }
+
+  /**
+   * 处理待更新的 Consumer
+   */
+  private processPendingUpdates(): void {
+    const startTime = performance.now();
+    let updateCount = 0;
+
+    this.pendingUpdates.forEach((consumer) => {
+      this.updateConsumerSubscriptions(consumer);
+      updateCount++;
+    });
+
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+
+    // 当更新耗时较长时发出警告
+    if (duration > 16) {
+      console.warn(
+        `Warning: Context subscription updates took ${duration.toFixed(2)}ms ` +
+          `to process ${updateCount} consumers. ` +
+          'This may cause frame drops or UI jank.'
+      );
+    }
+
+    this.pendingUpdates.clear();
+  }
+
+  /**
+   * 更新 Consumer 的订阅关系
+   */
+  private updateConsumerSubscriptions(consumer: Component): void {
+    const consumedContexts = consumer.context.getConsumedContexts();
+
+    consumedContexts.forEach((context) => {
+      const currentProvider = this.consumerMap.get(context)?.get(consumer);
+      const nearestProvider = this.findNearestProvider(context, consumer);
+
+      if (currentProvider !== nearestProvider) {
+        if (currentProvider) {
+          this.unlinkConsumer(context, currentProvider, consumer);
+        }
+        if (nearestProvider) {
+          this.linkConsumer(context, nearestProvider, consumer);
+        }
+      }
+    });
+  }
+
+  /**
+   * 查找最近的 Provider
+   */
+  private findNearestProvider<T>(context: Context<T>, component: Component): Component | null {
+    let current: Element | null = component.element;
+
+    while (current) {
+      if (isComponentRoot(current)) {
+        const potentialProvider = getComponent(current);
+        if (potentialProvider && potentialProvider.context.getProvidedContexts().has(context)) {
+          return potentialProvider;
+        }
+      }
+      current = current.parentElement;
+    }
+
+    return null;
+  }
+
+  /**
+   * 建立 Provider 和 Consumer 的关联
+   */
+  private linkConsumer<T>(context: Context<T>, provider: Component, consumer: Component): void {
+    const contextProviders = this.providerMap.get(context);
+    if (!contextProviders) return;
+
+    const entry = contextProviders.get(provider);
+    if (!entry) return;
+
+    // 如果 Consumer 已经有 Provider，先解除旧关联
+    const oldProvider = this.consumerMap.get(context)?.get(consumer);
+    if (oldProvider) {
+      this.unlinkConsumer(context, oldProvider, consumer);
+    }
+
+    // 建立新关联
+    entry.consumers.add(consumer);
+    entry.consumersSet.add(consumer);
+
+    const consumerMap = this.consumerMap.get(context) || new WeakMap();
+    consumerMap.set(consumer, provider);
+    this.consumerMap.set(context, consumerMap);
+  }
+
+  /**
+   * 解除 Provider 和 Consumer 的关联
+   */
+  private unlinkConsumer<T>(context: Context<T>, provider: Component, consumer: Component): void {
+    const contextProviders = this.providerMap.get(context);
+    if (!contextProviders) return;
+
+    const entry = contextProviders.get(provider);
+    if (!entry) return;
+
+    entry.consumers.delete(consumer);
+    entry.consumersSet.delete(consumer);
+
+    const consumerMap = this.consumerMap.get(context);
+    if (consumerMap) {
+      consumerMap.delete(consumer);
+    }
   }
 }

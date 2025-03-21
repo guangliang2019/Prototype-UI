@@ -1,3 +1,4 @@
+import { createContext } from '../adapter/context';
 import { PrototypeHooks, State } from '../interface';
 
 export interface ButtonProps {
@@ -28,6 +29,8 @@ export interface ButtonActions {
   /** 点击按钮 */
   click(): void;
 }
+
+const asButtonContext = createContext('as-button');
 
 /**
  * 让使用了 asButton 的组件具有按钮的行为
@@ -147,6 +150,12 @@ export function asButton<P extends ButtonProps>(
       }
     },
   };
+
+  hooks.provideContext(asButtonContext, () => {
+    console.log('provideContext');
+    const props = hooks.getProps();
+    console.log(props);
+  });
 
   return {
     state: {
