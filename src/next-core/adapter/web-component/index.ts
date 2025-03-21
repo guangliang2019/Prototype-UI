@@ -14,12 +14,28 @@ import type {
   PropType,
   State,
 } from '@/next-core/interface';
-import { Context, ContextManager, Prototype, PrototypeHooks } from '@/next-core';
+import { Context, WebContextCenter, Prototype, PrototypeHooks } from '@/next-core';
 import { EventHandler, EventOptions } from '@/next-core/interface';
-import { PrototypeSetupResult, RendererAPI } from '@/next-core/interface';
+import { PrototypeSetupResult } from '@/next-core/interface';
 import { WebRenderer } from './renderer';
+import { WebComponentContextManager } from './managers/context';
 
 type Constructor<T> = new (...args: any[]) => T;
+
+type PendingContextOperation<T = any> = {
+  type: 'provide' | 'watch';
+  context: Context<T>;
+} & (
+  | {
+      type: 'provide';
+      initialValue?: T;
+      initialValueFn?: (update: (value: Partial<T>, notify?: boolean) => void) => T;
+    }
+  | {
+      type: 'watch';
+      callback?: (value: T, changedKeys: string[]) => void;
+    }
+);
 
 /**
  * Web Components 适配器
@@ -35,6 +51,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     private _render = new WebRenderManager(this);
     private _propsManager = new WebPropsManager<Props>(this, prototype.options);
     private _eventManager = new WebEventManager(this);
+    private _contextManager: WebComponentContextManager = new WebComponentContextManager(this);
 
     private _renderer = new WebRenderer({
       eventManager: this._eventManager,
@@ -45,8 +62,8 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     });
 
     private _isDestroyed = false;
-    private _pendingContextRequests = new Set<symbol>();
     private _setupResult: PrototypeSetupResult | void;
+    private _pendingContextOperations: PendingContextOperation[] = [];
 
     // Component 接口实现
     get element(): Element {
@@ -63,6 +80,10 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
 
     get state() {
       return this._states;
+    }
+
+    get context() {
+      return this._contextManager;
     }
 
     contextChanged?: (key: symbol, value: any, changedKeys: string[]) => void;
@@ -140,82 +161,37 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           context: Context<T>,
           initialValue: T | ((update: (value: Partial<T>, notify?: boolean) => void) => T)
         ): void => {
-          const contextManager = ContextManager.getInstance();
-          const value =
-            typeof initialValue === 'function'
-              ? (initialValue as Function)((value: Partial<T>, notify = true) => {
-                  contextManager.setValue(this, context, value, notify);
-                })
-              : initialValue;
-
-          contextManager.registerProvider(this, context, value);
-
-          // 在组件销毁时注销 provider
-          this._lifecycle.add('destroyed', () => {
-            contextManager.unregisterProvider(this, context.key);
-          });
+          this._pendingContextOperations.push({
+            type: 'provide',
+            context,
+            ...(typeof initialValue === 'function'
+              ? { initialValueFn: initialValue }
+              : { initialValue }),
+          } as PendingContextOperation<T>);
         },
 
         watchContext: <T>(
           context: Context<T>,
           callback?: (value: T, changedKeys: string[]) => void
-        ): T => {
-          const contextManager = ContextManager.getInstance();
-
-          // 将 context 请求添加到待处理队列
-          this._pendingContextRequests.add(context.key);
-
-          // 设置回调
-          if (callback) {
-            this.contextChanged = (key: symbol, value: T, changedKeys: string[]) => {
-              if (key === context.key) {
-                callback(value, changedKeys);
-              }
-            };
-          }
-
-          // 在组件销毁时注销 consumer
-          this._lifecycle.add('destroyed', () => {
-            contextManager.unregisterConsumer(this, context.key);
+        ): void => {
+          this._pendingContextOperations.push({
+            type: 'watch',
+            context,
+            callback,
           });
-
-          // 获取当前值
-          const provider = contextManager.getProvider(this, context.key);
-          if (provider) {
-            const value = contextManager.getValue(provider, context);
-
-            // 如果允许 consumer 修改 context，则返回原始引用
-            // 否则返回一个只读代理
-            return context.options.allowConsumerModify
-              ? value
-              : (new Proxy(value as object, {
-                  set() {
-                    console.warn(
-                      'Context value is read-only. ' +
-                        'If you need to modify it, please set allowConsumerModify to true ' +
-                        'when defining the context.'
-                    );
-                    return false;
-                  },
-                }) as T);
-          }
-
-          return context.defaultValue;
         },
 
-        getContext: <T>(context: Context<T>): T => {
-          const contextManager = ContextManager.getInstance();
-          const provider = contextManager.getProvider(this, context.key);
+        getContext: <T>(context: Context): T => {
+          const value = this._contextManager.getConsumedValue(context);
 
-          if (!provider) {
-            console.warn(
-              'No provider found for the context. ' +
+          if (value === undefined) {
+            throw new Error(
+              `No provider found for the context "${context.displayName}". ` +
                 'Make sure you have called watchContext before using getContext.'
             );
-            return context.defaultValue;
           }
 
-          return contextManager.getValue(provider, context);
+          return value;
         },
 
         getInstance: () => {
@@ -253,14 +229,30 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       // 初始化 props
       this._propsManager.initialize();
 
-      // 发送所有待处理的 context 请求
-      if (this._pendingContextRequests.size > 0) {
-        const contextManager = ContextManager.getInstance();
-        this._pendingContextRequests.forEach((key) => {
-          contextManager.dispatchContextRequest(this, key);
-        });
-        this._pendingContextRequests.clear();
-      }
+      // 处理所有待处理的 Context 操作
+      this._pendingContextOperations.forEach((operation) => {
+        if (operation.type === 'provide') {
+          // 如果有初始化函数，先执行它
+          const value = operation.initialValueFn
+            ? operation.initialValueFn((value, notify = true) => {
+                this._contextManager.provideContext(operation.context, value);
+              })
+            : operation.initialValue;
+
+          // 提供 Context
+          this._contextManager.provideContext(operation.context, value);
+        } else if (operation.type === 'watch') {
+          this._contextManager.consumeContext(operation.context, null);
+          if (operation.callback) {
+            this.contextChanged = (key: symbol, value: any, changedKeys: string[]) => {
+              if (key === operation.context.id) {
+                operation.callback!(value, changedKeys);
+              }
+            };
+          }
+        }
+      });
+      this._pendingContextOperations = [];
 
       // 同步所有待处理的属性
       this._states.flushAttributes();

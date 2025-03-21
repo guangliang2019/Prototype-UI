@@ -1,4 +1,4 @@
-import { EventManager, PropsManager, StateManager } from "./managers";
+import { ContextManager, EventManager, PropsManager, StateManager } from './managers';
 
 /**
  * 组件实例接口
@@ -25,6 +25,11 @@ export interface Component {
   readonly state: StateManager;
 
   /**
+   * 上下文管理器
+   */
+  readonly context: ContextManager;
+
+  /**
    * Context 变更回调
    */
   contextChanged?: (key: symbol, value: any, changedKeys: string[]) => void;
@@ -33,25 +38,4 @@ export interface Component {
    * 销毁组件
    */
   destroy(): void;
-}
-
-/**
- * 组件树遍历器
- * 不同框架可以提供不同的实现
- */
-export interface ComponentTreeWalker {
-  /**
-   * 获取父组件
-   */
-  getParent(instance: Component): Component | null;
-
-  /**
-   * 获取子组件列表
-   */
-  getChildren(instance: Component): Component[];
-
-  /**
-   * 判断是否是组件实例
-   */
-  isComponent(element: any): element is Component;
 }

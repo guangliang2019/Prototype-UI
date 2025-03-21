@@ -1,4 +1,4 @@
-import { Component } from '../adapter/interface';
+import { Component } from '../interface';
 
 /**
  * 组件标识符
@@ -30,9 +30,11 @@ export function attachComponent(element: Element, component: Component): void {
  * @returns 如果元素是组件根节点则返回 true，否则返回 false
  */
 export function isComponentRoot(element: Element): boolean {
-  return element instanceof HTMLElement && 
+  return (
+    element instanceof HTMLElement &&
     COMPONENT_SYMBOL in element &&
-    (element as ComponentElement)[COMPONENT_SYMBOL] !== undefined;
+    (element as ComponentElement)[COMPONENT_SYMBOL] !== undefined
+  );
 }
 
 /**
@@ -55,4 +57,4 @@ export function detachComponent(element: Element): void {
   if (element instanceof HTMLElement) {
     delete (element as ComponentElement)[COMPONENT_SYMBOL];
   }
-} 
+}

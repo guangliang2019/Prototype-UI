@@ -1,5 +1,4 @@
-import { Context } from '../adapter/context';
-import { EventHandler, EventOptions, State } from './managers';
+import { Context, EventHandler, EventOptions, State } from './managers';
 import {
   ElementChildren,
   ElementProps,
@@ -103,7 +102,7 @@ export interface PrototypeHooks<Props = any> {
    * @param context Context 定义
    * @param callback 变更回调
    */
-  watchContext<T>(context: Context<T>, callback?: (value: T, changedKeys: string[]) => void): T;
+  watchContext<T>(context: Context<T>, callback?: (value: T, changedKeys: string[]) => void): void;
 
   /**
    * 获取当前 context 值
