@@ -1,28 +1,28 @@
-import { Prototype, PrototypeHooks } from '@/next-core/interface';
-import { TabsProps, TabsContext } from './interface';
-import { defineContext } from '@/next-core/adapter/context';
-
-export const asTabsContext = defineContext('as-tabs');
+import { PrototypeHooks } from '@/next-core/interface';
+import { TabsProps, TabsContext, asTabsContext } from './interface';
 
 const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
   // props
-  defineProps(
-    p,
-    {
-      defaultValue: '',
-      onTabChange: () => {},
-      changTab: (value, focus = false) => {
-        const context = getContext<TabsContext>(p, 'tabs');
-        context.changeTab(value, focus);
-      },
-    },
-    (key, _) => {
-      if (key === 'changTab') throw new Error('changTab is readonly');
-    }
-  );
+  // defineProps(
+  //   p,
+  //   {
+  //     defaultValue: '',
+  //     onTabChange: () => {},
+  //     changTab: (value, focus = false) => {
+  //       const context = getContext<TabsContext>(p, 'tabs');
+  //       context.changeTab(value, focus);
+  //     },
+  //   },
+  //   (key, _) => {
+  //     if (key === 'changTab') throw new Error('changTab is readonly');
+  //   }
+  // );
+
+  const { provideContext, getProps } = hooks;
+
   // context
-  hooks.provideContext<TabsContext>(asTabsContext, (updateContext) => {
-    const props = hooks.getProps();
+  provideContext(asTabsContext, (updateContext) => {
+    const props = getProps();
 
     const context: TabsContext = {
       tabValue: props.defaultValue ?? '',
@@ -42,8 +42,6 @@ const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
     };
     return context;
   });
-
-  provideContext<TabsContext>(p, 'tabs');
 };
 
 export default asTabs;

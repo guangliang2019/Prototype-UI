@@ -1,4 +1,6 @@
-import { Context, EventHandler, EventOptions, State } from './managers';
+import { ElementCommands } from './element';
+import { EventCommands } from './event';
+import { Context, State } from './managers';
 import {
   ElementChildren,
   ElementProps,
@@ -35,21 +37,6 @@ export interface PrototypeHooks<Props = any> {
 
   /** 监听属性变化 */
   watchAttribute<T = any>(name: string, callback: (oldValue: T, newValue: T) => void): void;
-
-  /**
-   * 注册事件监听器
-   * @param eventName 事件名称
-   * @param handler 事件处理器
-   * @param options 事件选项
-   */
-  useEvent<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void;
-
-  /**
-   * 触发事件
-   * @param eventName 事件名称
-   * @param detail 事件详情
-   */
-  emitEvent<T = any>(eventName: string, detail: T): void;
 
   /**
    * 创建状态
@@ -112,16 +99,20 @@ export interface PrototypeHooks<Props = any> {
   getContext<T>(context: Context<T>): T;
 
   /**
-   * 获取组件实例
-   * 注意：此钩子只能在 mounted 之后的生命周期中使用
-   */
-  getInstance(): HTMLElement;
-
-  /**
    * 获取当前的 props 值
    * 注意：此钩子会返回最新的 props 值，包括通过 setAttribute 等方式设置的值
    */
   getProps(): Props;
+
+  /**
+   * 元素工具类
+   */
+  element: ElementCommands;
+
+  /**
+   * 事件工具类
+   */
+  event: EventCommands;
 }
 
 /**

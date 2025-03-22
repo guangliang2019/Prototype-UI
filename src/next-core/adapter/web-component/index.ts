@@ -14,11 +14,14 @@ import type {
   PropType,
   State,
 } from '@/next-core/interface';
-import { Context, WebContextCenter, Prototype, PrototypeHooks } from '@/next-core';
+import { Context, Prototype, PrototypeHooks } from '@/next-core';
 import { EventHandler, EventOptions } from '@/next-core/interface';
 import { PrototypeSetupResult } from '@/next-core/interface';
 import { WebRenderer } from './renderer';
 import { WebComponentContextManager } from './managers/context';
+import { ElementPosition } from '@/next-core/interface/element';
+import { binarySearch } from '@/next-core/utils/search';
+import { WebEventCommands } from './commands/event';
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -52,6 +55,8 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     private _propsManager = new WebPropsManager<Props>(this, prototype.options);
     private _eventManager = new WebEventManager(this);
     private _contextManager: WebComponentContextManager = new WebComponentContextManager(this);
+
+    private _eventCommands = new WebEventCommands(this._eventManager);
 
     private _renderer = new WebRenderer({
       eventManager: this._eventManager,
@@ -114,18 +119,18 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           this._attributeManager.watch(name, callback);
         },
 
-        useEvent: <T>(eventName: string, handler: EventHandler<T>, options?: EventOptions) => {
-          this._eventManager.on(eventName, handler, options);
+        // useEvent: <T>(eventName: string, handler: EventHandler<T>, options?: EventOptions) => {
+        //   this._eventManager.on(eventName, handler, options);
 
-          // 在组件销毁时自动移除事件监听
-          this._lifecycle.add('destroyed', () => {
-            this._eventManager.off(eventName, handler);
-          });
-        },
+        //   // 在组件销毁时自动移除事件监听
+        //   this._lifecycle.add('destroyed', () => {
+        //     this._eventManager.off(eventName, handler);
+        //   });
+        // },
 
-        emitEvent: <T>(eventName: string, detail: T) => {
-          this._eventManager.emit(eventName, detail);
-        },
+        // emitEvent: <T>(eventName: string, detail: T) => {
+        //   this._eventManager.emit(eventName, detail);
+        // },
 
         useState: (initial, attribute, options) =>
           this._states.useState(initial, attribute, options),
@@ -194,16 +199,6 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           return value;
         },
 
-        getInstance: () => {
-          if (!this._lifecycle.hasTriggered('mounted')) {
-            throw new Error(
-              'getInstance() can only be called after the component is mounted. ' +
-                'Please use it in mounted or later lifecycle hooks.'
-            );
-          }
-          return this;
-        },
-
         getProps: () => {
           if (!this._lifecycle.hasTriggered('created')) {
             throw new Error(
@@ -216,6 +211,59 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           }
           return this._propsManager.getProps();
         },
+
+        element: {
+          get: () => {
+            if (!this._lifecycle.hasTriggered('mounted')) {
+              throw new Error(
+                'element.get can only be called after the component is mounted. ' +
+                  'Please use it in mounted or later lifecycle hooks.'
+              );
+            }
+            return this;
+          },
+
+          comparePosition: (a, b) => {
+            if (!this._lifecycle.hasTriggered('mounted')) {
+              throw new Error(
+                'element.comparePosition can only be called after the component is mounted. ' +
+                  'Please use it in mounted or later lifecycle hooks.'
+              );
+            }
+            if (b === undefined) b = this;
+            // 处理非法输入
+            if (!a || !b) return ElementPosition.INVALID;
+
+            // 处理同一元素
+            if (a === b) return ElementPosition.SAME;
+
+            // 使用原生 API
+            return a.compareDocumentPosition(b) as ElementPosition;
+          },
+
+          getListIndex: (list, element) => {
+            if (!this._lifecycle.hasTriggered('mounted')) {
+              throw new Error(
+                'element.getListIndex can only be called after the component is mounted. ' +
+                  'Please use it in mounted or later lifecycle hooks.'
+              );
+            }
+            if (element === undefined) element = this;
+            if (!list.includes(element)) return -1;
+
+            return binarySearch(list, element, (a, b) => {
+              const position = a.compareDocumentPosition(b);
+              if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+                return -1; // a 在 b 前
+              } else if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+                return 1; // a 在 b 后
+              }
+              return 0; // a 和 b 相同
+            });
+          },
+        },
+
+        event: this._eventCommands,
       };
     }
 
