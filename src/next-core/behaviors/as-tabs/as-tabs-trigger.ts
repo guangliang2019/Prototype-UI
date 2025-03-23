@@ -31,6 +31,7 @@ const asTabsTrigger = (hooks: PrototypeHooks<TabsTriggerProps>) => {
       state.set('inactive');
     }
   };
+  
   watchContext(asTabsContext, (context, keys) => {
     if (keys.includes('tabValue')) _handleContextChange(context);
   });

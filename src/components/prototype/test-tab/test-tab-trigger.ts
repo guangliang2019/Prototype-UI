@@ -1,8 +1,8 @@
-import { definePrototype, getContext, listenContext, useConnect } from '@/core';
+import { definePrototype, PropType, WebComponentAdapter } from '@/next-core';
 import { PrototypeTestTabContext, TestTabTriggerProps } from './interface';
 import { ContextConsumer } from '@/components/common';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
-import { watchContext } from '@/core/context';
+import { TabsTriggerProps } from '@/core/components/tabs';
+import asTabsTrigger from '@/next-core/behaviors/as-tabs/as-tabs-trigger';
 
 export const handleContextChangeSymbol = Symbol('prototype-test-tab');
 
@@ -31,22 +31,11 @@ export default class PrototypeTestTabTrigger<
   }
 }
 
-const PrototypeTestTabTrigger2 = definePrototype<{ value: string }>((self) => {
-  watchContext(self, 'prototype-test-tab', (context, changedKeys) => {
-    if (context.value === self.componentRef.value) {
-      self.componentRef.setAttribute('data-active', '');
-    } else {
-      self.componentRef.removeAttribute('data-active');
-    }
-  });
-  useConnect(self, () => {
-    const context = getContext(self, 'prototype-test-tab');
-    const value = self.componentRef.getAttribute('value') || '';
-    self.componentRef.value = value;
-    self.componentRef.addEventListener('click', () => {
-      context.setValue(self.componentRef.value);
-    });
-  });
-});
-
-customElements.define('prototype-test-tab-trigger', WebComponentAdapter(PrototypeTestTabTrigger2));
+customElements.define(
+  'prototype-test-tab-trigger',
+  WebComponentAdapter<TabsTriggerProps & Record<string, PropType>>(
+    definePrototype({}, (hooks) => {
+      asTabsTrigger(hooks);
+    })
+  )
+);

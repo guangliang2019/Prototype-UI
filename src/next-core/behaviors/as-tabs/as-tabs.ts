@@ -23,6 +23,7 @@ const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
   // context
   provideContext(asTabsContext, (updateContext) => {
     const props = getProps();
+   
 
     const context: TabsContext = {
       tabValue: props.defaultValue ?? '',
@@ -33,7 +34,7 @@ const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
       changeTab: (value, focus = false) => {
         const _index = context.tabs.indexOf(value);
         updateContext({ index: _index, tabValue: value });
-        props.onTabChange(context);
+        // props.onTabChange(context);
         if (focus) {
           const _targetIndex = context.tabs.findIndex((tab) => tab === value);
           if (_targetIndex !== -1) context.tabRefs[_targetIndex].focus();

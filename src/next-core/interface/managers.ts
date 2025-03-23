@@ -205,15 +205,15 @@ export interface EventManager {
 }
 
 export interface ContextOptions {
-  shared: boolean;    // 是否共享内存引用
-  mutable: boolean;   // 是否允许 Consumer 静默修改
-  name?: string;      // Context 的标识名称，用于调试
+  shared: boolean; // 是否共享内存引用
+  mutable: boolean; // 是否允许 Consumer 静默修改
+  name?: string; // Context 的标识名称，用于调试
 }
 
 export interface Context<T = any> {
   id: symbol;
   options: ContextOptions;
-  __type: T;  // 用于类型推导
+  __type: T; // 用于类型推导
   displayName: string;
 }
 
@@ -241,6 +241,16 @@ export interface ContextManager {
    * @param value Context 值
    */
   consumeContext<T>(context: Context<T>, value: T): void;
+
+  /**
+   * 更新消费的 Context 值
+   */
+  setConsumedValue<T>(
+    context: Context<T>,
+    value: T,
+    changedKeys: string[],
+    notifyListeners?: boolean
+  ): void;
 
   /**
    * 获取当前组件提供的 Context 值

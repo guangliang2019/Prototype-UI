@@ -22,6 +22,7 @@ import { WebComponentContextManager } from './managers/context';
 import { ElementPosition } from '@/next-core/interface/element';
 import { binarySearch } from '@/next-core/utils/search';
 import { WebEventCommands } from './commands/event';
+import { attachComponent } from '@/next-core/utils/component';
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -91,10 +92,10 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       return this._contextManager;
     }
 
-    contextChanged?: (key: symbol, value: any, changedKeys: string[]) => void;
-
     constructor() {
       super();
+
+      attachComponent(this, this);
 
       // 执行 setup 获取结果
       this._setupResult = prototype.setup(this.createHooks());
@@ -179,10 +180,12 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           context: Context<T>,
           callback?: (value: T, changedKeys: string[]) => void
         ): void => {
+          if (callback) {
+            this._contextManager.addContextListener(context, callback);
+          }
           this._pendingContextOperations.push({
             type: 'watch',
             context,
-            callback,
           });
         },
 
@@ -280,24 +283,29 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       // 处理所有待处理的 Context 操作
       this._pendingContextOperations.forEach((operation) => {
         if (operation.type === 'provide') {
-          // 如果有初始化函数，先执行它
           const value = operation.initialValueFn
             ? operation.initialValueFn((value, notify = true) => {
-                this._contextManager.provideContext(operation.context, value);
+                const changedKeys = Object.keys(value) ?? [];
+                const currentValue = this._contextManager.getProvidedValue(operation.context);
+
+                Object.assign(currentValue, value);
+                this._contextManager.setProvidedValue(operation.context, currentValue);
+                this._contextManager.getConsumers(operation.context).forEach((consumer) => {
+                  consumer.context.setConsumedValue(
+                    operation.context,
+                    currentValue,
+                    changedKeys,
+                    notify
+                  );
+                });
               })
             : operation.initialValue;
 
-          // 提供 Context
+          // 提供 Context 并更新所有 Consumer
           this._contextManager.provideContext(operation.context, value);
+          // this._contextManager.updateConsumers(operation.context, value);
         } else if (operation.type === 'watch') {
           this._contextManager.consumeContext(operation.context, null);
-          if (operation.callback) {
-            this.contextChanged = (key: symbol, value: any, changedKeys: string[]) => {
-              if (key === operation.context.id) {
-                operation.callback!(value, changedKeys);
-              }
-            };
-          }
         }
       });
       this._pendingContextOperations = [];
@@ -361,6 +369,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       this._states.clear();
       this._render.clear();
       this._eventManager.clearAll();
+      this._contextManager.destroy();
     }
   };
 };
