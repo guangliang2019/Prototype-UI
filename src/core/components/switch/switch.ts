@@ -3,10 +3,10 @@ import { asTrigger } from '../trigger';
 import { defineProps, useAttributeState, useConnect, useDisconnect } from '@/core/lifecycle';
 import useEventListener from '@/core/hooks/use-event-listener';
 import { SwitchProps } from './interface';
-import { provideContext, watchContext } from '@/core/context';
+import { provideContext } from '@/core/context';
 
 // 创建上下文键
-const SwitchStateContext = Symbol('SwitchState');
+export const SwitchStateContext = Symbol('SwitchState');
 
 const asSwitch = (p: Prototype<SwitchProps>): void => {
 
