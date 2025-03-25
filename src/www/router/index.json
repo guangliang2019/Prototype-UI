@@ -88,6 +88,11 @@
       "title": "Test-button",
       "value": "prototype-test-button",
       "href": "/prototype/test-button"
+    },
+    {
+      "title": "New-Switch",
+      "value": "prototype-new-switch",
+      "href": "/prototype/new-switch"
     }
   ]
 }
