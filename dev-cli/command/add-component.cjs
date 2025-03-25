@@ -51,8 +51,9 @@ src/components/${targetType}/${componentName}
   let codeFactory = null;
 
   if (confirm) {
+    console.log(targetType);
     switch (targetType) {
-      case 'prototype':
+      case 'src/components/prototype':
         codeFactory = require('../template/prototype-component.cjs');
         break;
       case 'shadcn':
