@@ -1,4 +1,7 @@
-import { ContextManager, EventManager, PropsManager, StateManager } from './managers';
+import { ContextManager, EventManager, PropsManager } from './managers';
+
+export const EVENT_MANAGER_SYMBOL = Symbol('eventManager');
+export const CONTEXT_MANAGER_SYMBOL = Symbol('contextManager');
 
 /**
  * 组件实例接口
@@ -10,29 +13,19 @@ export interface Component {
   readonly element: Element;
 
   /**
-   * 事件管理器
-   */
-  readonly eventManager: EventManager;
-
-  /**
    * 属性管理器
    */
   readonly props: PropsManager;
 
   /**
-   * 状态管理器
-   */
-  readonly state: StateManager;
-
-  /**
    * 上下文管理器
    */
-  readonly context: ContextManager;
+  readonly [CONTEXT_MANAGER_SYMBOL]: ContextManager;
 
   /**
-   * Context 变更回调
+   * 事件管理器
    */
-  contextChanged?: (key: symbol, value: any, changedKeys: string[]) => void;
+  readonly [EVENT_MANAGER_SYMBOL]: EventManager;
 
   /**
    * 销毁组件

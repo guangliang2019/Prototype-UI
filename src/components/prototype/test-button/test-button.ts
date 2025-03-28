@@ -1,11 +1,14 @@
-import { asButton } from '@/next-core/behaviors/as-button';
+import { asButton } from '@/next-core/behaviors/as-button/as-button';
 import { TestButtonProps } from './interface';
 import { definePrototype, WebComponentAdapter } from '@/next-core';
 
 const Button = WebComponentAdapter(
-  definePrototype<TestButtonProps>({}, (hooks) => {
-    console.log('ButtonPrototype', hooks, 'setup');
-    asButton(hooks);
+  definePrototype<TestButtonProps>({
+    displayName: 'prototype-test-button',
+    setup: (hooks) => {
+      console.log('ButtonPrototype', hooks, 'setup');
+      asButton(hooks);
+    },
   })
 );
 

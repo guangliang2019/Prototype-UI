@@ -1,4 +1,6 @@
-import { Context, EventHandler, EventOptions, State } from './managers';
+import { ElementCommands } from './element';
+import { EventCommands } from './event';
+import { Context, State } from './managers';
 import {
   ElementChildren,
   ElementProps,
@@ -37,21 +39,6 @@ export interface PrototypeHooks<Props = any> {
   watchAttribute<T = any>(name: string, callback: (oldValue: T, newValue: T) => void): void;
 
   /**
-   * 注册事件监听器
-   * @param eventName 事件名称
-   * @param handler 事件处理器
-   * @param options 事件选项
-   */
-  useEvent<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void;
-
-  /**
-   * 触发事件
-   * @param eventName 事件名称
-   * @param detail 事件详情
-   */
-  emitEvent<T = any>(eventName: string, detail: T): void;
-
-  /**
    * 创建状态
    * @param initial 初始值
    * @param attribute 如果提供且值类型合适，状态会同步到对应的 attribute
@@ -71,14 +58,20 @@ export interface PrototypeHooks<Props = any> {
    * @param state 要监听的状态
    * @param callback 变更回调
    */
-  onStateChange<T>(state: State<T>, callback: (newValue: T, oldValue: T) => void): void;
+  watchState<T>(state: State<T>, callback: (newValue: T, oldValue: T) => void): void;
+
+  /**
+   * 定义参数
+   * @param defaultProps 默认参数
+   */
+  defineProps(defaultProps: Props): void;
 
   /**
    * 监听属性变化
    * @param props 要监听的属性列表
    * @param callback 变更回调
    */
-  onPropsChange(props: (keyof Props)[], callback: (changedProps: Partial<Props>) => void): void;
+  watchProps(props: (keyof Props)[], callback: (changedProps: Partial<Props>) => void): void;
 
   /** 创建元素 */
   h(
@@ -112,28 +105,35 @@ export interface PrototypeHooks<Props = any> {
   getContext<T>(context: Context<T>): T;
 
   /**
-   * 获取组件实例
-   * 注意：此钩子只能在 mounted 之后的生命周期中使用
-   */
-  getInstance(): HTMLElement;
-
-  /**
    * 获取当前的 props 值
    * 注意：此钩子会返回最新的 props 值，包括通过 setAttribute 等方式设置的值
    */
   getProps(): Props;
+
+  /**
+   * 元素工具类
+   */
+  element: ElementCommands;
+
+  /**
+   * 事件工具类
+   */
+  event: EventCommands;
 }
 
 /**
  * 原型配置项
  */
-export interface PrototypeOptions<Props = Record<string, any>> {
+export interface Prototype<Props> {
   /** 组件名称 */
   displayName?: string;
-  /** 默认属性 */
-  defaultProps?: Partial<Props>;
   /** 可观察的属性 */
   observedAttributes?: string[];
+
+  /**
+   * 设置函数
+   */
+  setup: (hooks: PrototypeHooks<Props>) => void;
 }
 
 /**
@@ -158,7 +158,7 @@ export interface PrototypeSetupResult<P = Record<string, any>> {
   /**
    * 渲染函数
    */
-  render?: (renderer: RendererAPI) => Element;
+  render?: (renderer: RendererAPI) => Element | void;
 }
 
 /**
@@ -167,13 +167,3 @@ export interface PrototypeSetupResult<P = Record<string, any>> {
 export type PrototypeSetup<Props = Record<string, any>> = (
   hooks: PrototypeHooks<Props>
 ) => PrototypeSetupResult<Props> | void;
-
-/**
- * 组件原型
- */
-export interface Prototype<Props = Record<string, any>> {
-  /** 配置项 */
-  readonly options: PrototypeOptions<Props>;
-  /** 设置函数 */
-  readonly setup: PrototypeSetup<Props>;
-}

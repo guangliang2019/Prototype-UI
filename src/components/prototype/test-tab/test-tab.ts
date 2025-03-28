@@ -1,7 +1,8 @@
 import { ContextProvider } from '@/components/common';
 import { PrototypeTestTabContext, TestTabProps } from './interface';
-import { definePrototype, provideContext } from '@/core';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { definePrototype, PropType, WebComponentAdapter } from '@/next-core';
+import asTabs from '@/next-core/behaviors/as-tabs/as-tabs';
+import { TabsProps } from '@/next-core/behaviors/as-tabs/interface';
 
 export default class PrototypeTestTab<
     T extends Record<string, Object> & PrototypeTestTabContext = PrototypeTestTabContext,
@@ -21,17 +22,14 @@ export default class PrototypeTestTab<
   }
 }
 
-const PrototypeTestTab2 = definePrototype((self) => {
-  provideContext<any>(self, 'prototype-test-tab', (setContext) => {
-    const defaultValue = self.componentRef.getAttribute('default-value') || '';
-    return {
-      rootRef: self,
-      value: defaultValue,
-      setValue: (value: string) => {
-        setContext({ value });
+customElements.define(
+  'prototype-test-tab',
+  WebComponentAdapter<TabsProps & Record<string, PropType>>(
+    definePrototype({
+      displayName: 'prototype-test-tab',
+      setup: (hooks) => {
+        asTabs(hooks);
       },
-    };
-  });
-});
-
-customElements.define('prototype-test-tab', WebComponentAdapter(PrototypeTestTab2));
+    })
+  )
+);

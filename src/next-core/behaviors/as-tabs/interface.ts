@@ -1,3 +1,5 @@
+import { createContext } from "@/next-core/adapter/context";
+
 export interface TabsProps {
   readonly defaultValue?: string;
   readonly changTab?: (value: string, focus?: boolean) => void;
@@ -25,3 +27,5 @@ export interface TabsContext {
   tabs: string[];
   tabRefs: HTMLElement[];
 }
+
+export const asTabsContext = createContext<TabsContext>('as-tabs');

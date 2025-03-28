@@ -1,4 +1,9 @@
-import { EventManager as IEventManager, EventHandler, EventOptions } from '@/next-core/interface';
+import {
+  EventManager as IEventManager,
+  EventHandler,
+  EventOptions,
+  EVENT_MANAGER_SYMBOL,
+} from '@/next-core/interface';
 import { getComponent } from '../../../utils/component';
 
 interface EventItem {
@@ -277,7 +282,7 @@ export class EventManager implements IEventManager {
    */
   private findEventManager(element: Element): EventManager | null {
     const component = getComponent(element);
-    return component?.eventManager as EventManager | null;
+    return component?.[EVENT_MANAGER_SYMBOL] as EventManager | null;
   }
 
   public on<T = any>(
@@ -479,5 +484,56 @@ export class EventManager implements IEventManager {
     this.attributeObserver = null;
     this.styleObserver = null;
     this.clearAll();
+  }
+
+  /**
+   * 基础交互方法
+   */
+  public focus(): void {
+    if (this.isTrigger && this.innerMostTrigger) {
+      this.innerMostTrigger.element.focus();
+    } else {
+      this.element.focus();
+    }
+  }
+
+  public blur(): void {
+    if (this.isTrigger && this.innerMostTrigger) {
+      this.innerMostTrigger.element.blur();
+    } else {
+      this.element.blur();
+    }
+  }
+
+  public click(): void {
+    if (this.isTrigger && this.innerMostTrigger) {
+      this.innerMostTrigger.element.click();
+    } else {
+      this.element.click();
+    }
+  }
+
+  /**
+   * 属性操作方法
+   */
+  public setAttribute(attr: string, value: string | number | boolean): void {
+    const target =
+      this.isTrigger && this.innerMostTrigger ? this.innerMostTrigger.element : this.element;
+
+    if (typeof value === 'boolean') {
+      if (value) {
+        target.setAttribute(attr, '');
+      } else {
+        target.removeAttribute(attr);
+      }
+    } else {
+      target.setAttribute(attr, String(value));
+    }
+  }
+
+  public removeAttribute(attr: string): void {
+    const target =
+      this.isTrigger && this.innerMostTrigger ? this.innerMostTrigger.element : this.element;
+    target.removeAttribute(attr);
   }
 }

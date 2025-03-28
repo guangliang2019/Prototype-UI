@@ -1,10 +1,16 @@
+import { definePrototype, PropType, WebComponentAdapter } from '@/next-core';
 import { PrototypeTestTabContext, TestTabContentProps } from './interface';
 import { ContextConsumer } from '@/components/common';
+import { TabsContentProps } from '@/next-core/behaviors/as-tabs/interface';
+import asTabsContent from '@/next-core/behaviors/as-tabs/as-tabs-content';
 
 export const handleContextChangeSymbol = Symbol('prototype-test-tab');
 
-export default class PrototypeTestTabContent<T extends PrototypeTestTabContext = PrototypeTestTabContext>
-  extends ContextConsumer<T> implements TestTabContentProps
+export default class PrototypeTestTabContent<
+    T extends PrototypeTestTabContext = PrototypeTestTabContext,
+  >
+  extends ContextConsumer<T>
+  implements TestTabContentProps
 {
   protected _consumerKeys = ['prototype-test-tab'];
 
@@ -25,4 +31,14 @@ export default class PrototypeTestTabContent<T extends PrototypeTestTabContext =
   }
 }
 
-customElements.define('prototype-test-tab-content', PrototypeTestTabContent);
+customElements.define(
+  'prototype-test-tab-content',
+  WebComponentAdapter<TabsContentProps & Record<string, PropType>>(
+    definePrototype({
+      displayName: 'prototype-test-tab-content',
+      setup: (hooks) => {
+        asTabsContent(hooks);
+      },
+    })
+  )
+);

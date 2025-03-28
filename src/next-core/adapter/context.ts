@@ -1,4 +1,4 @@
-import { Component, Context, ContextOptions } from '../interface';
+import { Component, Context, CONTEXT_MANAGER_SYMBOL, ContextOptions } from '../interface';
 import { getComponent, isComponentRoot } from '../utils/component';
 
 /**
@@ -49,19 +49,14 @@ export class WebContextCenter {
    * 注册 Provider
    * @param component Provider 组件实例
    */
-  registerProvider(component: Component): void {
-    const providedContexts = component.context.getProvidedContexts();
-
-    providedContexts.forEach((context) => {
-      if (!this.providerMap.has(context)) {
-        this.providerMap.set(context, new Map());
-      }
-
-      const contextProviders = this.providerMap.get(context)!;
-      contextProviders.set(component, {
-        consumers: new WeakSet(),
-        consumersSet: new Set(),
-      });
+  registerProvider(context: Context, component: Component): void {
+    if (!this.providerMap.has(context)) {
+      this.providerMap.set(context, new Map());
+    }
+    const contextProviders = this.providerMap.get(context)!;
+    contextProviders.set(component, {
+      consumers: new WeakSet(),
+      consumersSet: new Set(),
     });
 
     // 检查是否是中途插入的 Provider
@@ -79,30 +74,84 @@ export class WebContextCenter {
   }
 
   /**
+   * 注册 Consumer
+   * @param context Context 实例
+   * @param consumer Consumer 组件实例
+   */
+  registerConsumer<T>(context: Context<T>, consumer: Component): void {
+    // 如果 Consumer 已经有 Provider，先解除旧关联
+    const oldProvider = this.consumerMap.get(context)?.get(consumer);
+    if (oldProvider) {
+      this.unlinkConsumer(context, oldProvider, consumer);
+    }
+
+    // 查找最近的 Provider
+    const nearestProvider = this.findNearestProvider(context, consumer);
+    if (nearestProvider) {
+      this.linkConsumer(context, nearestProvider, consumer);
+    }
+  }
+
+  /**
+   * 移除 Consumer
+   * @param context Context 实例
+   * @param consumer Consumer 组件实例
+   */
+  removeConsumer<T>(context: Context<T>, consumer: Component): void {
+    const provider = this.consumerMap.get(context)?.get(consumer);
+    if (provider) {
+      this.unlinkConsumer(context, provider, consumer);
+    }
+  }
+
+  /**
+   * 获取 Consumer 的 Provider
+   * @param context Context 实例
+   * @param consumer Consumer 组件实例
+   */
+  getProvider<T>(context: Context<T>, consumer: Component): Component | null {
+    return this.consumerMap.get(context)?.get(consumer) || null;
+  }
+
+  /**
+   * 当 Provider 被移除时，重新为所有相关的 Consumer 查找新的 Provider
+   * @param context Context 实例
+   * @param oldProvider 被移除的 Provider
+   */
+  private reassignConsumers<T>(context: Context<T>, oldProvider: Component): void {
+    const contextProviders = this.providerMap.get(context);
+    if (!contextProviders) return;
+
+    const entry = contextProviders.get(oldProvider);
+    if (!entry) return;
+
+    // 为每个 Consumer 重新查找 Provider
+    entry.consumersSet.forEach((consumer) => {
+      this.unlinkConsumer(context, oldProvider, consumer);
+      const newProvider = this.findNearestProvider(context, consumer);
+      console.warn('reassignConsumers', context, oldProvider, consumer, newProvider);
+      if (newProvider) {
+        this.linkConsumer(context, newProvider, consumer);
+      }
+    });
+  }
+
+  /**
    * 移除 Provider
    * @param component Provider 组件实例
    */
   removeProvider(component: Component): void {
-    const providedContexts = component.context.getProvidedContexts();
+    const providedContexts = component[CONTEXT_MANAGER_SYMBOL].getProvidedContexts();
 
     providedContexts.forEach((context) => {
+      // 重新分配所有相关的 Consumer
+      this.reassignConsumers(context, component);
+
+      // 清理 Provider 相关的数据结构
       const contextProviders = this.providerMap.get(context);
-      if (!contextProviders) return;
-
-      const entry = contextProviders.get(component);
-      if (!entry) return;
-
-      // 通知所有 Consumer 重新查找 Provider
-      entry.consumersSet.forEach((consumer) => {
-        this.unlinkConsumer(context, component, consumer);
-        // 重新查找 Provider
-        const newProvider = this.findNearestProvider(context, consumer);
-        if (newProvider) {
-          this.linkConsumer(context, newProvider, consumer);
-        }
-      });
-
-      contextProviders.delete(component);
+      if (contextProviders) {
+        contextProviders.delete(component);
+      }
     });
   }
 
@@ -120,8 +169,10 @@ export class WebContextCenter {
     if (!entry) return;
 
     // 通知所有 Consumer
+    // 默认方案是共享内存的，所以不需要通知
+
     entry.consumersSet.forEach((consumer) => {
-      consumer.context.consumeContext(context, value);
+      consumer[CONTEXT_MANAGER_SYMBOL].setConsumedValue(context, value, [], true);
     });
   }
 
@@ -153,7 +204,10 @@ export class WebContextCenter {
 
       if (isComponentRoot(element)) {
         const potentialConsumer = getComponent(element);
-        if (potentialConsumer && potentialConsumer.context.getConsumedContexts().size > 0) {
+        if (
+          potentialConsumer &&
+          potentialConsumer[CONTEXT_MANAGER_SYMBOL].getConsumedContexts().size > 0
+        ) {
           this.pendingUpdates.add(potentialConsumer);
           consumerCount++;
         }
@@ -207,7 +261,7 @@ export class WebContextCenter {
    * 更新 Consumer 的订阅关系
    */
   private updateConsumerSubscriptions(consumer: Component): void {
-    const consumedContexts = consumer.context.getConsumedContexts();
+    const consumedContexts = consumer[CONTEXT_MANAGER_SYMBOL].getConsumedContexts();
 
     consumedContexts.forEach((context) => {
       const currentProvider = this.consumerMap.get(context)?.get(consumer);
@@ -229,11 +283,13 @@ export class WebContextCenter {
    */
   private findNearestProvider<T>(context: Context<T>, component: Component): Component | null {
     let current: Element | null = component.element;
-
     while (current) {
       if (isComponentRoot(current)) {
         const potentialProvider = getComponent(current);
-        if (potentialProvider && potentialProvider.context.getProvidedContexts().has(context)) {
+        if (
+          potentialProvider &&
+          potentialProvider[CONTEXT_MANAGER_SYMBOL].getProvidedContexts().has(context)
+        ) {
           return potentialProvider;
         }
       }
@@ -266,6 +322,12 @@ export class WebContextCenter {
     const consumerMap = this.consumerMap.get(context) || new WeakMap();
     consumerMap.set(consumer, provider);
     this.consumerMap.set(context, consumerMap);
+
+    // 同步 Provider 的 Context 值到 Consumer
+    const providerValue = provider[CONTEXT_MANAGER_SYMBOL].getProvidedValue(context);
+    if (providerValue !== undefined) {
+      consumer[CONTEXT_MANAGER_SYMBOL].setConsumedValue(context, providerValue, [], false);
+    }
   }
 
   /**
