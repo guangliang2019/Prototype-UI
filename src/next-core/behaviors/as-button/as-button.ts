@@ -1,17 +1,21 @@
 import { PrototypeHooks } from '../../interface';
 import { ButtonActions, ButtonProps, ButtonState } from './interface';
 
+export const DEFAULT_BUTTON_PROPS: ButtonProps = {
+  disabled: false,
+  autoFocus: false,
+  onClick: () => {},
+};
+
 /**
  * 让使用了 asButton 的组件具有按钮的行为
  * @param hooks 原型钩子
  */
-export function asButton<P extends ButtonProps>(
-  hooks: PrototypeHooks<P>
-): {
+export function asButton(hooks: PrototypeHooks<ButtonProps>): {
   state: ButtonState;
   actions: ButtonActions;
 } {
-  const { event, markAsTrigger, useState, onPropsChange, getProps, useMounted } = hooks;
+  const { event, defineProps, markAsTrigger, useState, watchProps, getProps, useMounted } = hooks;
   // 标记为触发器
   markAsTrigger();
   // 状态管理
@@ -20,19 +24,15 @@ export function asButton<P extends ButtonProps>(
   const focusVisible = useState<boolean>(false, 'data-focus-visible');
   const active = useState<boolean>(false, 'data-active');
 
+  defineProps(DEFAULT_BUTTON_PROPS);
+
   const handleDisabledChange = (disabled: boolean) => {
-    try {
-      if (disabled) {
-        event.focus.setPriority(-1);
-        event.setAttribute('aria-disabled', 'true');
-      } else {
-        event.focus.setPriority(0);
-        event.removeAttribute('aria-disabled');
-      }
-    } catch (e) {
-      // 如果组件还没挂载，就忽略这次更新
-      // 等到 mounted 时会重新设置
-      console.warn('Cannot set disabled attribute before the component is mounted');
+    if (disabled) {
+      event.focus.setPriority(-1);
+      event.setAttribute('aria-disabled', 'true');
+    } else {
+      event.focus.setPriority(0);
+      event.removeAttribute('aria-disabled');
     }
   };
 
@@ -48,7 +48,7 @@ export function asButton<P extends ButtonProps>(
   });
 
   // 属性同步
-  onPropsChange(['disabled'], ({ disabled }) => {
+  watchProps(['disabled'], ({ disabled }) => {
     handleDisabledChange(disabled ?? false);
   });
 

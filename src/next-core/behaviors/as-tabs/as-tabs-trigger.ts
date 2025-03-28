@@ -12,14 +12,19 @@ const asTabsTrigger = (hooks: PrototypeHooks<TabsTriggerProps>) => {
     useUnmounted,
     watchContext,
     getContext,
+    defineProps,
   } = hooks;
 
+  // role
   markAsTrigger();
+
+  // props
+  defineProps({ value: '' });
 
   // ui-state
   const state = useState<'active' | 'inactive'>('inactive', 'state');
-  // context
 
+  // context
   const _handleContextChange = (context: TabsContext) => {
     const { value } = getProps();
     if (context.tabValue === value) {
@@ -31,10 +36,11 @@ const asTabsTrigger = (hooks: PrototypeHooks<TabsTriggerProps>) => {
       state.set('inactive');
     }
   };
-  
   watchContext(asTabsContext, (context, keys) => {
     if (keys.includes('tabValue')) _handleContextChange(context);
   });
+
+  // deal with insert index
   useMounted(() => {
     const { value } = getProps();
     const context = getContext(asTabsContext);
@@ -49,6 +55,7 @@ const asTabsTrigger = (hooks: PrototypeHooks<TabsTriggerProps>) => {
     context.tabs.splice(removeIndex, 1);
     context.tabRefs.splice(removeIndex, 1);
   });
+
   // event
   event.on('click', () => {
     const { value } = getProps();

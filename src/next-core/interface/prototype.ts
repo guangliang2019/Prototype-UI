@@ -58,14 +58,20 @@ export interface PrototypeHooks<Props = any> {
    * @param state 要监听的状态
    * @param callback 变更回调
    */
-  onStateChange<T>(state: State<T>, callback: (newValue: T, oldValue: T) => void): void;
+  watchState<T>(state: State<T>, callback: (newValue: T, oldValue: T) => void): void;
+
+  /**
+   * 定义参数
+   * @param defaultProps 默认参数
+   */
+  defineProps(defaultProps: Props): void;
 
   /**
    * 监听属性变化
    * @param props 要监听的属性列表
    * @param callback 变更回调
    */
-  onPropsChange(props: (keyof Props)[], callback: (changedProps: Partial<Props>) => void): void;
+  watchProps(props: (keyof Props)[], callback: (changedProps: Partial<Props>) => void): void;
 
   /** 创建元素 */
   h(
@@ -118,13 +124,16 @@ export interface PrototypeHooks<Props = any> {
 /**
  * 原型配置项
  */
-export interface PrototypeOptions<Props = Record<string, any>> {
+export interface Prototype<Props> {
   /** 组件名称 */
   displayName?: string;
-  /** 默认属性 */
-  defaultProps?: Partial<Props>;
   /** 可观察的属性 */
   observedAttributes?: string[];
+
+  /**
+   * 设置函数
+   */
+  setup: (hooks: PrototypeHooks<Props>) => void;
 }
 
 /**
@@ -149,7 +158,7 @@ export interface PrototypeSetupResult<P = Record<string, any>> {
   /**
    * 渲染函数
    */
-  render?: (renderer: RendererAPI) => Element;
+  render?: (renderer: RendererAPI) => Element | void;
 }
 
 /**
@@ -158,13 +167,3 @@ export interface PrototypeSetupResult<P = Record<string, any>> {
 export type PrototypeSetup<Props = Record<string, any>> = (
   hooks: PrototypeHooks<Props>
 ) => PrototypeSetupResult<Props> | void;
-
-/**
- * 组件原型
- */
-export interface Prototype<Props = Record<string, any>> {
-  /** 配置项 */
-  readonly options: PrototypeOptions<Props>;
-  /** 设置函数 */
-  readonly setup: PrototypeSetup<Props>;
-}

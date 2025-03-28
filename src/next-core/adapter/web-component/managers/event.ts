@@ -1,4 +1,9 @@
-import { EventManager as IEventManager, EventHandler, EventOptions } from '@/next-core/interface';
+import {
+  EventManager as IEventManager,
+  EventHandler,
+  EventOptions,
+  EVENT_MANAGER_SYMBOL,
+} from '@/next-core/interface';
 import { getComponent } from '../../../utils/component';
 
 interface EventItem {
@@ -277,7 +282,7 @@ export class EventManager implements IEventManager {
    */
   private findEventManager(element: Element): EventManager | null {
     const component = getComponent(element);
-    return component?.eventManager as EventManager | null;
+    return component?.[EVENT_MANAGER_SYMBOL] as EventManager | null;
   }
 
   public on<T = any>(

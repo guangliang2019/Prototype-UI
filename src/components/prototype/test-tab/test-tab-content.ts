@@ -34,8 +34,11 @@ export default class PrototypeTestTabContent<
 customElements.define(
   'prototype-test-tab-content',
   WebComponentAdapter<TabsContentProps & Record<string, PropType>>(
-    definePrototype({}, (hooks) => {
-      asTabsContent(hooks);
+    definePrototype({
+      displayName: 'prototype-test-tab-content',
+      setup: (hooks) => {
+        asTabsContent(hooks);
+      },
     })
   )
 );

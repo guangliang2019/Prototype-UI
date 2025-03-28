@@ -1,4 +1,4 @@
-import { Component, Context, ContextOptions } from '../interface';
+import { Component, Context, CONTEXT_MANAGER_SYMBOL, ContextOptions } from '../interface';
 import { getComponent, isComponentRoot } from '../utils/component';
 
 /**
@@ -141,7 +141,7 @@ export class WebContextCenter {
    * @param component Provider 组件实例
    */
   removeProvider(component: Component): void {
-    const providedContexts = component.context.getProvidedContexts();
+    const providedContexts = component[CONTEXT_MANAGER_SYMBOL].getProvidedContexts();
 
     providedContexts.forEach((context) => {
       // 重新分配所有相关的 Consumer
@@ -172,7 +172,7 @@ export class WebContextCenter {
     // 默认方案是共享内存的，所以不需要通知
 
     entry.consumersSet.forEach((consumer) => {
-      consumer.context.setConsumedValue(context, value, [], true);
+      consumer[CONTEXT_MANAGER_SYMBOL].setConsumedValue(context, value, [], true);
     });
   }
 
@@ -204,7 +204,10 @@ export class WebContextCenter {
 
       if (isComponentRoot(element)) {
         const potentialConsumer = getComponent(element);
-        if (potentialConsumer && potentialConsumer.context.getConsumedContexts().size > 0) {
+        if (
+          potentialConsumer &&
+          potentialConsumer[CONTEXT_MANAGER_SYMBOL].getConsumedContexts().size > 0
+        ) {
           this.pendingUpdates.add(potentialConsumer);
           consumerCount++;
         }
@@ -258,7 +261,7 @@ export class WebContextCenter {
    * 更新 Consumer 的订阅关系
    */
   private updateConsumerSubscriptions(consumer: Component): void {
-    const consumedContexts = consumer.context.getConsumedContexts();
+    const consumedContexts = consumer[CONTEXT_MANAGER_SYMBOL].getConsumedContexts();
 
     consumedContexts.forEach((context) => {
       const currentProvider = this.consumerMap.get(context)?.get(consumer);
@@ -283,7 +286,10 @@ export class WebContextCenter {
     while (current) {
       if (isComponentRoot(current)) {
         const potentialProvider = getComponent(current);
-        if (potentialProvider && potentialProvider.context.getProvidedContexts().has(context)) {
+        if (
+          potentialProvider &&
+          potentialProvider[CONTEXT_MANAGER_SYMBOL].getProvidedContexts().has(context)
+        ) {
           return potentialProvider;
         }
       }
@@ -318,9 +324,9 @@ export class WebContextCenter {
     this.consumerMap.set(context, consumerMap);
 
     // 同步 Provider 的 Context 值到 Consumer
-    const providerValue = provider.context.getProvidedValue(context);
+    const providerValue = provider[CONTEXT_MANAGER_SYMBOL].getProvidedValue(context);
     if (providerValue !== undefined) {
-      consumer.context.setConsumedValue(context, providerValue, [], false);
+      consumer[CONTEXT_MANAGER_SYMBOL].setConsumedValue(context, providerValue, [], false);
     }
   }
 

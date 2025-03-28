@@ -25,8 +25,11 @@ export default class PrototypeTestTab<
 customElements.define(
   'prototype-test-tab',
   WebComponentAdapter<TabsProps & Record<string, PropType>>(
-    definePrototype({}, (hooks) => {
-      asTabs(hooks);
+    definePrototype({
+      displayName: 'prototype-test-tab',
+      setup: (hooks) => {
+        asTabs(hooks);
+      },
     })
   )
 );

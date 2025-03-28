@@ -1,4 +1,4 @@
-import type { PrototypeOptions, PrototypeSetup, Prototype } from './interface';
+import type { Prototype } from './interface';
 
 /**
  * 定义组件原型
@@ -25,13 +25,9 @@ import type { PrototypeOptions, PrototypeSetup, Prototype } from './interface';
  * ```
  */
 export function definePrototype<Props = Record<string, any>>(
-  options: PrototypeOptions<Props>,
-  setup: PrototypeSetup<Props>
+  prototype: Prototype<Props>
 ): Prototype<Props> {
-  return {
-    options,
-    setup,
-  };
+  return prototype;
 }
 
 // 导出类型定义

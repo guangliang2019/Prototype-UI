@@ -1,4 +1,4 @@
-import { Component } from '@/next-core/interface';
+import { Component, CONTEXT_MANAGER_SYMBOL, EVENT_MANAGER_SYMBOL } from '@/next-core/interface';
 import {
   WebAttributeManager,
   WebLifecycleManager,
@@ -15,7 +15,6 @@ import type {
   State,
 } from '@/next-core/interface';
 import { Context, Prototype, PrototypeHooks } from '@/next-core';
-import { EventHandler, EventOptions } from '@/next-core/interface';
 import { PrototypeSetupResult } from '@/next-core/interface';
 import { WebRenderer } from './renderer';
 import { WebComponentContextManager } from './managers/context';
@@ -51,9 +50,9 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
   return class extends HTMLElement implements Component {
     private _lifecycle = new WebLifecycleManager();
     private _attributeManager = new WebAttributeManager();
-    private _states = new WebStateManager(this, this._attributeManager);
-    private _render = new WebRenderManager(this);
-    private _propsManager = new WebPropsManager<Props>(this, prototype.options);
+    private _statesManager = new WebStateManager(this, this._attributeManager);
+    private _renderManager = new WebRenderManager(this);
+    private _propsManager = new WebPropsManager<Props>(this, {});
     private _eventManager = new WebEventManager(this);
     private _contextManager: WebComponentContextManager = new WebComponentContextManager(this);
 
@@ -63,20 +62,27 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       eventManager: this._eventManager,
       attributeManager: this._attributeManager,
       lifecycleManager: this._lifecycle,
-      stateManager: this._states,
+      stateManager: this._statesManager,
       propsManager: this._propsManager,
     });
 
     private _isDestroyed = false;
     private _setupResult: PrototypeSetupResult | void;
+    private _setupPhase: boolean = true;
     private _pendingContextOperations: PendingContextOperation[] = [];
+
+    private _pendingProps: Record<string, any> | null = null;
+    private _pendingPropListeners: Array<{
+      props: (keyof Props)[];
+      callback: (props: Partial<Props>) => void;
+    }> = [];
 
     // Component 接口实现
     get element(): Element {
       return this;
     }
 
-    get eventManager() {
+    get [EVENT_MANAGER_SYMBOL]() {
       return this._eventManager;
     }
 
@@ -85,10 +91,10 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     }
 
     get state() {
-      return this._states;
+      return this._statesManager;
     }
 
-    get context() {
+    get [CONTEXT_MANAGER_SYMBOL]() {
       return this._contextManager;
     }
 
@@ -99,44 +105,57 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
 
       // 执行 setup 获取结果
       this._setupResult = prototype.setup(this.createHooks());
+      this._setupPhase = false;
 
       // 触发 created 回调
       this._lifecycle.trigger('created');
     }
 
+    private checkSetupPhase(name: string) {
+      if (!this._setupPhase) throw new Error(`${name} can only be called at the root of the prototype.`);
+    }
+
     private createHooks(): PrototypeHooks<Props> {
       return {
-        useCreated: (cb) => this._lifecycle.add('created', cb),
-        useDestroyed: (cb) => this._lifecycle.add('destroyed', cb),
-        useMounted: (cb) => this._lifecycle.add('mounted', cb),
-        useUnmounted: (cb) => this._lifecycle.add('unmounted', cb),
-        useUpdated: (cb) => this._lifecycle.add('updated', cb),
+        useCreated: (cb) => {
+          this.checkSetupPhase('useCreated');
+          this._lifecycle.add('created', cb);
+        },
+        useDestroyed: (cb) => {
+          this.checkSetupPhase('useDestroyed');
+          this._lifecycle.add('destroyed', cb);
+        },
+        useMounted: (cb) => {
+          this.checkSetupPhase('useMounted');
+          this._lifecycle.add('mounted', cb);
+        },
+        useUnmounted: (cb) => {
+          this.checkSetupPhase('useUnmounted');
+          this._lifecycle.add('unmounted', cb);
+        },
+        useUpdated: (cb) => {
+          this.checkSetupPhase('useUpdated');
+          this._lifecycle.add('updated', cb);
+        },
 
         markAsTrigger: () => {
+          this.checkSetupPhase('markAsTrigger');
+
           this._eventManager.markAsTrigger();
         },
 
         watchAttribute: (name, callback) => {
+          this.checkSetupPhase('watchAttribute');
           this._attributeManager.watch(name, callback);
         },
 
-        // useEvent: <T>(eventName: string, handler: EventHandler<T>, options?: EventOptions) => {
-        //   this._eventManager.on(eventName, handler, options);
+        useState: (initial, attribute, options) => {
+          this.checkSetupPhase('useState');
+          return this._statesManager.useState(initial, attribute, options);
+        },
 
-        //   // 在组件销毁时自动移除事件监听
-        //   this._lifecycle.add('destroyed', () => {
-        //     this._eventManager.off(eventName, handler);
-        //   });
-        // },
-
-        // emitEvent: <T>(eventName: string, detail: T) => {
-        //   this._eventManager.emit(eventName, detail);
-        // },
-
-        useState: (initial, attribute, options) =>
-          this._states.useState(initial, attribute, options),
-
-        onStateChange: <T>(state: State<T>, callback: (newValue: T, oldValue: T) => void) => {
+        watchState: <T>(state: State<T>, callback: (newValue: T, oldValue: T) => void) => {
+          this.checkSetupPhase('watchState');
           const originalSet = state.set;
           state.set = (value: T) => {
             const oldValue = state.value;
@@ -145,17 +164,9 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           };
         },
 
-        onPropsChange: (
-          props: (keyof Props)[],
-          callback: (changedProps: Partial<Props>) => void
-        ) => {
-          return this._propsManager.onPropsChange((newProps: Props) => {
-            const changedProps = props.reduce((acc, key) => {
-              acc[key] = newProps[key];
-              return acc;
-            }, {} as Partial<Props>);
-            callback(changedProps);
-          });
+        watchProps: (props, callback) => {
+          this.checkSetupPhase('watchProps');
+          this._pendingPropListeners.push({ props, callback });
         },
 
         h: (type: ElementType, props?: ElementProps, children?: ElementChildren[]) => {
@@ -167,6 +178,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           context: Context<T>,
           initialValue: T | ((update: (value: Partial<T>, notify?: boolean) => void) => T)
         ): void => {
+          this.checkSetupPhase('provideContext');
           this._pendingContextOperations.push({
             type: 'provide',
             context,
@@ -180,6 +192,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           context: Context<T>,
           callback?: (value: T, changedKeys: string[]) => void
         ): void => {
+          this.checkSetupPhase('watchContext');
           if (callback) {
             this._contextManager.addContextListener(context, callback);
           }
@@ -267,11 +280,37 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
         },
 
         event: this._eventCommands,
+
+        defineProps: (defaultProps: Props) => {
+          this.checkSetupPhase('defineProps');
+          this._pendingProps = defaultProps;
+        },
       };
     }
 
     static get observedAttributes() {
-      return prototype.options.observedAttributes || [];
+      return prototype.observedAttributes || [];
+    }
+
+    private _handlePendingProps() {
+      if (this._pendingProps) {
+        this._propsManager.defineProps(this._pendingProps as Props);
+        this._pendingProps = null;
+      }
+    }
+
+    private _handlePendingPropListeners() {
+      // 处理所有待处理的监听器
+      this._pendingPropListeners.forEach(({ props, callback }) => {
+        this._propsManager.onPropsChange((newProps) => {
+          const changedProps = props.reduce((acc, key) => {
+            acc[key] = newProps[key];
+            return acc;
+          }, {} as Partial<Props>);
+          callback(changedProps);
+        });
+      });
+      this._pendingPropListeners = [];
     }
 
     connectedCallback() {
@@ -279,6 +318,9 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
 
       // 初始化 props
       this._propsManager.initialize();
+      this._handlePendingProps();
+
+      this._handlePendingPropListeners();
 
       // 处理所有待处理的 Context 操作
       this._pendingContextOperations.forEach((operation) => {
@@ -291,7 +333,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
                 Object.assign(currentValue, value);
                 this._contextManager.setProvidedValue(operation.context, currentValue);
                 this._contextManager.getConsumers(operation.context).forEach((consumer) => {
-                  consumer.context.setConsumedValue(
+                  consumer[CONTEXT_MANAGER_SYMBOL].setConsumedValue(
                     operation.context,
                     currentValue,
                     changedKeys,
@@ -311,7 +353,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       this._pendingContextOperations = [];
 
       // 同步所有待处理的属性
-      this._states.flushAttributes();
+      this._statesManager.flushAttributes();
 
       // 挂载事件管理器
       this._eventManager.mount();
@@ -340,21 +382,22 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       // 如果有 render 函数，使用它来更新
       if (this._setupResult?.render) {
         const element = this._setupResult.render(this._renderer);
-
-        this._render.update(element);
+        if (element) {
+          this._renderManager.update(element);
+        }
       }
     }
 
     // 提供给外部的渲染控制方法
     requestRender(): void {
       if (!this._isDestroyed) {
-        this._render.requestRender();
+        this._renderManager.requestRender();
       }
     }
 
     forceRender(): void {
       if (!this._isDestroyed) {
-        this._render.forceRender();
+        this._renderManager.forceRender();
       }
     }
 
@@ -366,8 +409,8 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
 
       // 清理资源
       this._lifecycle.clear();
-      this._states.clear();
-      this._render.clear();
+      this._statesManager.clear();
+      this._renderManager.clear();
       this._eventManager.clearAll();
       this._contextManager.destroy();
     }

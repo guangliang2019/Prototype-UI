@@ -136,5 +136,5 @@ Prototype UI 不是框架，不是库，而是一个**组件生成方案**。默
 即使它错过了最佳发布时机也是如此。
 
 > This will take time.  
-> But as long as I’m here, Prototype UI will burn steady and bright —  
+> But as long as I’m here, Prototype UI will burn faint but steady —  
 > even if it misses the “perfect” moment to be seen.

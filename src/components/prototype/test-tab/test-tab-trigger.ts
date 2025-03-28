@@ -34,8 +34,11 @@ export default class PrototypeTestTabTrigger<
 customElements.define(
   'prototype-test-tab-trigger',
   WebComponentAdapter<TabsTriggerProps & Record<string, PropType>>(
-    definePrototype({}, (hooks) => {
-      asTabsTrigger(hooks);
+    definePrototype({
+      displayName: 'prototype-test-tab-trigger',
+      setup: (hooks) => {
+        asTabsTrigger(hooks);
+      },
     })
   )
 );

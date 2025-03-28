@@ -2,9 +2,9 @@ import { PrototypeHooks } from '@/next-core/interface';
 import { asTabsContext, TabsContext } from './interface';
 
 const asTabsContent = (hooks: PrototypeHooks) => {
-  const { getProps, useState, watchContext, getContext, useMounted } = hooks;
+  const { getProps, useState, watchContext, getContext, useMounted, defineProps } = hooks;
   // props
-  // defineProps(p, { value: '' });
+  defineProps({ value: '' });
 
   // ui-state
   const state = useState<'active' | 'inactive'>('inactive', 'state');

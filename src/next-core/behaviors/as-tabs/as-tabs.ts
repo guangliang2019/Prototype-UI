@@ -2,28 +2,23 @@ import { PrototypeHooks } from '@/next-core/interface';
 import { TabsProps, TabsContext, asTabsContext } from './interface';
 
 const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
+  const { provideContext, getProps, defineProps, watchProps, getContext } = hooks;
   // props
-  // defineProps(
-  //   p,
-  //   {
-  //     defaultValue: '',
-  //     onTabChange: () => {},
-  //     changTab: (value, focus = false) => {
-  //       const context = getContext<TabsContext>(p, 'tabs');
-  //       context.changeTab(value, focus);
-  //     },
-  //   },
-  //   (key, _) => {
-  //     if (key === 'changTab') throw new Error('changTab is readonly');
-  //   }
-  // );
-
-  const { provideContext, getProps } = hooks;
+  defineProps({
+    defaultValue: '',
+    onTabChange: () => {},
+    changTab: (value, focus = false) => {
+      const context = getContext<TabsContext>(asTabsContext);
+      context.changeTab(value, focus);
+    },
+  });
+  watchProps(['changTab'], () => {
+    throw new Error('changTab is readonly');
+  });
 
   // context
   provideContext(asTabsContext, (updateContext) => {
     const props = getProps();
-   
 
     const context: TabsContext = {
       tabValue: props.defaultValue ?? '',
@@ -43,6 +38,15 @@ const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
     };
     return context;
   });
+
+  return {
+    expose: {
+      changeTab: (value: string, focus?: boolean) => {
+        const context = getContext<TabsContext>(asTabsContext);
+        context.changeTab(value, focus);
+      },
+    },
+  };
 };
 
 export default asTabs;
