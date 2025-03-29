@@ -1,25 +1,25 @@
-import { createContext } from "@/next-core/adapter/context";
+import { createContext } from '@/next-core/adapter/context';
 
-export interface TabsProps {
+export type TabsProps = {
   readonly defaultValue?: string;
   readonly changTab?: (value: string, focus?: boolean) => void;
-  onTabChange: (context: TabsContext) => void;
+  onTabChange: (context: TabsContextType) => void;
 }
 
-export interface TabsTriggerProps {
+export type TabsTriggerProps = {
   value: string;
 }
 
-export interface TabsContentProps {
+export type TabsContentProps = {
   value: string;
 }
 
-export interface TabsIndicatorProps {
-  onTabChange: (context: TabsContext) => void;
-  onTabResize: (context: TabsContext) => void;
+export type TabsIndicatorProps = {
+  onTabChange: (context: TabsContextType) => void;
+  onTabResize: (context: TabsContextType) => void;
 }
 
-export interface TabsContext {
+export type TabsContextType = {
   index: number;
   tabValue: string;
   defaultValue: string;
@@ -28,4 +28,4 @@ export interface TabsContext {
   tabRefs: HTMLElement[];
 }
 
-export const asTabsContext = createContext<TabsContext>('as-tabs');
+export const TabsContext = createContext<TabsContextType>('as-tabs');

@@ -1,34 +1,51 @@
-import { definePrototype, useConnect } from '@/core';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
+import './style.css';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
 import {
   asTabs,
   asTabsContent,
   asTabsIndicator,
   asTabsTrigger,
-  TabsContentProps,
-} from '@/core/components/tabs';
-import './style.css';
+} from '@/next-core/behaviors/as-tabs';
 
-const TabsContent = definePrototype<TabsContentProps>((p) => {
-  asTabsContent(p);
+export const PrototypeTabs = WebComponentAdapter(
+  definePrototype({
+    displayName: 'prototype-tabs',
+    setup: asTabs,
+  })
+);
+export const PrototypeTabsTrigger = WebComponentAdapter(
+  definePrototype({
+    displayName: 'prototype-tabs-trigger',
+    setup: asTabsTrigger,
+  })
+);
+export const PrototypeTabsContent = WebComponentAdapter({
+  displayName: 'prototype-tabs-content',
+  setup: (hooks) => {
+    const { useMounted, element } = hooks;
+    // role
+    asTabsContent(hooks);
 
-  let _originalCls = '';
-  useConnect(p, () => {
-    _originalCls = p.componentRef.className;
-  });
+    // get original class name
+    let _originalCls = '';
+    useMounted(() => {
+      _originalCls = element.get().className;
+    });
 
-  return () => {
-    const component = p.componentRef;
-    component.className = [_originalCls, 'data-[state=inactive]:hidden'].join(' ').trimEnd();
-
-    return null;
-  };
+    // set hidden style
+    return {
+      render: () => {
+        element.get().className = [_originalCls, 'data-[state=inactive]:hidden']
+          .join(' ')
+          .trimEnd();
+      },
+    };
+  },
 });
-
-export const PrototypeTabs = WebComponentAdapter(definePrototype(asTabs));
-export const PrototypeTabsTrigger = WebComponentAdapter(definePrototype(asTabsTrigger));
-export const PrototypeTabsContent = WebComponentAdapter(TabsContent);
-export const PrototypeTabsIndicator = WebComponentAdapter(definePrototype(asTabsIndicator));
+export const PrototypeTabsIndicator = WebComponentAdapter({
+  displayName: 'prototype-tabs-indicator',
+  setup: asTabsIndicator,
+});
 
 customElements.define('prototype-tabs', PrototypeTabs);
 customElements.define('prototype-tabs-trigger', PrototypeTabsTrigger);

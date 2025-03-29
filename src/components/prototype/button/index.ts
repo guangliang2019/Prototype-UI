@@ -4,9 +4,7 @@ import { asButton } from '@/next-core/behaviors/as-button';
 export const PrototypeButton = WebComponentAdapter(
   definePrototype({
     displayName: 'prototype-button',
-    setup: (hooks) => {
-      asButton(hooks);
-    },
+    setup: asButton,
   })
 );
 

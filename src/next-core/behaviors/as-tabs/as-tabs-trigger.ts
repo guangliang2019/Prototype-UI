@@ -1,5 +1,5 @@
 import { PrototypeHooks } from '@/next-core/interface';
-import { asTabsContext, TabsContext, TabsTriggerProps } from './interface';
+import { TabsContext, TabsContextType, TabsTriggerProps } from './interface';
 
 const asTabsTrigger = (hooks: PrototypeHooks<TabsTriggerProps>) => {
   const {
@@ -22,10 +22,10 @@ const asTabsTrigger = (hooks: PrototypeHooks<TabsTriggerProps>) => {
   defineProps({ value: '' });
 
   // ui-state
-  const state = useState<'active' | 'inactive'>('inactive', 'state');
+  const state = useState<'active' | 'inactive'>('inactive', 'data-state');
 
   // context
-  const _handleContextChange = (context: TabsContext) => {
+  const _handleContextChange = (context: TabsContextType) => {
     const { value } = getProps();
     if (context.tabValue === value) {
       event.focus.setPriority(0);
@@ -36,22 +36,22 @@ const asTabsTrigger = (hooks: PrototypeHooks<TabsTriggerProps>) => {
       state.set('inactive');
     }
   };
-  watchContext(asTabsContext, (context, keys) => {
+  watchContext(TabsContext, (context, keys) => {
     if (keys.includes('tabValue')) _handleContextChange(context);
   });
 
   // deal with insert index
   useMounted(() => {
     const { value } = getProps();
-    const context = getContext(asTabsContext);
-    const insertIndex = element.getListIndex(context.tabRefs);
-    context.tabRefs.splice(insertIndex, 0, element.get());
+    const context = getContext(TabsContext);
+    const insertIndex = element.insert(context.tabRefs);
     context.tabs.splice(insertIndex, 0, value);
     _handleContextChange(context);
+    if (context.index === -1) context.index = insertIndex;
   });
   useUnmounted(() => {
-    const context = getContext(asTabsContext);
-    const removeIndex = element.getListIndex(context.tabRefs);
+    const context = getContext(TabsContext);
+    const removeIndex = context.tabRefs.indexOf(element.get());
     context.tabs.splice(removeIndex, 1);
     context.tabRefs.splice(removeIndex, 1);
   });
@@ -59,12 +59,12 @@ const asTabsTrigger = (hooks: PrototypeHooks<TabsTriggerProps>) => {
   // event
   event.on('click', () => {
     const { value } = getProps();
-    const context = getContext(asTabsContext);
+    const context = getContext(TabsContext);
     context.changeTab(value);
   });
   event.on('keydown', (e) => {
     const event = e as KeyboardEvent;
-    const context = getContext(asTabsContext);
+    const context = getContext(TabsContext);
     const { value } = getProps();
     const currentIndex = context.tabs.indexOf(value);
     const nextIndex = (currentIndex + 1) % context.tabs.length;

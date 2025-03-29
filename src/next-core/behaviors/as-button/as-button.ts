@@ -11,10 +11,12 @@ export const DEFAULT_BUTTON_PROPS: ButtonProps = {
  * 让使用了 asButton 的组件具有按钮的行为
  * @param hooks 原型钩子
  */
-export function asButton(hooks: PrototypeHooks<ButtonProps>): {
+const asButton = (
+  hooks: PrototypeHooks<ButtonProps>
+): {
   state: ButtonState;
   actions: ButtonActions;
-} {
+} => {
   const { event, defineProps, markAsTrigger, useState, watchProps, getProps, useMounted } = hooks;
   // 标记为触发器
   markAsTrigger();
@@ -124,4 +126,6 @@ export function asButton(hooks: PrototypeHooks<ButtonProps>): {
     },
     actions,
   };
-}
+};
+
+export default asButton;

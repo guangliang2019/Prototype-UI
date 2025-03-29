@@ -1,5 +1,5 @@
 import { PrototypeHooks } from '@/next-core/interface';
-import { asTabsContext, TabsContext } from './interface';
+import { TabsContext, TabsContextType } from './interface';
 
 const asTabsContent = (hooks: PrototypeHooks) => {
   const { getProps, useState, watchContext, getContext, useMounted, defineProps } = hooks;
@@ -7,19 +7,19 @@ const asTabsContent = (hooks: PrototypeHooks) => {
   defineProps({ value: '' });
 
   // ui-state
-  const state = useState<'active' | 'inactive'>('inactive', 'state');
+  const state = useState<'active' | 'inactive'>('inactive', 'data-state');
+
   // context
-  const _handleContextChange = (context: TabsContext) => {
+  const _handleContextChange = (context: TabsContextType) => {
     const { value } = getProps();
     if (context.tabValue === value) state.set('active');
     if (context.tabValue !== value) state.set('inactive');
   };
-
-  watchContext(asTabsContext, (context, keys) => {
+  watchContext(TabsContext, (context, keys) => {
     if (keys.includes('tabValue')) _handleContextChange(context);
   });
   useMounted(() => {
-    const context = getContext(asTabsContext);
+    const context = getContext(TabsContext);
     _handleContextChange(context);
   });
 };

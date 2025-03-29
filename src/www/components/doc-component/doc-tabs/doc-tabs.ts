@@ -4,6 +4,8 @@ import {
   PrototypeTabsIndicator,
   PrototypeTabsTrigger,
 } from '@/components/prototype/tabs';
+import { CONTEXT_MANAGER_SYMBOL } from '@/next-core';
+import { TabsContext, TabsContextType } from '@/next-core/behaviors/as-tabs';
 
 class DocTabs extends PrototypeTabs {
   connectedCallback() {
@@ -32,8 +34,18 @@ class DocTabsIndicator extends PrototypeTabsIndicator {
 
   private _currentTabIndex = 0;
   private __resizeObserver = new ResizeObserver((_) => {
-    this.onTabResize(this.context.get('tabs'));
+    this._handleTabResize(
+      this[CONTEXT_MANAGER_SYMBOL].getConsumedValue(TabsContext) as TabsContextType
+    );
   });
+
+  private _handleTabResize(context: TabsContextType) {
+    const currentRef = context.tabRefs[context.index];
+    this.style.transition = '';
+    this.style.left = `${currentRef.offsetLeft}px`;
+    this.style.right = `${this._getOffsetRight(currentRef)}px`;
+    this.style.width = `${currentRef.offsetWidth}px`;
+  }
 
   private _leadingDebounce<T extends (...args: any[]) => void>(
     func: T,
@@ -71,28 +83,22 @@ class DocTabsIndicator extends PrototypeTabsIndicator {
     this.style.willChange = 'width left right';
     this.__resizeObserver.observe(this.parentElement!);
     this.className = 'absolute -mb-[34px] h-0.5 bg-primary';
-
-    this.onTabResize = this._leadingDebounce((context) => {
-      const currentRef = context.tabRefs[context.index];
-      this.style.transition = '';
-      this.style.left = `${currentRef.offsetLeft}px`;
-      this.style.right = `${this._getOffsetRight(currentRef)}px`;
-      this.style.width = `${currentRef.offsetWidth}px`;
-    }, 100);
-
-    this.onTabChange = (context) => {
-      requestAnimationFrame(() => {
-        this.style.width = 'unset';
-        this.style.transition =
-          this._currentTabIndex < context.index
-            ? 'left .12s ease-out .09s, right .12s ease-out'
-            : 'left .12s ease-out, right .12s ease-out .09s';
-        this._currentTabIndex = context.index;
-        const currentRef = context.tabRefs[context.index];
-        this.style.right = `${this._getOffsetRight(currentRef)}px`;
-        this.style.left = `${currentRef.offsetLeft}px`;
-      });
-    };
+    this.props.setProps({
+      onTabResize: this._leadingDebounce((context) => this._handleTabResize(context), 100),
+      onTabChange: (context: TabsContextType) => {
+        requestAnimationFrame(() => {
+          this.style.width = 'unset';
+          this.style.transition =
+            this._currentTabIndex < context.index
+              ? 'left .12s ease-out .09s, right .12s ease-out'
+              : 'left .12s ease-out, right .12s ease-out .09s';
+          this._currentTabIndex = context.index;
+          const currentRef = context.tabRefs[context.index];
+          this.style.right = `${this._getOffsetRight(currentRef)}px`;
+          this.style.left = `${currentRef.offsetLeft}px`;
+        });
+      },
+    });
   }
 
   disconnectedCallback() {

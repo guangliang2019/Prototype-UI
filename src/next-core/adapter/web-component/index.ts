@@ -40,13 +40,33 @@ type PendingContextOperation<T = any> = {
     }
 );
 
+// 定义 Web Component 的生命周期接口
+export interface WebComponentLifecycle {
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  adoptedCallback(): void;
+  attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void;
+}
+
+// 定义 Web Component 的静态属性接口
+export interface WebComponentStatic {
+  readonly observedAttributes: string[];
+}
+
+// 组合所有需要的接口
+type WebComponentInstance<T extends HTMLElement> = T & Component & WebComponentLifecycle;
+
+// 组合静态类型
+export type WebComponentConstructor<T extends HTMLElement> = Constructor<WebComponentInstance<T>> &
+  WebComponentStatic;
+
 /**
  * Web Components 适配器
  * 将组件原型转换为 Web Component 类
  */
 export const WebComponentAdapter = <Props extends Record<string, PropType>>(
   prototype: Prototype<Props>
-): Constructor<HTMLElement & Component> => {
+): WebComponentConstructor<HTMLElement> => {
   return class extends HTMLElement implements Component {
     private _lifecycle = new WebLifecycleManager();
     private _attributeManager = new WebAttributeManager();
@@ -104,7 +124,24 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       attachComponent(this, this);
 
       // 执行 setup 获取结果
-      this._setupResult = prototype.setup(this.createHooks());
+      this._setupResult = prototype.setup(this.createHooks()) ?? {};
+      if (this._setupResult?.expose) {
+        Object.entries(this._setupResult.expose).forEach(([key, value]) => {
+          // 跳过已存在的属性
+          if (key in this) {
+            console.warn(
+              `[WebComponentAdapter] Property "${key}" already exists on the component, ` +
+                'exposing it will override the original property.'
+            );
+          }
+          // 暴露 API
+          Object.defineProperty(this, key, {
+            value,
+            configurable: true,
+            enumerable: true,
+          });
+        });
+      }
       this._setupPhase = false;
 
       // 触发 created 回调
@@ -112,7 +149,8 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     }
 
     private checkSetupPhase(name: string) {
-      if (!this._setupPhase) throw new Error(`${name} can only be called at the root of the prototype.`);
+      if (!this._setupPhase)
+        throw new Error(`${name} can only be called at the root of the prototype.`);
     }
 
     private createHooks(): PrototypeHooks<Props> {
@@ -257,17 +295,23 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
             return a.compareDocumentPosition(b) as ElementPosition;
           },
 
-          getListIndex: (list, element) => {
+          insert: (list, element, index) => {
             if (!this._lifecycle.hasTriggered('mounted')) {
               throw new Error(
-                'element.getListIndex can only be called after the component is mounted. ' +
+                'element.insert can only be called after the component is mounted. ' +
                   'Please use it in mounted or later lifecycle hooks.'
               );
             }
             if (element === undefined) element = this;
-            if (!list.includes(element)) return -1;
 
-            return binarySearch(list, element, (a, b) => {
+            // 如果提供了 index，直接使用
+            if (index !== undefined) {
+              list.splice(index, 0, element);
+              return index;
+            }
+
+            // 否则根据 DOM 顺序插入
+            const currentIndex = binarySearch(list, element, (a, b) => {
               const position = a.compareDocumentPosition(b);
               if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
                 return -1; // a 在 b 前
@@ -276,6 +320,15 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
               }
               return 0; // a 和 b 相同
             });
+
+            // 如果元素已在列表中，先移除
+            if (list.includes(element)) {
+              list.splice(list.indexOf(element), 1);
+            }
+
+            // 插入到正确位置
+            list.splice(currentIndex === -1 ? list.length : currentIndex, 0, element);
+            return currentIndex === -1 ? list.length - 1 : currentIndex;
           },
         },
 
@@ -386,6 +439,10 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
           this._renderManager.update(element);
         }
       }
+    }
+
+    adoptedCallback() {
+      // 空实现即可，因为我们不需要处理这个生命周期
     }
 
     // 提供给外部的渲染控制方法

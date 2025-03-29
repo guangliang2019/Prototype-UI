@@ -2,6 +2,90 @@
 
 ## 近期重点
 
+### TODO
+
+- [ ] 旧内核以及比旧内核还旧的原型，需要迁移到新内核
+- [ ] 原型需要拓展
+
+  - [x] Button
+  - [ ] Switch
+  - [ ] Radio
+  - [ ] Checkbox
+  - [ ] Input
+  - [ ] Select
+  - [ ] Slider
+  - [ ] Rate
+  - [ ] Progress
+  - [ ] Badge
+  - [ ] Tooltip
+  - [ ] Popover
+  - [ ] Dialog
+  - [ ] Drawer
+  - [ ] Menu
+  - [ ] SubMenu
+  - [ ] Dropdown
+  - [ ] Tabs
+  - [ ] Breadcrumb
+  - [ ] Pagination
+  - [ ] Steps
+  - [ ] Upload
+  - [ ] Transfer
+  - [ ] Table
+  - [ ] Tree
+  - [ ] Carousel
+  - [ ] Collapse
+  - [ ] Timeline
+  - [ ] Calendar
+
+- [ ] 适配器库开发
+
+  - [ ] PureJS
+  - [x] WebComponent
+  - [ ] Vue2
+  - [ ] Vue3
+  - [ ] React
+  - [ ] Angular
+  - [ ] Svelte
+  - [ ] SolidJS
+  - [ ] Preact
+  - [ ] MiniProgram
+
+  - [ ] Flutter
+  - [ ] Qt
+  - [ ] Unity
+  - [ ] Cocos
+
+- [ ] Shadcn UI 主题原型
+  - [x] Button
+  - [ ] Input
+  - [ ] Select
+  - [ ] Checkbox
+  - [ ] Radio
+  - [ ] Switch
+  - [ ] Slider
+  - [ ] Rate
+  - [ ] Progress
+  - [ ] Badge
+  - [ ] Tooltip
+  - [ ] Popover
+  - [ ] Dialog
+  - [ ] Drawer
+  - [ ] Menu
+  - [ ] SubMenu
+  - [ ] Dropdown
+  - [ ] Tabs
+  - [ ] Breadcrumb
+  - [ ] Pagination
+  - [ ] Steps
+  - [ ] Upload
+  - [ ] Transfer
+  - [ ] Table
+  - [ ] Tree
+  - [ ] Carousel
+  - [ ] Collapse
+  - [ ] Timeline
+  - [ ] Calendar
+
 ### next-core 重构计划
 
 - 已完成测试的模块：

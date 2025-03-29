@@ -1,4 +1,4 @@
-import { asButton } from '@/next-core/behaviors/as-button/as-button';
+import asButton from '@/next-core/behaviors/as-button/as-button';
 import { TestButtonProps } from './interface';
 import { definePrototype, WebComponentAdapter } from '@/next-core';
 
