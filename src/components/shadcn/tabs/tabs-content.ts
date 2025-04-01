@@ -1,25 +1,27 @@
-import { definePrototype, useConnect } from '@/core';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
-import { asTabsContent, TabsContentProps } from '@/core/components/tabs';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
+import { asTabsContent, TabsContentProps } from '@/next-core/behaviors/as-tabs';
 
-const TabsContent = definePrototype<TabsContentProps>((p) => {
-  asTabsContent(p);
+export const ShadcnTabsContentPrototype = definePrototype<TabsContentProps>({
+  setup: (hooks) => {
+    const { useMounted, element } = hooks;
+    asTabsContent(hooks);
 
-  let _originalCls = '';
-  useConnect(p, () => {
-    _originalCls = p.componentRef.className;
-  });
+    // get original class
+    let _originalCls = '';
+    useMounted(() => {
+      _originalCls = element.get().className;
+    });
 
-  return () => {
-    const component = p.componentRef;
-    component.className = [_originalCls, 'data-[state=inactive]:hidden'].join(' ').trimEnd();
-
-    return null;
-  };
+    return {
+      render: () => {
+        element.get().className = [_originalCls, 'data-[state=inactive]:hidden']
+          .join(' ')
+          .trimEnd();
+      },
+    };
+  },
 });
 
-const ShadcnTabsContent = WebComponentAdapter(TabsContent);
-
-export default ShadcnTabsContent;
+export const ShadcnTabsContent = WebComponentAdapter(ShadcnTabsContentPrototype);
 
 customElements.define('shadcn-tabs-content', ShadcnTabsContent);

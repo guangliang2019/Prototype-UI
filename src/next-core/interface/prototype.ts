@@ -121,6 +121,50 @@ export interface PrototypeHooks<Props = any> {
   event: EventCommands;
 }
 
+export interface PrototypeAPI<Props> {
+  props: {
+    define: (props: Props) => void;
+    set: (props: Partial<Props>) => void;
+    get: () => Props;
+    watch: (props: (keyof Props)[], callback: (props: Props) => void) => void;
+  };
+
+  state: {
+    define: <T>(state: Record<string, State<T>>) => State<T>;
+    watch: <T>(state: State<T>, callback: (state: T) => void) => void;
+  };
+
+  event: EventCommands;
+
+  view: {
+    // 渲染调度相关
+    update: (callback: () => void) => Promise<void>;
+    forceUpdate: () => Promise<void>;
+    // 元素相关
+    getElement: () => HTMLElement;
+    insertElement: (list: HTMLElement[], element?: HTMLElement) => void;
+    compareElementPosition: (target: HTMLElement, element?: HTMLElement) => number;
+  };
+
+  lifecycle: {
+    onCreated: (callback: () => void) => void;
+    onMounted: (callback: () => void) => void;
+    onUpdated: (callback: () => void) => void;
+    onBeforeUnmount: (callback: () => void) => void;
+    onBeforeDestroy: (callback: () => void) => void;
+  };
+
+  context: {
+    provide: <T>(context: Context<T>, value: (update: UpdateContext<T>) => T) => void;
+    watch: <T>(context: Context<T>, listener: (value: T, changedKeys: string[]) => void) => void;
+    get: <T>(context: Context<T>) => T;
+  };
+}
+
+export interface UpdateContext<T> {
+  (value: Partial<T>, notify?: boolean): void;
+}
+
 /**
  * 原型配置项
  */

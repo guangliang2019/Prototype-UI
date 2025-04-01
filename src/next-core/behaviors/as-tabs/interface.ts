@@ -1,4 +1,4 @@
-import { createContext } from '@/next-core/adapter/context';
+import { createContext } from '@/next-core/adapters/web/context';
 
 export type TabsProps = {
   readonly defaultValue?: string;

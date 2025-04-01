@@ -1,5 +1,5 @@
-import { Component, Context, CONTEXT_MANAGER_SYMBOL, ContextOptions } from '../interface';
-import { getComponent, isComponentRoot } from '../utils/component';
+import { Component, Context, CONTEXT_MANAGER_SYMBOL, ContextOptions } from '../../interface';
+import { getComponent, isComponentRoot } from '../../utils/component';
 
 /**
  * 创建新的 Context

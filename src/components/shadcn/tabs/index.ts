@@ -1,6 +1,6 @@
-export { default as ShadcnTabs } from './tabs';
-export { default as ShadcnTabsContent } from './tabs-content';
-export { default as ShadcnTabsTrigger } from './tabs-trigger';
-export { default as ShadcnTabsList } from './tabs-list';
+export { ShadcnTabs, ShadcnTabsPrototype } from './tabs';
+export { ShadcnTabsContent, ShadcnTabsContentPrototype } from './tabs-content';
+export { ShadcnTabsTrigger, ShadcnTabsTriggerPrototype } from './tabs-trigger';
+export { ShadcnTabsList, ShadcnTabsListPrototype } from './tabs-list';
 
 import './style.css';

@@ -4,7 +4,7 @@ import { ShadcnButtonProps } from './interface';
 import { CONFIG } from '../_config';
 import { optimizeTailwindClasses } from '@/www/utils/tailwind';
 
-const Button = definePrototype<ShadcnButtonProps>({
+export const ShadcnButtonPrototype = definePrototype<ShadcnButtonProps>({
   displayName: 'shadcn-button',
   setup: (hooks) => {
     // role
@@ -74,7 +74,6 @@ const Button = definePrototype<ShadcnButtonProps>({
   },
 });
 
-const ShadcnButton = WebComponentAdapter(Button);
-export default ShadcnButton;
+export const ShadcnButton = WebComponentAdapter(ShadcnButtonPrototype);
 
 customElements.define(`${CONFIG.shadcn.prefix}-button`, ShadcnButton);

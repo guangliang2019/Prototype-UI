@@ -14,7 +14,7 @@ export const DEFAULT_BUTTON_PROPS: ButtonProps = {
 const asButton = (
   hooks: PrototypeHooks<ButtonProps>
 ): {
-  state: ButtonState;
+  states: ButtonState;
   actions: ButtonActions;
 } => {
   const { event, defineProps, markAsTrigger, useState, watchProps, getProps, useMounted } = hooks;
@@ -118,7 +118,7 @@ const asButton = (
   };
 
   return {
-    state: {
+    states: {
       hover,
       focus,
       focusVisible,

@@ -1,6 +1,32 @@
 import { PropType, PropsManager, PropsOptions, SerializationRule } from '@/next-core/interface';
 import { camelToKebab, kebabToCamel } from '@/next-core/utils/naming';
-import { defaultSerializationRules } from '../../props';
+
+/**
+ * 默认的序列化规则
+ */
+export const defaultSerializationRules: Required<SerializationRule> = {
+  reflectToAttribute: false,
+  serialize: (value: any) => {
+    if (typeof value === 'boolean') {
+      // 布尔值为 true 时设置空字符串，为 false 时移除属性
+      return value ? '' : null;
+    }
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number') return value.toString();
+    return null;
+  },
+  deserialize: (value: string) => {
+    // 1. 对于布尔类型，属性存在就是 true（无论值是什么）
+    if (value === null) return false; // 属性不存在
+    if (typeof value === 'string') {
+      // 2. 尝试解析数字
+      if (/^-?\d+$/.test(value)) return parseInt(value, 10);
+      if (/^-?\d*\.\d+$/.test(value)) return parseFloat(value);
+    }
+    // 3. 其他情况返回原始字符串
+    return value;
+  },
+};
 
 /**
  * Web Components 的 Props 管理器实现
@@ -88,7 +114,7 @@ export class WebPropsManager<T extends Record<string, PropType>> implements Prop
   getProps(): T {
     // 优先返回从 attribute 获取的实际值
     const actualProps = { ...this.defaultProps };
-    
+
     // 从 attributes 获取实际值
     Array.from(this.element.attributes).forEach((attr) => {
       const propName = kebabToCamel(attr.name) as keyof T;
@@ -239,8 +265,8 @@ export class WebPropsManager<T extends Record<string, PropType>> implements Prop
   defineProps(defaultProps: T): void {
     // 开发环境下，记录并提示 props 覆盖
     if (process.env.NODE_ENV === 'development') {
-      const overriddenProps = Object.keys(defaultProps).filter(
-        (key) => this.definedProps.has(key as keyof T)
+      const overriddenProps = Object.keys(defaultProps).filter((key) =>
+        this.definedProps.has(key as keyof T)
       );
 
       if (overriddenProps.length > 0) {
@@ -258,7 +284,7 @@ export class WebPropsManager<T extends Record<string, PropType>> implements Prop
 
     // 合并默认值，而不是覆盖
     this.defaultProps = { ...this.defaultProps, ...defaultProps };
-    
+
     // 更新属性代理
     Object.keys(defaultProps).forEach((key) => {
       this.addPropertyProxy(key);

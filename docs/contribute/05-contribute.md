@@ -24,7 +24,7 @@
   - [ ] Menu
   - [ ] SubMenu
   - [ ] Dropdown
-  - [ ] Tabs
+  - [x] Tabs
   - [ ] Breadcrumb
   - [ ] Pagination
   - [ ] Steps

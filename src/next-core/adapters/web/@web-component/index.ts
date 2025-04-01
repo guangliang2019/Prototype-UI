@@ -1,6 +1,5 @@
 import { Component, CONTEXT_MANAGER_SYMBOL, EVENT_MANAGER_SYMBOL } from '@/next-core/interface';
 import {
-  WebAttributeManager,
   WebLifecycleManager,
   WebRenderManager,
   WebStateManager,
@@ -22,6 +21,7 @@ import { ElementPosition } from '@/next-core/interface/element';
 import { binarySearch } from '@/next-core/utils/search';
 import { WebEventCommands } from './commands/event';
 import { attachComponent } from '@/next-core/utils/component';
+import { WebAttributeManagerImpl } from '..';
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -69,7 +69,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
 ): WebComponentConstructor<HTMLElement> => {
   return class extends HTMLElement implements Component {
     private _lifecycle = new WebLifecycleManager();
-    private _attributeManager = new WebAttributeManager();
+    private _attributeManager = new WebAttributeManagerImpl(this, this);
     private _statesManager = new WebStateManager(this, this._attributeManager);
     private _renderManager = new WebRenderManager(this);
     private _propsManager = new WebPropsManager<Props>(this, {});

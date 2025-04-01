@@ -1,1 +1,1 @@
-export { default as ShadcnButton } from './button';
+export { ShadcnButton, ShadcnButtonPrototype } from './button';

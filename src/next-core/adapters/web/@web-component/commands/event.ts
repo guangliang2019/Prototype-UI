@@ -21,7 +21,7 @@ export class WebEventCommands implements EventCommands {
     // 0 映射到 0
     if (priority === 0) return 0;
 
-    // 将 0-10 映射到 0,1-infinity
+    // 将 0-1 映射到 0,1-infinity
     return Math.ceil(WebEventCommands.MAX_PRIORITY / priority);
   }
 
@@ -96,5 +96,21 @@ export class WebEventCommands implements EventCommands {
    */
   clearAll(): void {
     this.eventManager.clearAll();
+  }
+
+  onGlobal<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void {
+    this.eventManager.onGlobal(eventName, handler, options);
+  }
+
+  offGlobal<T = any>(eventName: string, handler: EventHandler<T>): void {
+    this.eventManager.offGlobal(eventName, handler);
+  }
+
+  onceGlobal<T = any>(eventName: string, handler: EventHandler<T>): void {
+    this.eventManager.onceGlobal(eventName, handler);
+  }
+
+  clearGlobal(): void {
+    this.eventManager.clearGlobal();
   }
 }
