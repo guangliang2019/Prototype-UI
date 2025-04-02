@@ -72,6 +72,14 @@ export interface EventCommands {
    * 批量事件清理
    */
   clearAll(): void;
+
+  /**
+   * 全局事件监听方法
+   */
+  onGlobal<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void;
+  offGlobal<T = any>(eventName: string, handler: EventHandler<T>): void;
+  onceGlobal<T = any>(eventName: string, handler: EventHandler<T>): void;
+  clearGlobal(): void;
 }
 
 /**
@@ -116,4 +124,9 @@ export abstract class BaseEventCommands implements EventCommands {
   abstract once<T = any>(eventName: string, handler: EventHandler<T>): void;
   abstract emit<T = any>(eventName: string, detail: T): void;
   abstract clearAll(): void;
+
+  abstract onGlobal<T = any>(eventName: string, handler: EventHandler<T>, options?: EventOptions): void;
+  abstract offGlobal<T = any>(eventName: string, handler: EventHandler<T>): void;
+  abstract onceGlobal<T = any>(eventName: string, handler: EventHandler<T>): void;
+  abstract clearGlobal(): void;
 }

@@ -1,8 +1,8 @@
 import { definePrototype, PropType, WebComponentAdapter } from '@/next-core';
 import { PrototypeTestTabContext, TestTabTriggerProps } from './interface';
 import { ContextConsumer } from '@/components/common';
-import { TabsTriggerProps } from '@/core/components/tabs';
 import asTabsTrigger from '@/next-core/behaviors/as-tabs/as-tabs-trigger';
+import { TabsTriggerProps } from '@/next-core/behaviors/as-tabs';
 
 export const handleContextChangeSymbol = Symbol('prototype-test-tab');
 

@@ -1,13 +1,10 @@
-import { definePrototype } from '@/core';
-import { asTabs, TabsProps } from '@/core/components/tabs';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
+import { asTabs } from '@/next-core/behaviors/as-tabs';
 
-const Tabs = definePrototype<TabsProps>((p) => {
-  asTabs(p);
+export const ShadcnTabsPrototype = definePrototype({
+  setup: asTabs,
 });
 
-const ShadcnTabs = WebComponentAdapter(Tabs);
-
-export default ShadcnTabs;
+export const ShadcnTabs = WebComponentAdapter(ShadcnTabsPrototype);
 
 customElements.define('shadcn-tabs', ShadcnTabs);

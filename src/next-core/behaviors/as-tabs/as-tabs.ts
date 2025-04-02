@@ -1,26 +1,18 @@
-import { PrototypeHooks } from '@/next-core/interface';
-import { TabsProps, TabsContext, asTabsContext } from './interface';
+import { PrototypeAPI } from '@/next-core/interface';
+import { TabsProps, TabsContext, TabsContextType } from './interface';
 
-const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
-  const { provideContext, getProps, defineProps, watchProps, getContext } = hooks;
+const asTabs = (p: PrototypeAPI<TabsProps>) => {
   // props
-  defineProps({
+  p.props.define({
     defaultValue: '',
     onTabChange: () => {},
-    changTab: (value, focus = false) => {
-      const context = getContext<TabsContext>(asTabsContext);
-      context.changeTab(value, focus);
-    },
-  });
-  watchProps(['changTab'], () => {
-    throw new Error('changTab is readonly');
   });
 
   // context
-  provideContext(asTabsContext, (updateContext) => {
-    const props = getProps();
+  p.context.provide(TabsContext, (updateContext) => {
+    const props = p.props.get();
 
-    const context: TabsContext = {
+    const context: TabsContextType = {
       tabValue: props.defaultValue ?? '',
       defaultValue: props.defaultValue ?? '',
       tabs: [],
@@ -29,7 +21,7 @@ const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
       changeTab: (value, focus = false) => {
         const _index = context.tabs.indexOf(value);
         updateContext({ index: _index, tabValue: value });
-        // props.onTabChange(context);
+        props.onTabChange(context);
         if (focus) {
           const _targetIndex = context.tabs.findIndex((tab) => tab === value);
           if (_targetIndex !== -1) context.tabRefs[_targetIndex].focus();
@@ -42,7 +34,7 @@ const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
   return {
     expose: {
       changeTab: (value: string, focus?: boolean) => {
-        const context = getContext<TabsContext>(asTabsContext);
+        const context = p.context.get(TabsContext);
         context.changeTab(value, focus);
       },
     },

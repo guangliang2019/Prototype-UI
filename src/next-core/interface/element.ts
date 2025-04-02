@@ -32,10 +32,11 @@ export interface ElementCommands {
   comparePosition(a: HTMLElement, b?: HTMLElement): ElementPosition;
 
   /**
-   * 获取元素在指定列表中的当前位置
+   * 在指定列表中插入元素
    * @param list 目标列表
-   * @param element 元素
-   * @returns 元素在列表中的当前位置
+   * @param element 要插入的元素, 如果未提供, 则使用当前元素
+   * @param index 插入位置, 如果未提供, 则根据 DOM 顺序插入
+   * @returns 插入位置的索引
    */
-  getListIndex(list: HTMLElement[], element?: HTMLElement): number;
+  insert(list: HTMLElement[], element?: HTMLElement, index?: number): number;
 }

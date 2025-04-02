@@ -1,9 +1,9 @@
-import { createContext } from "@/next-core/adapter/context";
+import { createContext } from '@/next-core/adapters/web/context';
 
 export interface TabsProps {
   readonly defaultValue?: string;
   readonly changTab?: (value: string, focus?: boolean) => void;
-  onTabChange: (context: TabsContext) => void;
+  onTabChange: (context: TabsContextType) => void;
 }
 
 export interface TabsTriggerProps {
@@ -15,11 +15,11 @@ export interface TabsContentProps {
 }
 
 export interface TabsIndicatorProps {
-  onTabChange: (context: TabsContext) => void;
-  onTabResize: (context: TabsContext) => void;
+  onTabChange: (context: TabsContextType) => void;
+  onTabResize: (context: TabsContextType) => void;
 }
 
-export interface TabsContext {
+export interface TabsContextType {
   index: number;
   tabValue: string;
   defaultValue: string;
@@ -28,4 +28,4 @@ export interface TabsContext {
   tabRefs: HTMLElement[];
 }
 
-export const asTabsContext = createContext<TabsContext>('as-tabs');
+export const TabsContext = createContext<TabsContextType>('as-tabs');

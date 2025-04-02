@@ -1,9 +1,4 @@
 /**
- * Props 的基本类型定义
- */
-export type PropType = string | number | boolean | object | Function;
-
-/**
  * 可以被序列化到 attribute 的类型
  */
 export type SerializablePropType = string | number | boolean;
@@ -31,7 +26,7 @@ export interface SerializationRule {
 /**
  * Props 的配置选项
  */
-export interface PropsOptions<T extends Record<string, PropType>> {
+export interface PropsOptions<T extends object> {
   /**
    * 默认值
    */

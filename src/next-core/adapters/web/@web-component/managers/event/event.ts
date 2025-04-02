@@ -4,176 +4,39 @@ import {
   EventOptions,
   EVENT_MANAGER_SYMBOL,
 } from '@/next-core/interface';
-import { getComponent } from '../../../utils/component';
-
-interface EventItem {
-  handler: EventHandler;
-  options: EventOptions;
-}
-
-interface PendingEvent<T = any> {
-  eventName: string;
-  detail: T;
-}
-
-/**
- * 需要代理的基础交互属性
- */
-const INTERACTIVE_ATTRIBUTES = ['tabIndex', 'disabled', 'contentEditable', 'draggable'] as const;
-
-/**
- * 需要代理的 ARIA 状态属性
- * 这些属性描述了元素的交互状态，应该跟随实际的交互元素
- */
-const ARIA_STATE_ATTRIBUTES = [
-  'aria-pressed',
-  'aria-expanded',
-  'aria-selected',
-  'aria-checked',
-  'aria-disabled',
-  'aria-hidden',
-  'aria-invalid',
-] as const;
-
-/**
- * 不需要代理的 ARIA 关系属性
- * 这些属性描述了组件间的逻辑关系，应该保持在原始元素上
- */
-const ARIA_RELATION_ATTRIBUTES = [
-  'aria-controls',
-  'aria-owns',
-  'aria-describedby',
-  'aria-labelledby',
-  'aria-details',
-] as const;
-
-/**
- * 需要根据上下文决定是否代理的 ARIA 属性
- * 这些属性可能需要特殊处理
- */
-const ARIA_CONTEXT_ATTRIBUTES = [
-  'aria-label', // 可能需要保留在原始元素上作为组件描述
-  'aria-description', // 可能需要保留在原始元素上作为组件描述
-] as const;
-
-/**
- * 需要同步的样式属性列表
- */
-const INTERACTIVE_STYLES = ['pointerEvents', 'userSelect', 'cursor'] as const;
+import { getComponent } from '../../../../../utils/component';
+import { GlobalEventManager } from './global-event';
+import { InteractionManager } from './interaction-manager';
+import { WebAttributeManagerImpl } from '../../../attribute';
+import {
+  ARIA_CONTEXT_ATTRIBUTES,
+  ARIA_STATE_ATTRIBUTES,
+  EventItem,
+  INTERACTIVE_ATTRIBUTES,
+  INTERACTIVE_STYLES,
+  PendingEvent,
+  PendingListener,
+  STANDARD_DOM_EVENTS,
+} from './types';
 
 export class EventManager implements IEventManager {
   private events: Map<string, Set<EventItem>> = new Map();
+  private globalEvents: Map<string, Set<EventItem>> = new Map();
   private element: HTMLElement;
   private isMounted = false;
   private isTrigger = false;
-  private pendingListeners: Array<{ eventName: string; item: EventItem }> = [];
+  private pendingListeners: PendingListener[] = [];
   private pendingEvents: PendingEvent[] = [];
   private childTriggers: Set<EventManager> = new Set();
   private innerMostTrigger: EventManager | null = null;
-  private attributeObserver: MutationObserver | null = null;
-  private styleObserver: MutationObserver | null = null;
+  private globalEventManager = GlobalEventManager.getInstance();
+  private attributeManager: WebAttributeManagerImpl;
+  private interactionManager: InteractionManager;
 
   constructor(element: HTMLElement) {
     this.element = element;
-    this.setupAttributeObserver();
-    this.setupStyleObserver();
-  }
-
-  /**
-   * 设置属性观察器
-   */
-  private setupAttributeObserver(): void {
-    this.attributeObserver = new MutationObserver((mutations) => {
-      if (!this.isTrigger || !this.innerMostTrigger) return;
-
-      for (const mutation of mutations) {
-        if (mutation.type === 'attributes') {
-          const attr = mutation.attributeName!;
-
-          // 只同步基础交互属性和状态型 ARIA 属性
-          if (
-            INTERACTIVE_ATTRIBUTES.includes(attr as any) ||
-            ARIA_STATE_ATTRIBUTES.includes(attr as any)
-          ) {
-            this.syncAttribute(attr, this.innerMostTrigger.element);
-          }
-          // 对于上下文相关的 ARIA 属性，只在特定条件下同步
-          else if (
-            ARIA_CONTEXT_ATTRIBUTES.includes(attr as any) &&
-            !this.innerMostTrigger.element.hasAttribute(attr)
-          ) {
-            this.syncAttribute(attr, this.innerMostTrigger.element);
-          }
-        }
-      }
-    });
-  }
-
-  /**
-   * 设置样式观察器
-   */
-  private setupStyleObserver(): void {
-    this.styleObserver = new MutationObserver((mutations) => {
-      if (!this.isTrigger || !this.innerMostTrigger) return;
-
-      for (const mutation of mutations) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-          const style = window.getComputedStyle(this.element);
-          INTERACTIVE_STYLES.forEach((prop) => {
-            const value = style.getPropertyValue(
-              prop.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)
-            );
-            if (value) {
-              this.innerMostTrigger!.element.style[prop] = value;
-            }
-          });
-        }
-      }
-    });
-  }
-
-  /**
-   * 同步当前的交互属性到目标元素
-   */
-  private syncInteractiveProperties(target: HTMLElement): void {
-    // 同步基础交互属性
-    INTERACTIVE_ATTRIBUTES.forEach((attr) => {
-      this.syncAttribute(attr, target);
-    });
-
-    // 同步 ARIA 状态属性
-    ARIA_STATE_ATTRIBUTES.forEach((attr) => {
-      this.syncAttribute(attr, target);
-    });
-
-    // 处理上下文相关的 ARIA 属性
-    ARIA_CONTEXT_ATTRIBUTES.forEach((attr) => {
-      // 如果原始元素和目标元素都没有该属性，则同步
-      // 这样可以保证至少有一个元素提供可访问性信息
-      if (!this.element.hasAttribute(attr) && !target.hasAttribute(attr)) {
-        this.syncAttribute(attr, target);
-      }
-    });
-
-    // 同步样式
-    const style = window.getComputedStyle(this.element);
-    INTERACTIVE_STYLES.forEach((prop) => {
-      const value = style.getPropertyValue(prop.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`));
-      if (value && this.innerMostTrigger) {
-        this.innerMostTrigger.element.style[prop] = value;
-      }
-    });
-  }
-
-  /**
-   * 同步单个属性
-   */
-  private syncAttribute(attr: string, target: HTMLElement): void {
-    if (this.element.hasAttribute(attr)) {
-      target.setAttribute(attr, this.element.getAttribute(attr)!);
-    } else {
-      target.removeAttribute(attr);
-    }
+    this.attributeManager = new WebAttributeManagerImpl(element, element);
+    this.interactionManager = new InteractionManager(element, element);
   }
 
   /**
@@ -182,26 +45,6 @@ export class EventManager implements IEventManager {
   public markAsTrigger(): void {
     this.isTrigger = true;
     this.findInnerMostTrigger();
-
-    // 开始观察属性变化
-    if (this.attributeObserver) {
-      this.attributeObserver.observe(this.element, {
-        attributes: true,
-        attributeFilter: [
-          ...INTERACTIVE_ATTRIBUTES,
-          ...ARIA_STATE_ATTRIBUTES,
-          ...ARIA_CONTEXT_ATTRIBUTES,
-        ],
-      });
-    }
-
-    // 开始观察样式变化
-    if (this.styleObserver) {
-      this.styleObserver.observe(this.element, {
-        attributes: true,
-        attributeFilter: ['style'],
-      });
-    }
   }
 
   /**
@@ -325,6 +168,23 @@ export class EventManager implements IEventManager {
     }
   }
 
+  public onGlobal<T = any>(
+    eventName: string,
+    handler: EventHandler<T>,
+    options: EventOptions = {}
+  ): void {
+    if (!this.globalEvents.has(eventName)) {
+      this.globalEvents.set(eventName, new Set());
+    }
+
+    const eventSet = this.globalEvents.get(eventName)!;
+    const eventItem: EventItem = { handler, options };
+    eventSet.add(eventItem);
+
+    // 委托给全局事件管理器
+    this.globalEventManager.addGlobalListener(eventName, handler, options);
+  }
+
   public off<T = any>(eventName: string, handler: EventHandler<T>): void {
     const eventSet = this.events.get(eventName);
     if (!eventSet) return;
@@ -354,6 +214,26 @@ export class EventManager implements IEventManager {
     }
   }
 
+  public offGlobal<T = any>(eventName: string, handler: EventHandler<T>): void {
+    const eventSet = this.globalEvents.get(eventName);
+    if (!eventSet) return;
+
+    // 找到并移除对应的事件项
+    for (const eventItem of eventSet) {
+      if (eventItem.handler === handler) {
+        eventSet.delete(eventItem);
+      }
+    }
+
+    // 委托给全局事件管理器
+    this.globalEventManager.removeGlobalListener(eventName, handler);
+
+    // 如果没有更多处理器，删除整个事件集合
+    if (eventSet.size === 0) {
+      this.globalEvents.delete(eventName);
+    }
+  }
+
   public emit<T = any>(eventName: string, detail: T): void {
     // 如果是 trigger 且有最内层 trigger，则代理触发
     if (this.isTrigger && this.innerMostTrigger) {
@@ -367,23 +247,29 @@ export class EventManager implements IEventManager {
       return;
     }
 
+    // 触发本地事件
     const eventSet = this.events.get(eventName);
-    if (!eventSet) return;
-
-    // 如果是 DOM 事件，创建并分发自定义事件
-    if (this.isDOMEvent(eventName)) {
-      const event = new CustomEvent(eventName, { detail });
-      this.element.dispatchEvent(event);
-    } else {
-      // 对于非 DOM 事件，直接调用处理器
-      for (const { handler } of eventSet) {
-        handler(detail);
+    if (eventSet) {
+      if (this.isDOMEvent(eventName)) {
+        const event = new CustomEvent(eventName, { detail });
+        this.element.dispatchEvent(event);
+      } else {
+        for (const { handler } of eventSet) {
+          handler(detail);
+        }
       }
     }
+
+    // 触发全局事件
+    this.globalEventManager.emit(eventName, detail);
   }
 
   public once<T = any>(eventName: string, handler: EventHandler<T>): void {
     this.on(eventName, handler, { once: true });
+  }
+
+  public onceGlobal<T = any>(eventName: string, handler: EventHandler<T>): void {
+    this.onGlobal(eventName, handler, { once: true });
   }
 
   public clearAll(): void {
@@ -402,13 +288,21 @@ export class EventManager implements IEventManager {
 
     // 清空所有队列
     this.events.clear();
+    this.globalEvents.clear();
     this.pendingListeners = [];
     this.pendingEvents = [];
   }
 
-  /**
-   * 组件挂载时调用
-   */
+  public clearGlobal(): void {
+    // 清理该组件注册的所有全局事件
+    for (const [eventName, eventSet] of this.globalEvents) {
+      for (const { handler } of eventSet) {
+        this.globalEventManager.removeGlobalListener(eventName, handler);
+      }
+    }
+    this.globalEvents.clear();
+  }
+
   public mount(): void {
     this.isMounted = true;
 
@@ -430,9 +324,6 @@ export class EventManager implements IEventManager {
     this.pendingEvents = [];
   }
 
-  /**
-   * 组件卸载时调用
-   */
   public unmount(): void {
     this.isMounted = false;
 
@@ -446,94 +337,83 @@ export class EventManager implements IEventManager {
         }
       }
     }
+
+    // 清理该组件注册的所有全局事件
+    this.clearGlobal();
   }
 
   private isDOMEvent(eventName: string): boolean {
-    // 简单判断是否为标准 DOM 事件
-    const standardEvents = [
-      'click',
-      'dblclick',
-      'mousedown',
-      'mouseup',
-      'mousemove',
-      'mouseover',
-      'mouseout',
-      'mouseenter',
-      'mouseleave',
-      'keydown',
-      'keyup',
-      'keypress',
-      'focus',
-      'blur',
-      'change',
-      'input',
-      'submit',
-      'reset',
-      'touchstart',
-      'touchend',
-      'touchmove',
-      'touchcancel',
-    ];
-
-    return standardEvents.includes(eventName.toLowerCase());
+    return STANDARD_DOM_EVENTS.includes(eventName.toLowerCase() as any);
   }
 
   public destroy(): void {
-    this.attributeObserver?.disconnect();
-    this.styleObserver?.disconnect();
-    this.attributeObserver = null;
-    this.styleObserver = null;
+    this.attributeManager.destroy();
     this.clearAll();
   }
 
   /**
-   * 基础交互方法
+   * 同步当前的交互属性到目标元素
    */
-  public focus(): void {
-    if (this.isTrigger && this.innerMostTrigger) {
-      this.innerMostTrigger.element.focus();
-    } else {
-      this.element.focus();
-    }
-  }
+  private syncInteractiveProperties(target: HTMLElement): void {
+    // 同步基础交互属性
+    INTERACTIVE_ATTRIBUTES.forEach((attr) => {
+      this.syncAttribute(attr, target);
+    });
 
-  public blur(): void {
-    if (this.isTrigger && this.innerMostTrigger) {
-      this.innerMostTrigger.element.blur();
-    } else {
-      this.element.blur();
-    }
-  }
+    // 同步 ARIA 状态属性
+    ARIA_STATE_ATTRIBUTES.forEach((attr) => {
+      this.syncAttribute(attr, target);
+    });
 
-  public click(): void {
-    if (this.isTrigger && this.innerMostTrigger) {
-      this.innerMostTrigger.element.click();
-    } else {
-      this.element.click();
-    }
+    // 处理上下文相关的 ARIA 属性
+    ARIA_CONTEXT_ATTRIBUTES.forEach((attr) => {
+      // 如果原始元素和目标元素都没有该属性，则同步
+      // 这样可以保证至少有一个元素提供可访问性信息
+      if (!this.element.hasAttribute(attr) && !target.hasAttribute(attr)) {
+        this.syncAttribute(attr, target);
+      }
+    });
+
+    // 同步样式
+    const style = window.getComputedStyle(this.element);
+    INTERACTIVE_STYLES.forEach((prop) => {
+      const value = style.getPropertyValue(prop.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`));
+      if (value && this.innerMostTrigger) {
+        this.innerMostTrigger.element.style[prop] = value;
+      }
+    });
   }
 
   /**
-   * 属性操作方法
+   * 同步单个属性
    */
-  public setAttribute(attr: string, value: string | number | boolean): void {
-    const target =
-      this.isTrigger && this.innerMostTrigger ? this.innerMostTrigger.element : this.element;
-
-    if (typeof value === 'boolean') {
-      if (value) {
-        target.setAttribute(attr, '');
-      } else {
-        target.removeAttribute(attr);
-      }
+  private syncAttribute(attr: string, target: HTMLElement): void {
+    if (this.element.hasAttribute(attr)) {
+      target.setAttribute(attr, this.element.getAttribute(attr)!);
     } else {
-      target.setAttribute(attr, String(value));
+      target.removeAttribute(attr);
     }
   }
 
+  // 代理 AttributeManager 的方法
+  public setAttribute(attr: string, value: string | number | boolean): void {
+    this.attributeManager.setAttribute(attr, value);
+  }
+
   public removeAttribute(attr: string): void {
-    const target =
-      this.isTrigger && this.innerMostTrigger ? this.innerMostTrigger.element : this.element;
-    target.removeAttribute(attr);
+    this.attributeManager.removeAttribute(attr);
+  }
+
+  // 代理 InteractionManager 的方法
+  public focus(): void {
+    this.interactionManager.focus();
+  }
+
+  public blur(): void {
+    this.interactionManager.blur();
+  }
+
+  public click(): void {
+    this.interactionManager.click();
   }
 }

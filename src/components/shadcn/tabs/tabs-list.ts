@@ -1,28 +1,26 @@
-import { definePrototype, useConnect } from '@/core';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
-import { watchContext } from '@/core/context';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
+import { TabsContext } from '@/next-core/behaviors/as-tabs';
 
-const TabsList = definePrototype((p) => {
-  watchContext(p, 'tabs');
+export const ShadcnTabsListPrototype = definePrototype({
+  setup: (p) => {
+    p.context.watch(TabsContext);
 
-  let _originalCls = '';
+    // get original class
+    let _originalCls = '';
+    p.lifecycle.onMounted(() => {
+      _originalCls = p.view.getElement().className;
+    });
 
-  useConnect(p, () => {
-    _originalCls = p.componentRef.className;
-  });
-
-  return () => {
-    const component = p.componentRef;
-    const _computedClass =
-      'h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground grid w-full grid-cols-2';
-    component.className = [_computedClass, _originalCls].join(' ').trimEnd();
-
-    return null;
-  };
+    return {
+      render: () => {
+        const _computedClass =
+          'h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground grid w-full grid-cols-2';
+        p.view.getElement().className = [_computedClass, _originalCls].join(' ').trimEnd();
+      },
+    };
+  },
 });
 
-const ShadcnTabsList = WebComponentAdapter(TabsList);
-
-export default ShadcnTabsList;
+export const ShadcnTabsList = WebComponentAdapter(ShadcnTabsListPrototype);
 
 customElements.define('shadcn-tabs-list', ShadcnTabsList);

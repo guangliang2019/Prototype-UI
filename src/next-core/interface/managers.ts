@@ -1,10 +1,7 @@
-import { Prototype } from '../interface';
-import { PropType } from './props';
-
 /**
  * Props 管理器接口
  */
-export interface PropsManager<T extends Record<string, PropType> = any> {
+export interface PropsManager<T extends object> {
   /**
    * 获取当前的 props
    */
@@ -36,21 +33,6 @@ export interface PropsManager<T extends Record<string, PropType> = any> {
    * @returns 取消监听的函数
    */
   onPropsChange(callback: (props: T) => void): () => void;
-}
-
-/**
- * 适配器接口
- * 定义了将原型转换为具体组件实现所需的基本结构
- */
-export interface Adapter<Source extends Prototype = Prototype, Target = unknown> {
-  /** 适配器名称 */
-  readonly name: string;
-
-  /**
-   * 将原型转换为目标平台的组件
-   * @param prototype 组件原型
-   */
-  adapt(prototype: Source): Target;
 }
 
 /**

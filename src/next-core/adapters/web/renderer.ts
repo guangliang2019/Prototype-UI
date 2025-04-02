@@ -8,8 +8,8 @@ import {
   Prototype,
   ElementChildren,
   ElementChild,
-} from '../interface';
-import { EventHandler } from '../interface/managers';
+} from '../../interface';
+import { EventHandler } from '../../interface/managers';
 
 /**
  * 基础渲染器实现
