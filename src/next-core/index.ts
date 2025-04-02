@@ -1,4 +1,4 @@
-import type { Prototype } from './interface';
+import type { PropType, Prototype } from './interface';
 
 /**
  * 定义组件原型
@@ -24,7 +24,7 @@ import type { Prototype } from './interface';
  * });
  * ```
  */
-export function definePrototype<Props = Record<string, any>>(
+export function definePrototype<Props extends object>(
   prototype: Prototype<Props>
 ): Prototype<Props> {
   return prototype;

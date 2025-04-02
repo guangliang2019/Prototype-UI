@@ -5,9 +5,11 @@ export { default as asSelectItem } from './select-item';
 export { default as asSelectValue } from './select-value';
 
 export type {
-  SelectContext,
+  SelectContextType,
   SelectProps,
   SelectValueProps,
   SelectContentProps,
   SelectItemProps,
 } from './interface';
+
+export { SelectContext } from './interface';

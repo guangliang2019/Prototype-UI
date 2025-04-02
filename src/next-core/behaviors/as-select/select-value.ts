@@ -1,10 +1,8 @@
-import { PrototypeHooks, RendererAPI } from '@/next-core/interface';
+import { PrototypeAPI, RendererAPI } from '@/next-core/interface';
 import { SelectContext, SelectValueProps } from './interface';
 
-const asSelectValue = (hooks: PrototypeHooks<SelectValueProps>) => {
-  const { defineProps, watchContext, useMounted, getContext, element } = hooks;
-
-  defineProps({
+const asSelectValue = (p: PrototypeAPI<SelectValueProps>) => {
+  p.props.define({
     renderValue: (value: string) => {
       const span = document.createElement('span');
       span.textContent = value;
@@ -12,21 +10,21 @@ const asSelectValue = (hooks: PrototypeHooks<SelectValueProps>) => {
     },
   });
 
-  watchContext(SelectContext, (_, keys) => {
+  p.context.watch(SelectContext, (_, keys) => {
     if (keys.includes('value')) {
       // requestRender(p);
     }
   });
 
-  useMounted(() => {
-    const context = getContext(SelectContext);
-    context.valueRef = element.get();
+  p.lifecycle.onMounted(() => {
+    const context = p.context.get(SelectContext);
+    context.valueRef = p.view.getElement();
   });
 
   return {
     render: (renderer: RendererAPI) => {
       const h = renderer.createElement;
-      const context = getContext(SelectContext);
+      const context = p.context.get(SelectContext);
       return h('span', {}, [context.value]);
     },
   };

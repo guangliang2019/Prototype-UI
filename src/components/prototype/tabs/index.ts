@@ -1,10 +1,11 @@
 import './style.css';
-import { definePrototype, WebComponentAdapter } from '@/next-core';
+import { definePrototype, PrototypeAPI, WebComponentAdapter } from '@/next-core';
 import {
   asTabs,
   asTabsContent,
   asTabsIndicator,
   asTabsTrigger,
+  TabsContentProps,
 } from '@/next-core/behaviors/as-tabs';
 
 export const PrototypeTabs = WebComponentAdapter(
@@ -19,23 +20,22 @@ export const PrototypeTabsTrigger = WebComponentAdapter(
     setup: asTabsTrigger,
   })
 );
-export const PrototypeTabsContent = WebComponentAdapter({
+export const PrototypeTabsContent = WebComponentAdapter<TabsContentProps>({
   displayName: 'prototype-tabs-content',
-  setup: (hooks) => {
-    const { useMounted, element } = hooks;
+  setup: (p) => {
     // role
-    asTabsContent(hooks);
+    asTabsContent(p);
 
     // get original class name
     let _originalCls = '';
-    useMounted(() => {
-      _originalCls = element.get().className;
+    p.lifecycle.onMounted(() => {
+      _originalCls = p.view.getElement().className;
     });
 
     // set hidden style
     return {
       render: () => {
-        element.get().className = [_originalCls, 'data-[state=inactive]:hidden']
+        p.view.getElement().className = [_originalCls, 'data-[state=inactive]:hidden']
           .join(' ')
           .trimEnd();
       },

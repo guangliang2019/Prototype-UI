@@ -1,39 +1,37 @@
-import { PrototypeHooks } from '@/next-core/interface';
+import { PrototypeAPI } from '@/next-core/interface';
 import { OverlayProps } from './interface';
 
-const asOverlay = (hooks: PrototypeHooks<OverlayProps>) => {
-  const { defineProps, getProps, useState, event, element } = hooks;
-
+const asOverlay = (p: PrototypeAPI<OverlayProps>) => {
   // props
-  defineProps({
+  p.props.define({
     visible: false,
     onVisibleChange: () => {},
     clickOutsideInterceptor: () => true,
   });
 
   // state
-  const visible = useState<boolean>(false, 'data-visible');
+  const visible = p.state.define<boolean>(false, 'data-visible');
 
   // actions
   const show = () => {
-    const props = getProps();
+    const props = p.props.get();
     visible.set(true);
     props.onVisibleChange?.(true);
   };
 
   const hide = () => {
-    const props = getProps();
+    const props = p.props.get();
     visible.set(false);
     props.onVisibleChange?.(false);
   };
 
   // event: when click outside, hide the overlay
-  event.onGlobal('click', (e: MouseEvent) => {
+  p.event.onGlobal('click', (e: MouseEvent) => {
     if (!visible.value) return;
     const target = e.target as HTMLElement;
     if (!target) return;
-    if (target?.contains(element.get())) {
-      const props = getProps();
+    if (target?.contains(p.view.getElement())) {
+      const props = p.props.get();
       // if the click outside is intercepted, do not hide
       if (!props.clickOutsideInterceptor?.(e)) return;
       hide();

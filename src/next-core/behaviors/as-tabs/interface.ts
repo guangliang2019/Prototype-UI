@@ -1,25 +1,25 @@
 import { createContext } from '@/next-core/adapters/web/context';
 
-export type TabsProps = {
+export interface TabsProps {
   readonly defaultValue?: string;
   readonly changTab?: (value: string, focus?: boolean) => void;
   onTabChange: (context: TabsContextType) => void;
 }
 
-export type TabsTriggerProps = {
+export interface TabsTriggerProps {
   value: string;
 }
 
-export type TabsContentProps = {
+export interface TabsContentProps {
   value: string;
 }
 
-export type TabsIndicatorProps = {
+export interface TabsIndicatorProps {
   onTabChange: (context: TabsContextType) => void;
   onTabResize: (context: TabsContextType) => void;
 }
 
-export type TabsContextType = {
+export interface TabsContextType {
   index: number;
   tabValue: string;
   defaultValue: string;

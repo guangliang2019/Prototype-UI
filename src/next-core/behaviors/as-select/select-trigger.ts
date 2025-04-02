@@ -1,27 +1,26 @@
-import { PrototypeHooks } from '@/next-core/interface';
+import { PrototypeAPI } from '@/next-core/interface';
 import { SelectContext, SelectContextType, SelectTriggerProps } from './interface';
 
-const asSelectTrigger = (hooks: PrototypeHooks<SelectTriggerProps>) => {
-  const { markAsTrigger, watchContext, getContext, useMounted, element, event } = hooks;
+const asSelectTrigger = (p: PrototypeAPI<SelectTriggerProps>) => {
   // role
-  markAsTrigger();
+  p.role.asTrigger();
   // context
-  watchContext(SelectContext, (context, keys) => {
+  p.context.watch(SelectContext, (context, keys) => {
     if (keys.includes('width')) {
       context.width = context.valueRef.offsetWidth;
     }
   });
-  useMounted(() => {
-    const context = getContext(SelectContext);
-    const component = element.get();
+  p.lifecycle.onMounted(() => {
+    const context = p.context.get(SelectContext);
+    const component = p.view.getElement();
     context.width = component.offsetWidth;
     context.triggerRef = component;
     context.focus = component.focus;
   });
 
   const _handleMouseDown = (event: MouseEvent): void => {
-    const context = getContext(SelectContext);
-    const component = element.get();
+    const context = p.context.get(SelectContext);
+    const component = p.view.getElement();
     // context.width = component.offsetWidth;
 
     // Check if the click is on the trigger or its children
@@ -63,16 +62,16 @@ const asSelectTrigger = (hooks: PrototypeHooks<SelectTriggerProps>) => {
   };
 
   const _handleFocus = (): void => {
-    const context = getContext(SelectContext);
-    const component = element.get();
+    const context = p.context.get(SelectContext);
+    const component = p.view.getElement();
     context.width = component.offsetWidth;
     context.selecting.value ? context.close() : context.open();
     _focusSelectedItem(context);
   };
 
-  event.on('focus', _handleFocus);
-  event.on('mousedown', _handleMouseDown as EventListener);
-  event.on('keydown', _handleKeydown as EventListener);
+  p.event.on('focus', _handleFocus);
+  p.event.on('mousedown', _handleMouseDown as EventListener);
+  p.event.on('keydown', _handleKeydown as EventListener);
 };
 
 export default asSelectTrigger;

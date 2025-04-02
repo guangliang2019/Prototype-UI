@@ -1,10 +1,7 @@
-import { Prototype } from '../interface';
-import { PropType } from './props';
-
 /**
  * Props 管理器接口
  */
-export interface PropsManager<T extends Record<string, PropType> = any> {
+export interface PropsManager<T extends object> {
   /**
    * 获取当前的 props
    */

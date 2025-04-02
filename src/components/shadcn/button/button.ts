@@ -6,27 +6,26 @@ import { optimizeTailwindClasses } from '@/www/utils/tailwind';
 
 export const ShadcnButtonPrototype = definePrototype<ShadcnButtonProps>({
   displayName: 'shadcn-button',
-  setup: (hooks) => {
+  setup: (p) => {
     // role
-    asButton(hooks);
+    asButton(p);
 
-    const { defineProps, watchProps, useMounted, getProps, element } = hooks;
     // props
-    defineProps({ variant: 'secondary', iconOnly: false });
-    watchProps(['variant'], () => {
+    p.props.define({ variant: 'secondary', iconOnly: false });
+    p.props.watch(['variant'], () => {
       // TODO:requestRender
-      console.log('watchProps', element.get());
+      console.log('watchProps', p.view.getElement());
     });
 
     // handle class names
     let _originalCls = '';
-    useMounted(() => {
-      _originalCls = element.get().className;
+    p.lifecycle.onMounted(() => {
+      _originalCls = p.view.getElement().className;
     });
 
     return {
       render() {
-        const { iconOnly, disabled, variant } = getProps();
+        const { iconOnly, disabled, variant } = p.props.get();
 
         let basicCls = 'select-none whitespace-nowrap';
         let flexCls = 'inline-flex items-center justify-center gap-2';
@@ -66,7 +65,7 @@ export const ShadcnButtonPrototype = definePrototype<ShadcnButtonProps>({
         }
         // prettier-ignore
         const _computedClass = [basicCls, flexCls, shapeCls, sizeCls, cursorCls, fontCls, animationCls, disabledCls, focusCls, shadowCls, colorCls, borderCls, extraCls].join(' ').trimEnd();
-        element.get().className = optimizeTailwindClasses(
+        p.view.getElement().className = optimizeTailwindClasses(
           [_computedClass, _originalCls].join(' ').trimEnd()
         );
       },

@@ -6,18 +6,11 @@ import {
   WebPropsManager,
   WebEventManager,
 } from './managers';
-import type {
-  ElementChildren,
-  ElementProps,
-  ElementType,
-  PropType,
-  State,
-} from '@/next-core/interface';
-import { Context, Prototype, PrototypeHooks } from '@/next-core';
+import type { PrototypeAPI, State, UpdateContext } from '@/next-core/interface';
+import { Context, Prototype } from '@/next-core';
 import { PrototypeSetupResult } from '@/next-core/interface';
 import { WebRenderer } from './renderer';
 import { WebComponentContextManager } from './managers/context';
-import { ElementPosition } from '@/next-core/interface/element';
 import { binarySearch } from '@/next-core/utils/search';
 import { WebEventCommands } from './commands/event';
 import { attachComponent } from '@/next-core/utils/component';
@@ -64,7 +57,7 @@ export type WebComponentConstructor<T extends HTMLElement> = Constructor<WebComp
  * Web Components 适配器
  * 将组件原型转换为 Web Component 类
  */
-export const WebComponentAdapter = <Props extends Record<string, PropType>>(
+export const WebComponentAdapter = <Props extends object>(
   prototype: Prototype<Props>
 ): WebComponentConstructor<HTMLElement> => {
   return class extends HTMLElement implements Component {
@@ -94,7 +87,7 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
     private _pendingProps: Record<string, any> | null = null;
     private _pendingPropListeners: Array<{
       props: (keyof Props)[];
-      callback: (props: Partial<Props>) => void;
+      callback: (props: Props) => void;
     }> = [];
 
     // Component 接口实现
@@ -153,121 +146,123 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
         throw new Error(`${name} can only be called at the root of the prototype.`);
     }
 
-    private createHooks(): PrototypeHooks<Props> {
+    private createHooks(): PrototypeAPI<Props> {
       return {
-        useCreated: (cb) => {
-          this.checkSetupPhase('useCreated');
-          this._lifecycle.add('created', cb);
-        },
-        useDestroyed: (cb) => {
-          this.checkSetupPhase('useDestroyed');
-          this._lifecycle.add('destroyed', cb);
-        },
-        useMounted: (cb) => {
-          this.checkSetupPhase('useMounted');
-          this._lifecycle.add('mounted', cb);
-        },
-        useUnmounted: (cb) => {
-          this.checkSetupPhase('useUnmounted');
-          this._lifecycle.add('unmounted', cb);
-        },
-        useUpdated: (cb) => {
-          this.checkSetupPhase('useUpdated');
-          this._lifecycle.add('updated', cb);
-        },
-
-        markAsTrigger: () => {
-          this.checkSetupPhase('markAsTrigger');
-
-          this._eventManager.markAsTrigger();
+        lifecycle: {
+          onCreated: (cb) => {
+            this.checkSetupPhase('onCreated');
+            this._lifecycle.add('created', cb);
+          },
+          onMounted: (cb) => {
+            this.checkSetupPhase('onMounted');
+            this._lifecycle.add('mounted', cb);
+          },
+          onUpdated: (cb) => {
+            this.checkSetupPhase('onUpdated');
+            this._lifecycle.add('updated', cb);
+          },
+          onBeforeUnmount: (cb) => {
+            this.checkSetupPhase('onBeforeUnmount');
+            this._lifecycle.add('beforeUnmount', cb);
+          },
+          onBeforeDestroy: (cb) => {
+            this.checkSetupPhase('onBeforeDestroy');
+            this._lifecycle.add('beforeDestroy', cb);
+          },
         },
 
-        watchAttribute: (name, callback) => {
-          this.checkSetupPhase('watchAttribute');
-          this._attributeManager.watch(name, callback);
-        },
-
-        useState: (initial, attribute, options) => {
-          this.checkSetupPhase('useState');
-          return this._statesManager.useState(initial, attribute, options);
-        },
-
-        watchState: <T>(state: State<T>, callback: (newValue: T, oldValue: T) => void) => {
-          this.checkSetupPhase('watchState');
-          const originalSet = state.set;
-          state.set = (value: T) => {
-            const oldValue = state.value;
-            originalSet.call(state, value);
-            callback(value, oldValue);
-          };
-        },
-
-        watchProps: (props, callback) => {
-          this.checkSetupPhase('watchProps');
-          this._pendingPropListeners.push({ props, callback });
-        },
-
-        h: (type: ElementType, props?: ElementProps, children?: ElementChildren[]) => {
-          return this._renderer.createElement(type, props, children);
-        },
-
-        // Context hooks
-        provideContext: <T>(
-          context: Context<T>,
-          initialValue: T | ((update: (value: Partial<T>, notify?: boolean) => void) => T)
-        ): void => {
-          this.checkSetupPhase('provideContext');
-          this._pendingContextOperations.push({
-            type: 'provide',
-            context,
-            ...(typeof initialValue === 'function'
-              ? { initialValueFn: initialValue }
-              : { initialValue }),
-          } as PendingContextOperation<T>);
-        },
-
-        watchContext: <T>(
-          context: Context<T>,
-          callback?: (value: T, changedKeys: string[]) => void
-        ): void => {
-          this.checkSetupPhase('watchContext');
-          if (callback) {
-            this._contextManager.addContextListener(context, callback);
-          }
-          this._pendingContextOperations.push({
-            type: 'watch',
-            context,
-          });
-        },
-
-        getContext: <T>(context: Context): T => {
-          const value = this._contextManager.getConsumedValue(context);
-
-          if (value === undefined) {
-            throw new Error(
-              `No provider found for the context "${context.displayName}". ` +
-                'Make sure you have called watchContext before using getContext.'
-            );
-          }
-
-          return value;
-        },
-
-        getProps: () => {
-          if (!this._lifecycle.hasTriggered('created')) {
-            throw new Error(
-              'getProps() can only be called after the component is created. ' +
-                'Please use it in created or later lifecycle hooks.'
-            );
-          }
-          if (this._isDestroyed) {
-            throw new Error('getProps() cannot be called after the component is destroyed.');
-          }
-          return this._propsManager.getProps();
-        },
-
-        element: {
+        props: {
+          define: (defaultProps: Props) => {
+            this.checkSetupPhase('props.define');
+            this._pendingProps = defaultProps;
+          },
+          set: (props: Partial<Props>) => {
+            this.checkSetupPhase('props.set');
+            this._propsManager.setProps(props);
+          },
           get: () => {
+            if (!this._lifecycle.hasTriggered('created')) {
+              throw new Error(
+                'props.get can only be called after the component is created. ' +
+                  'Please use it in created or later lifecycle hooks.'
+              );
+            }
+            if (this._isDestroyed) {
+              throw new Error('getProps() cannot be called after the component is destroyed.');
+            }
+            return this._propsManager.getProps();
+          },
+          watch: (props: (keyof Props)[], callback: (props: Props) => void) => {
+            this.checkSetupPhase('props.watch');
+            this._pendingPropListeners.push({ props, callback });
+          },
+        },
+
+        state: {
+          define: <T>(
+            initial: T,
+            attribute?: string,
+            options?: {
+              serialize?: (value: T) => string;
+              deserialize?: (value: string) => T;
+            }
+          ) => {
+            this.checkSetupPhase('state.define');
+            return this._statesManager.useState(initial, attribute, options);
+          },
+          watch: <T>(state: State<T>, callback: (oldValue: T, newValue: T) => void) => {
+            this.checkSetupPhase('state.watch');
+            const originalSet = state.set;
+            state.set = (value: T) => {
+              const oldValue = state.value;
+              originalSet.call(state, value);
+              callback(value, oldValue);
+            };
+          },
+        },
+
+        context: {
+          provide: <T>(context: Context<T>, valueBuilder: (update: UpdateContext<T>) => T) => {
+            this.checkSetupPhase('context.provide');
+            this._pendingContextOperations.push({
+              type: 'provide',
+              context,
+              initialValueFn: valueBuilder,
+            });
+          },
+          watch: <T>(context: Context<T>, listener?: (value: T, changedKeys: string[]) => void) => {
+            this.checkSetupPhase('context.watch');
+            if (listener) {
+              this._contextManager.addContextListener(context, listener);
+            }
+            this._pendingContextOperations.push({
+              type: 'watch',
+              context,
+            });
+          },
+          get: <T>(context: Context<T>) => {
+            const value = this._contextManager.getConsumedValue(context);
+
+            if (value === undefined) {
+              throw new Error(
+                `No provider found for the context "${context.displayName}". ` +
+                  'Make sure you have called watchContext before using getContext.'
+              );
+            }
+
+            return value;
+          },
+        },
+
+        role: {
+          asTrigger: () => {
+            this.checkSetupPhase('role.asTrigger');
+            this._eventManager.markAsTrigger();
+          },
+        },
+
+        view: {
+          getElement: () => {
             if (!this._lifecycle.hasTriggered('mounted')) {
               throw new Error(
                 'element.get can only be called after the component is mounted. ' +
@@ -276,26 +271,13 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
             }
             return this;
           },
-
-          comparePosition: (a, b) => {
-            if (!this._lifecycle.hasTriggered('mounted')) {
-              throw new Error(
-                'element.comparePosition can only be called after the component is mounted. ' +
-                  'Please use it in mounted or later lifecycle hooks.'
-              );
-            }
-            if (b === undefined) b = this;
-            // 处理非法输入
-            if (!a || !b) return ElementPosition.INVALID;
-
-            // 处理同一元素
-            if (a === b) return ElementPosition.SAME;
-
-            // 使用原生 API
-            return a.compareDocumentPosition(b) as ElementPosition;
+          update: async () => {
+            this.checkSetupPhase('view.update');
           },
-
-          insert: (list, element, index) => {
+          forceUpdate: async () => {
+            this.checkSetupPhase('view.forceUpdate');
+          },
+          insertElement: (list, element, index) => {
             if (!this._lifecycle.hasTriggered('mounted')) {
               throw new Error(
                 'element.insert can only be called after the component is mounted. ' +
@@ -330,14 +312,19 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
             list.splice(currentIndex === -1 ? list.length : currentIndex, 0, element);
             return currentIndex === -1 ? list.length - 1 : currentIndex;
           },
+          compareElementPosition: (target, element) => {
+            if (!this._lifecycle.hasTriggered('mounted')) {
+              throw new Error(
+                'element.comparePosition can only be called after the component is mounted. ' +
+                  'Please use it in mounted or later lifecycle hooks.'
+              );
+            }
+            if (element === undefined) element = this;
+            return target.compareDocumentPosition(element);
+          },
         },
 
         event: this._eventCommands,
-
-        defineProps: (defaultProps: Props) => {
-          this.checkSetupPhase('defineProps');
-          this._pendingProps = defaultProps;
-        },
       };
     }
 
@@ -356,11 +343,11 @@ export const WebComponentAdapter = <Props extends Record<string, PropType>>(
       // 处理所有待处理的监听器
       this._pendingPropListeners.forEach(({ props, callback }) => {
         this._propsManager.onPropsChange((newProps) => {
-          const changedProps = props.reduce((acc, key) => {
-            acc[key] = newProps[key];
-            return acc;
-          }, {} as Partial<Props>);
-          callback(changedProps);
+          // const changedProps = props.reduce((acc, key) => {
+          //   acc[key] = newProps[key];
+          //   return acc;
+          // }, {} as Partial<Props>);
+          callback(newProps);
         });
       });
       this._pendingPropListeners = [];

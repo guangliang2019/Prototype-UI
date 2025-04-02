@@ -1,17 +1,16 @@
-import { PrototypeHooks } from '@/next-core/interface';
+import { PrototypeAPI } from '@/next-core/interface';
 import { TabsProps, TabsContext, TabsContextType } from './interface';
 
-const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
-  const { provideContext, getProps, defineProps, getContext } = hooks;
+const asTabs = (p: PrototypeAPI<TabsProps>) => {
   // props
-  defineProps({
+  p.props.define({
     defaultValue: '',
     onTabChange: () => {},
   });
 
   // context
-  provideContext(TabsContext, (updateContext) => {
-    const props = getProps();
+  p.context.provide(TabsContext, (updateContext) => {
+    const props = p.props.get();
 
     const context: TabsContextType = {
       tabValue: props.defaultValue ?? '',
@@ -35,7 +34,7 @@ const asTabs = (hooks: PrototypeHooks<TabsProps>) => {
   return {
     expose: {
       changeTab: (value: string, focus?: boolean) => {
-        const context = getContext(TabsContext);
+        const context = p.context.get(TabsContext);
         context.changeTab(value, focus);
       },
     },

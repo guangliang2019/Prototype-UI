@@ -1,11 +1,9 @@
-import { PrototypeHooks } from '@/next-core/interface';
+import { PrototypeAPI } from '@/next-core/interface';
 import { TabsContext, TabsIndicatorProps } from './interface';
 
-const asTabsIndicator = (hooks: PrototypeHooks<TabsIndicatorProps>) => {
-  const { useMounted, useUnmounted, getContext, defineProps, getProps, watchContext } = hooks;
-
+const asTabsIndicator = (p: PrototypeAPI<TabsIndicatorProps>) => {
   // props
-  defineProps({
+  p.props.define({
     onTabChange: () => {},
     onTabResize: () => {},
   });
@@ -20,15 +18,15 @@ const asTabsIndicator = (hooks: PrototypeHooks<TabsIndicatorProps>) => {
       _tabChangedFlag = false;
       return;
     }
-    const props = getProps();
-    const context = getContext(TabsContext);
+    const props = p.props.get();
+    const context = p.context.get(TabsContext);
     props.onTabResize(context);
   });
 
   // context
-  watchContext(TabsContext, (context, keys) => {
+  p.context.watch(TabsContext, (context, keys) => {
     if (keys.includes('tabValue')) {
-      const props = getProps();
+      const props = p.props.get();
       if (_currentTabRef) _resizeObserver.unobserve(_currentTabRef as HTMLElement);
       _tabChangedFlag = true;
       _currentTabRef = context.tabRefs[context.index];
@@ -38,15 +36,15 @@ const asTabsIndicator = (hooks: PrototypeHooks<TabsIndicatorProps>) => {
   });
 
   // life cycle
-  useMounted(() => {
-    const context = getContext(TabsContext);
+  p.lifecycle.onMounted(() => {
+    const context = p.context.get(TabsContext);
     if (context.tabRefs.length > 0 && context.index !== -1) {
       _currentTabRef = context.tabRefs[context.index];
       _resizeObserver.observe(_currentTabRef);
     }
   });
-  useUnmounted(() => {
-    _resizeObserver.unobserve(_currentTabRef as HTMLElement);
+  p.lifecycle.onBeforeUnmount(() => {
+    if (_currentTabRef) _resizeObserver.unobserve(_currentTabRef as HTMLElement);
   });
 };
 

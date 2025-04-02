@@ -1,4 +1,4 @@
-import { PropType, PropsManager, PropsOptions, SerializationRule } from '@/next-core/interface';
+import { PropsManager, PropsOptions, SerializationRule } from '@/next-core/interface';
 import { camelToKebab, kebabToCamel } from '@/next-core/utils/naming';
 
 /**
@@ -31,7 +31,7 @@ export const defaultSerializationRules: Required<SerializationRule> = {
 /**
  * Web Components 的 Props 管理器实现
  */
-export class WebPropsManager<T extends Record<string, PropType>> implements PropsManager<T> {
+export class WebPropsManager<T extends object> implements PropsManager<T> {
   private props: T;
   private defaultProps: T;
   private options: PropsOptions<T>;
@@ -163,7 +163,7 @@ export class WebPropsManager<T extends Record<string, PropType>> implements Prop
       // 触发属性监听器
       const listener = this.propListeners.get(key as keyof T);
       if (listener) {
-        listener(value);
+        listener(value as T[keyof T]);
       }
     });
 
@@ -241,7 +241,7 @@ export class WebPropsManager<T extends Record<string, PropType>> implements Prop
     }
 
     Object.defineProperty(this.element, key, {
-      get: () => this.props[key],
+      get: () => this.props[key as keyof T],
       set: (value) => {
         this.propertyKeys.add(key);
         this.setProps({ [key]: value } as Partial<T>);

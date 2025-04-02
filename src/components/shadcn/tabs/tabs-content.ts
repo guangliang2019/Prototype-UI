@@ -2,19 +2,18 @@ import { definePrototype, WebComponentAdapter } from '@/next-core';
 import { asTabsContent, TabsContentProps } from '@/next-core/behaviors/as-tabs';
 
 export const ShadcnTabsContentPrototype = definePrototype<TabsContentProps>({
-  setup: (hooks) => {
-    const { useMounted, element } = hooks;
-    asTabsContent(hooks);
+  setup: (p) => {
+    asTabsContent(p);
 
     // get original class
     let _originalCls = '';
-    useMounted(() => {
-      _originalCls = element.get().className;
+    p.lifecycle.onMounted(() => {
+      _originalCls = p.view.getElement().className;
     });
 
     return {
       render: () => {
-        element.get().className = [_originalCls, 'data-[state=inactive]:hidden']
+        p.view.getElement().className = [_originalCls, 'data-[state=inactive]:hidden']
           .join(' ')
           .trimEnd();
       },

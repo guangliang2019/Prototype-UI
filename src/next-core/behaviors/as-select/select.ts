@@ -1,21 +1,20 @@
-import { PrototypeHooks } from '@/next-core/interface';
+import { PrototypeAPI } from '@/next-core/interface';
 import { SelectContext, SelectContextType, SelectProps } from './interface';
 
-const asSelect = (hooks: PrototypeHooks<SelectProps>) => {
-  const { defineProps, useState, provideContext, getProps, element } = hooks;
+const asSelect = (p: PrototypeAPI<SelectProps>) => {
   const _itemRefs: SelectContextType['itemsRefs'] = [];
 
   // props
-  defineProps({
+  p.props.define({
     defaultValue: '',
   });
 
   // state
-  const selecting = useState<boolean>(false, 'data-selecting');
-  const focused = useState<boolean>(false, 'data-focused');
+  const selecting = p.state.define<boolean>(false, 'data-selecting');
+  const focused = p.state.define<boolean>(false, 'data-focused');
 
-  provideContext(SelectContext, (updateContext) => {
-    const { defaultValue = '' } = getProps();
+  p.context.provide(SelectContext, (updateContext) => {
+    const { defaultValue = '' } = p.props.get();
 
     const context: SelectContextType = {
       width: -1,
@@ -38,7 +37,7 @@ const asSelect = (hooks: PrototypeHooks<SelectProps>) => {
       value: defaultValue,
       items: [],
       selecting: selecting,
-      rootRef: element.get(),
+      rootRef: p.view.getElement(),
       itemsRefs: _itemRefs,
       valueRef: null as unknown as HTMLElement,
       contentRef: null as unknown as HTMLElement,

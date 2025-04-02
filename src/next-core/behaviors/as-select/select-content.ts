@@ -1,21 +1,19 @@
-import { PrototypeHooks } from '@/next-core/interface';
+import { PrototypeAPI } from '@/next-core/interface';
 import { SelectContentProps, SelectContext } from './interface';
 import asOverlay from '../as-overlay/as-overlay';
 
-const asSelectContent = (hooks: PrototypeHooks<SelectContentProps>) => {
-  const { watchContext, getContext, useCreated, useMounted, getProps, element } = hooks;
-
+const asSelectContent = (p: PrototypeAPI<SelectContentProps>) => {
   // context
-  watchContext(SelectContext);
+  p.context.watch(SelectContext);
 
   // role
-  const { actions } = asOverlay(hooks);
+  const { actions } = asOverlay(p);
 
-  useCreated(() => {
-    const props = getProps();
+  p.lifecycle.onCreated(() => {
+    const props = p.props.get();
     props.onVisibleChange = (visible) => {
-      const context = getContext(SelectContext);
-      const _element = element.get();
+      const context = p.context.get(SelectContext);
+      const _element = p.view.getElement();
       switch (visible) {
         case true:
           if (context.selecting.value) return;
@@ -30,13 +28,13 @@ const asSelectContent = (hooks: PrototypeHooks<SelectContentProps>) => {
       }
     };
     props.clickOutsideInterceptor = (e) => {
-      const context = getContext(SelectContext);
+      const context = p.context.get(SelectContext);
       return e.target === context.triggerRef;
     };
   });
 
-  useMounted(() => {
-    const context = getContext(SelectContext);
+  p.lifecycle.onMounted(() => {
+    const context = p.context.get(SelectContext);
 
     context.open = actions.show;
     context.close = actions.hide;
