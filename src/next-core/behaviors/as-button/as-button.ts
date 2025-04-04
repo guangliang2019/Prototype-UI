@@ -78,7 +78,6 @@ const asButton = <Props extends ButtonProps>(
   p.event.on('click', (e) => {
     const props = p.props.get();
     if (!focus.value || props.disabled) return;
-    console.log('click', props);
     props.onClick?.(e as MouseEvent);
   });
   // 键盘按下

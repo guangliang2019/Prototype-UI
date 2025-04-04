@@ -32,7 +32,7 @@ export interface PrototypeAPI<Props> {
 
   view: {
     // 渲染调度相关
-    update: (callback: () => void) => Promise<void>;
+    update: () => Promise<void>;
     forceUpdate: () => Promise<void>;
     // 元素相关
     getElement: () => HTMLElement;

@@ -1,4 +1,4 @@
-import type { PropType, Prototype } from './interface';
+import type { Prototype } from './interface';
 
 /**
  * 定义组件原型

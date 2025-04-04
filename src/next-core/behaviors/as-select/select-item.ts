@@ -66,11 +66,10 @@ const asSelectItem = (p: PrototypeAPI<SelectItemProps>) => {
   p.event.on('mouseleave', _handleSelectItemMouseLeave);
   p.event.on('keydown', _handleKeydown);
   p.lifecycle.onMounted(() => {
+    const props = p.props.get();
+    const context = p.context.get(SelectContext);
     p.props.set({
-      onClick: () => {
-        console.log('click', p.props.get().value);
-        p.context.get(SelectContext).changeValue(p.props.get().value, true);
-      },
+      onClick: () => context.changeValue(props.value, true),
     });
   });
 };

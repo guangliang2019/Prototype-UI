@@ -11,7 +11,6 @@ export class WebRenderManager implements RenderManager {
   private renderRequested = false;
 
   createElement(type: string, props: any, ...children: any[]): Node {
-    console.log('createElement', type, props, children);
     if (typeof type !== 'string') {
       throw new Error('Web Components adapter only supports string tags');
     }

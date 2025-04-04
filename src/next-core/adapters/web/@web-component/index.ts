@@ -283,7 +283,13 @@ export const WebComponentAdapter = <Props extends object>(
             return this;
           },
           update: async () => {
-            this.checkSetupPhase('view.update');
+            if (!this._lifecycle.hasTriggered('mounted')) {
+              throw new Error(
+                'element.get can only be called after the component is mounted. ' +
+                  'Please use it in mounted or later lifecycle hooks.'
+              );
+            }
+            return this.update();
           },
           forceUpdate: async () => {
             this.checkSetupPhase('view.forceUpdate');
@@ -352,12 +358,8 @@ export const WebComponentAdapter = <Props extends object>(
 
     private _handlePendingPropListeners() {
       // 处理所有待处理的监听器
-      this._pendingPropListeners.forEach(({ props, callback }) => {
+      this._pendingPropListeners.forEach(({ callback }) => {
         this._propsManager.onPropsChange((newProps) => {
-          // const changedProps = props.reduce((acc, key) => {
-          //   acc[key] = newProps[key];
-          //   return acc;
-          // }, {} as Partial<Props>);
           callback(newProps);
         });
       });
