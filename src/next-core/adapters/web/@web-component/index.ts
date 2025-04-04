@@ -84,7 +84,7 @@ export const WebComponentAdapter = <Props extends object>(
     private _setupPhase: boolean = true;
     private _pendingContextOperations: PendingContextOperation[] = [];
 
-    private _pendingProps: Record<string, any> | null = null;
+    private _pendingProps: Record<string, any> = {};
     private _pendingPropListeners: Array<{
       props: (keyof Props)[];
       callback: (props: Props) => void;
@@ -174,10 +174,18 @@ export const WebComponentAdapter = <Props extends object>(
         props: {
           define: (defaultProps: Props) => {
             this.checkSetupPhase('props.define');
-            this._pendingProps = defaultProps;
+            Object.assign(this._pendingProps, defaultProps);
           },
           set: (props: Partial<Props>) => {
-            this.checkSetupPhase('props.set');
+            if (!this._lifecycle.hasTriggered('created')) {
+              throw new Error(
+                'props.set can only be called after the component is created. ' +
+                  'Please use it in created or later lifecycle hooks.'
+              );
+            }
+            if (this._isDestroyed) {
+              throw new Error('getProps() cannot be called after the component is destroyed.');
+            }
             this._propsManager.setProps(props);
           },
           get: () => {
@@ -244,6 +252,9 @@ export const WebComponentAdapter = <Props extends object>(
             const value = this._contextManager.getConsumedValue(context);
 
             if (value === undefined) {
+              const providedValue = this._contextManager.getProvidedValue(context);
+              if (providedValue !== undefined) return providedValue;
+
               throw new Error(
                 `No provider found for the context "${context.displayName}". ` +
                   'Make sure you have called watchContext before using getContext.'
@@ -263,7 +274,7 @@ export const WebComponentAdapter = <Props extends object>(
 
         view: {
           getElement: () => {
-            if (!this._lifecycle.hasTriggered('mounted')) {
+            if (!this._lifecycle.hasTriggered('mounting')) {
               throw new Error(
                 'element.get can only be called after the component is mounted. ' +
                   'Please use it in mounted or later lifecycle hooks.'
@@ -278,7 +289,7 @@ export const WebComponentAdapter = <Props extends object>(
             this.checkSetupPhase('view.forceUpdate');
           },
           insertElement: (list, element, index) => {
-            if (!this._lifecycle.hasTriggered('mounted')) {
+            if (!this._lifecycle.hasTriggered('mounting')) {
               throw new Error(
                 'element.insert can only be called after the component is mounted. ' +
                   'Please use it in mounted or later lifecycle hooks.'
@@ -335,7 +346,7 @@ export const WebComponentAdapter = <Props extends object>(
     private _handlePendingProps() {
       if (this._pendingProps) {
         this._propsManager.defineProps(this._pendingProps as Props);
-        this._pendingProps = null;
+        this._pendingProps = {};
       }
     }
 
@@ -355,6 +366,10 @@ export const WebComponentAdapter = <Props extends object>(
 
     connectedCallback() {
       if (this._isDestroyed) return;
+      // 触发 mounting 状态，这是一个特殊的状态，仅暴露给 Adapter 开发者使用
+      // mounting 状态实际已经获取了与元素的联系，但是各种 prototype 相关的子模块还没有初始化
+      // 这是最早的可以获取到元素的时机
+      this._lifecycle.trigger('mounting');
 
       // 初始化 props
       this._propsManager.initialize();
@@ -387,7 +402,7 @@ export const WebComponentAdapter = <Props extends object>(
           this._contextManager.provideContext(operation.context, value);
           // this._contextManager.updateConsumers(operation.context, value);
         } else if (operation.type === 'watch') {
-          this._contextManager.consumeContext(operation.context, null);
+          this._contextManager.consumeContext(operation.context);
         }
       });
       this._pendingContextOperations = [];

@@ -20,13 +20,24 @@ export abstract class BaseRenderer implements RendererAPI {
 
   constructor(context: RendererContext) {
     this.context = context;
+    this.createElement = this.createElement.bind(this);
+    this.createText = this.createText.bind(this);
+    this.createComment = this.createComment.bind(this);
+    this.createNativeElement = this.createNativeElement.bind(this);
+    this.createFragment = this.createFragment.bind(this);
+    this.createFromPrototype = this.createFromPrototype.bind(this);
+    this.createFromComponent = this.createFromComponent.bind(this);
+    this.applyProps = this.applyProps.bind(this);
+    this.applyClass = this.applyClass.bind(this);
+    this.normalizeClass = this.normalizeClass.bind(this);
+    this.appendChildren = this.appendChildren.bind(this);
   }
 
-  createElement(
+  createElement = (
     type: ElementType,
     props?: ElementProps,
     children?: ElementChildren[]
-  ): Element | VirtualElement {
+  ): Element | VirtualElement => {
     // 根据类型分发到不同的创建方法
     if (typeof type === 'string') {
       return this.createNativeElement(type, props, children);
@@ -39,7 +50,7 @@ export abstract class BaseRenderer implements RendererAPI {
     }
 
     throw new Error(`不支持的元素类型: ${String(type)}`);
-  }
+  };
 
   abstract createText(content: string): Text | VirtualElement;
   abstract createComment(content: string): Comment | VirtualElement;

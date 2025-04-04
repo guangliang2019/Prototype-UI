@@ -26,6 +26,7 @@ const asButton = <Props extends ButtonProps>(
   const focusVisible = p.state.define<boolean>(false, 'data-focus-visible');
   const active = p.state.define<boolean>(false, 'data-active');
 
+  // props
   p.props.define(DEFAULT_BUTTON_PROPS as Props);
 
   const handleDisabledChange = (disabled: boolean) => {
@@ -77,6 +78,7 @@ const asButton = <Props extends ButtonProps>(
   p.event.on('click', (e) => {
     const props = p.props.get();
     if (!focus.value || props.disabled) return;
+    console.log('click', props);
     props.onClick?.(e as MouseEvent);
   });
   // 键盘按下

@@ -1,5 +1,5 @@
 import { PrototypeAPI } from '@/next-core/interface';
-import { SelectContext, SelectContextType, SelectItemProps } from './interface';
+import { SelectContext, SelectItemProps } from './interface';
 import { asButton } from '../as-button';
 
 const asSelectItem = (p: PrototypeAPI<SelectItemProps>) => {
@@ -13,7 +13,7 @@ const asSelectItem = (p: PrototypeAPI<SelectItemProps>) => {
   const selected = p.state.define<boolean>(false, 'data-selected');
 
   // context
-  p.context.watch(SelectContext, (context: SelectContextType, _) => {
+  p.context.watch(SelectContext, (context, _) => {
     const props = p.props.get();
     if (props.value === context.value) selected.set(true);
     else selected.set(false);
@@ -66,11 +66,12 @@ const asSelectItem = (p: PrototypeAPI<SelectItemProps>) => {
   p.event.on('mouseleave', _handleSelectItemMouseLeave);
   p.event.on('keydown', _handleKeydown);
   p.lifecycle.onMounted(() => {
-    const props = p.props.get();
-    const context = p.context.get(SelectContext);
-    props.onClick = () => {
-      context.changeValue(props.value, true);
-    };
+    p.props.set({
+      onClick: () => {
+        console.log('click', p.props.get().value);
+        p.context.get(SelectContext).changeValue(p.props.get().value, true);
+      },
+    });
   });
 };
 

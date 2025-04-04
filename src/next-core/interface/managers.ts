@@ -222,7 +222,7 @@ export interface ContextManager {
    * @param context Context 实例
    * @param value Context 值
    */
-  consumeContext<T>(context: Context<T>, value: T): void;
+  consumeContext<T>(context: Context<T>): void;
 
   /**
    * 更新消费的 Context 值

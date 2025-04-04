@@ -46,7 +46,7 @@ export interface RendererContext {
   attributeManager: AttributeManager;
   lifecycleManager: LifecycleManager;
   stateManager: StateManager;
-  propsManager: PropsManager;
+  propsManager: PropsManager<any>;
 }
 
 export interface RendererAPI {

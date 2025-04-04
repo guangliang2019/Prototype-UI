@@ -1,9 +1,10 @@
 import { PrototypeAPI } from '@/next-core/interface';
 import { SelectContext, SelectContextType, SelectTriggerProps } from './interface';
+import { asButton } from '../as-button';
 
 const asSelectTrigger = (p: PrototypeAPI<SelectTriggerProps>) => {
   // role
-  p.role.asTrigger();
+  const { actions: ButtonActions } = asButton(p);
   // context
   p.context.watch(SelectContext, (context, keys) => {
     if (keys.includes('width')) {
@@ -15,7 +16,7 @@ const asSelectTrigger = (p: PrototypeAPI<SelectTriggerProps>) => {
     const component = p.view.getElement();
     context.width = component.offsetWidth;
     context.triggerRef = component;
-    context.focus = component.focus;
+    context.focus = ButtonActions.focus;
   });
 
   const _handleMouseDown = (event: MouseEvent): void => {

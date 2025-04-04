@@ -16,18 +16,18 @@ const asSelect = (p: PrototypeAPI<SelectProps>) => {
   p.context.provide(SelectContext, (updateContext) => {
     const { defaultValue = '' } = p.props.get();
 
-    const context: SelectContextType = {
+    return {
       width: -1,
       open: () => {},
       close: () => {},
       focus: () => {},
       focused: focused,
       changeValue: (value, focus = false) => {
+        const context = p.context.get(SelectContext);
         updateContext({
           index: context.items.indexOf(value),
           value: value,
         });
-
         if (focus) context.focus?.();
         context.close?.();
       },
@@ -42,8 +42,6 @@ const asSelect = (p: PrototypeAPI<SelectProps>) => {
       valueRef: null as unknown as HTMLElement,
       contentRef: null as unknown as HTMLElement,
     };
-
-    return context;
   });
 };
 
