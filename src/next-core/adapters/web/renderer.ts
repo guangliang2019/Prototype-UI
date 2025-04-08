@@ -37,7 +37,7 @@ export abstract class BaseRenderer implements RendererAPI {
     type: ElementType,
     props?: ElementProps,
     children?: ElementChildren[]
-  ): Element | VirtualElement => {
+  ): Element => {
     // 根据类型分发到不同的创建方法
     if (typeof type === 'string') {
       return this.createNativeElement(type, props, children);
@@ -52,31 +52,28 @@ export abstract class BaseRenderer implements RendererAPI {
     throw new Error(`不支持的元素类型: ${String(type)}`);
   };
 
-  abstract createText(content: string): Text | VirtualElement;
-  abstract createComment(content: string): Comment | VirtualElement;
+  abstract createText(content: string): Text;
+  abstract createComment(content: string): Comment;
 
   protected abstract createNativeElement(
     tag: string,
     props?: ElementProps,
     children?: ElementChildren[]
-  ): Element | VirtualElement;
+  ): Element;
 
-  protected abstract createFragment(
-    props?: ElementProps,
-    children?: ElementChildren[]
-  ): Element | VirtualElement;
+  protected abstract createFragment(props?: ElementProps, children?: ElementChildren[]): Element;
 
   protected abstract createFromPrototype(
     prototype: Prototype<any>,
     props?: ElementProps,
     children?: ElementChildren[]
-  ): Element | VirtualElement;
+  ): Element;
 
   protected abstract createFromComponent(
     component: Component,
     props?: ElementProps,
     children?: ElementChildren[]
-  ): Element | VirtualElement;
+  ): Element;
 
   protected isPrototype(type: any): type is Prototype<any> {
     return type && typeof type.setup === 'function';
@@ -177,24 +174,19 @@ export abstract class BaseRenderer implements RendererAPI {
 
     children.flat().forEach((child) => {
       if (child != null) {
-        const childElement = this.isVirtualElement(child)
-          ? this.createElement(child.type, child.props, child.children)
-          : this.createText(String(child));
-        parent.appendChild(childElement as Node);
+        if (this.isVirtualElement(child)) {
+          // 如果是 VirtualElement，递归处理
+          this.appendChildren(parent, [
+            this.createElement(child.type, child.props, child.children),
+          ]);
+        } else if (child instanceof Node) {
+          // 如果是 Node 实例，直接追加
+          parent.appendChild(child);
+        } else {
+          // 其他情况转换为文本节点
+          parent.appendChild(this.createText(String(child)));
+        }
       }
     });
   }
 }
-
-// 添加类型断言函数，帮助处理特定类型的属性
-// function isEventMap(value: unknown): value is Record<string, EventHandler | EventHandler[]> {
-//   return typeof value === 'object' && value !== null;
-// }
-
-// function isHookMap(value: unknown): value is Record<string, () => void> {
-//   return typeof value === 'object' && value !== null;
-// }
-
-// function isStyleMap(value: unknown): value is Record<string, string | number> {
-//   return typeof value === 'object' && value !== null;
-// }
