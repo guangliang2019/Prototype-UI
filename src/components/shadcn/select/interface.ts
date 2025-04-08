@@ -1,13 +1,27 @@
-import { PrototypeSelectContext, PrototypeSelectProps } from '@/components/prototype/select/interface';
+import { createContext } from '@/next-core';
+import {
+  SelectProps,
+  SelectContentProps,
+  SelectItemProps,
+  SelectTriggerProps,
+  SelectValueProps,
+} from '@/next-core/behaviors/as-select';
 
-export interface ShadcnSelectContext extends PrototypeSelectContext {
-  'shadcn-select': {
-    arrowRef: HTMLElement;
-    checkRef: HTMLElement;
-    valueRef: HTMLElement;
+export interface ShadcnSelectProps extends SelectProps {}
 
-    updateRef: (name: 'arrowRef' | 'checkRef' | 'valueRef', ref: HTMLElement) => void;
-  };
+export interface ShadcnSelectContentProps extends SelectContentProps {}
+
+export interface ShadcnSelectItemProps extends SelectItemProps {}
+
+export interface ShadcnSelectTriggerProps extends SelectTriggerProps {}
+
+export interface ShadcnSelectValueProps extends SelectValueProps {}
+export interface ShadcnSelectContextType {
+  arrowRef: HTMLElement;
+  checkRef: HTMLElement;
+  valueRef: HTMLElement;
+
+  updateRef: (name: 'arrowRef' | 'checkRef' | 'valueRef', ref: HTMLElement) => void;
 }
 
-export interface ShadcnSelectProps extends PrototypeSelectProps {}
+export const ShadcnSelectContext = createContext<ShadcnSelectContextType>('shadcn-select');

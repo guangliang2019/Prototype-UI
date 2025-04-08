@@ -1,34 +1,42 @@
-import { PrototypeSelect } from '@/components/prototype/select';
-import { ShadcnSelectContext } from './interface';
+import { asSelect } from '@/next-core/behaviors/as-select';
+import { CONFIG } from '../_config';
+import { ShadcnSelectContext, ShadcnSelectContextType, ShadcnSelectProps } from './interface';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
 
-export default class ShadcnSelect extends PrototypeSelect<ShadcnSelectContext> {
-  protected _providerKeys = ['shadcn-select', 'prototype-select'];
-  private _class = '';
-  private _computedClass = '';
-  private _arrowRef = document.createElement('shadcn-select-arrow');
-  private _checkRef = document.createElement('shadcn-select-check');
-  private _valueRef = document.createElement('shadcn-select-value');
+export const ShadcnSelectPrototype = definePrototype<ShadcnSelectProps>({
+  displayName: 'shadcn-select',
+  setup: (p) => {
+    asSelect(p);
 
-  connectedCallback() {
-    super.connectedCallback();
+    p.context.provide(ShadcnSelectContext, (updateContext) => {
+      const context: ShadcnSelectContextType = {
+        // arrowRef: p.view.createElement('shadcn-select-arrow'),
+        // checkRef: p.view.createElement('shadcn-select-check'),
+        // valueRef: p.view.createElement('shadcn-select-value'),
+        arrowRef: document.createElement('shadcn-select-arrow'),
+        checkRef: document.createElement('shadcn-select-check'),
+        valueRef: document.createElement('shadcn-select-value'),
+        updateRef: (name, ref) => {
+          const originalRef = context[name];
+          updateContext({
+            [name]: ref,
+          });
+          if (originalRef) originalRef.remove();
+        },
+      };
+      return context;
+    });
 
-    this._provideValues['shadcn-select'] = {
-      arrowRef: this._arrowRef,
-      checkRef: this._checkRef,
-      valueRef: this._valueRef,
-
-      updateRef: (name, ref) => {
-        this[`_${name}`] = ref;
-        this.setContext('shadcn-select', { [name]: ref });
+    return {
+      render() {
+        const _class = p.view.getElement().className;
+        const _computedClass = 'block relative';
+        p.view.getElement().className = [_computedClass, _class].join(' ').trimEnd();
       },
     };
-    this._setup();
-  }
+  },
+});
 
-  private _setup() {
-    this._computedClass = 'block';
-    this.className = [this._computedClass, this._class].join(' ').trimEnd();
-  }
-}
+export const ShadcnSelect = WebComponentAdapter(ShadcnSelectPrototype);
 
-customElements.define('shadcn-select', ShadcnSelect);
+customElements.define(`${CONFIG.shadcn.prefix}-select`, ShadcnSelect);

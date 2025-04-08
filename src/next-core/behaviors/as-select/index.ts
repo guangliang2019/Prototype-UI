@@ -10,6 +10,7 @@ export type {
   SelectValueProps,
   SelectContentProps,
   SelectItemProps,
+  SelectTriggerProps,
 } from './interface';
 
 export { SelectContext } from './interface';

@@ -246,3 +246,11 @@ export interface ContextManager {
    */
   getConsumedValue<T>(context: Context<T>): T | undefined;
 }
+
+// 定义视图状态
+export enum ViewState {
+  NORMAL = 'normal', // 正常状态
+  RESTRUCTURING = 'restructuring', // 结构重组中
+  INITIALIZING = 'initializing', // 初始化中
+  SUSPENDED = 'suspended', // 挂起状态
+}

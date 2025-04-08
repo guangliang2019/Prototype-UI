@@ -1,5 +1,5 @@
 import { Component, Context, ContextManager } from '@/next-core/interface';
-import { WebContextCenter } from '@/next-core/adapters/web/context';
+import { WebContextCenter } from '@/next-core/adapters/web/context-center';
 
 interface ContextListener<T> {
   callback: (value: T, changedKeys: string[]) => void;

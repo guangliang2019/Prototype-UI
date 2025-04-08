@@ -30,3 +30,7 @@
 .data-\[selected\]\:visible[data-selected] {
   visibility: visible;
 }
+
+.data-\[visible\]:visible[data-visible] {
+  visibility: visible;
+}
