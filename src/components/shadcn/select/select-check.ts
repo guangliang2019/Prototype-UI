@@ -10,10 +10,10 @@ export const ShadcnSelectCheckPrototype = definePrototype<{}>({
     p.context.watch(ShadcnSelectContext);
 
     p.lifecycle.onMounted(() => {
-      const { updateRef } = p.context.get(ShadcnSelectContext);
-      updateRef('checkRef', p.view.getElement());
-
+      const { updateRef, checkRef } = p.context.get(ShadcnSelectContext);
       const element = p.view.getElement();
+      if (element !== checkRef) updateRef('checkRef', p.view.getElement());
+
       if (element.children.length > 0 || element.textContent !== '') {
         return;
       }

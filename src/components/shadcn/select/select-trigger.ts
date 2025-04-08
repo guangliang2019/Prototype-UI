@@ -26,8 +26,7 @@ export const ShadcnSelectTriggerPrototype = definePrototype<ShadcnSelectTriggerP
     });
 
     return {
-      render: (renderer: RendererAPI) => {
-        const h = renderer.createElement;
+      render: (renderer) => {
         const root = p.view.getElement();
         // class name
         const className = root.className || '';
@@ -41,28 +40,7 @@ export const ShadcnSelectTriggerPrototype = definePrototype<ShadcnSelectTriggerP
         _currentValueRef = valueRef;
         _currentArrowRef = arrowRef;
 
-        return h(
-          'svg',
-          {
-            viewBox: '0 0 24 24',
-            fill: 'none',
-            stroke: 'currentColor',
-            strokeWidth: '2',
-            strokeLinecap: 'round',
-            strokeLinejoin: 'round',
-            class: 'shadcn-icon shadcn-select-arrow h-4 w-4 opacity-50',
-          },
-          [
-            h('path', {
-              d: 'M8.5 15L12 18.5L15.5 15',
-              strokeWidth: '1.5',
-            }),
-            h('path', {
-              d: 'M8.5 9L12 5.5L15.5 9',
-              strokeWidth: '1.5',
-            }),
-          ]
-        );
+        return renderer.createFragment([valueRef, arrowRef]);
       },
     };
   },

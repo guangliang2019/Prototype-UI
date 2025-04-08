@@ -3,11 +3,9 @@ import {
   ElementProps,
   RendererAPI,
   RendererContext,
-  VirtualElement,
   Component,
   Prototype,
   ElementChildren,
-  ElementChild,
 } from '../../interface';
 import { EventHandler } from '../../interface/managers';
 
@@ -15,7 +13,6 @@ import { EventHandler } from '../../interface/managers';
  * 基础渲染器实现
  */
 export abstract class BaseRenderer implements RendererAPI {
-  public readonly Fragment: symbol = Symbol('Fragment');
   protected readonly context: RendererContext;
 
   constructor(context: RendererContext) {
@@ -23,8 +20,8 @@ export abstract class BaseRenderer implements RendererAPI {
     this.createElement = this.createElement.bind(this);
     this.createText = this.createText.bind(this);
     this.createComment = this.createComment.bind(this);
-    this.createNativeElement = this.createNativeElement.bind(this);
     this.createFragment = this.createFragment.bind(this);
+    this.createNativeElement = this.createNativeElement.bind(this);
     this.createFromPrototype = this.createFromPrototype.bind(this);
     this.createFromComponent = this.createFromComponent.bind(this);
     this.applyProps = this.applyProps.bind(this);
@@ -41,8 +38,6 @@ export abstract class BaseRenderer implements RendererAPI {
     // 根据类型分发到不同的创建方法
     if (typeof type === 'string') {
       return this.createNativeElement(type, props, children);
-    } else if (type === this.Fragment) {
-      return this.createFragment(props, children);
     } else if (this.isPrototype(type)) {
       return this.createFromPrototype(type, props, children);
     } else if (this.isComponent(type)) {
@@ -54,14 +49,13 @@ export abstract class BaseRenderer implements RendererAPI {
 
   abstract createText(content: string): Text;
   abstract createComment(content: string): Comment;
+  abstract createFragment(children?: ElementChildren[]): Element;
 
   protected abstract createNativeElement(
     tag: string,
     props?: ElementProps,
     children?: ElementChildren[]
   ): Element;
-
-  protected abstract createFragment(props?: ElementProps, children?: ElementChildren[]): Element;
 
   protected abstract createFromPrototype(
     prototype: Prototype<any>,
@@ -81,16 +75,6 @@ export abstract class BaseRenderer implements RendererAPI {
 
   protected isComponent(type: any): type is Component {
     return type && typeof type.render === 'function';
-  }
-
-  protected isVirtualElement(child: ElementChild): child is VirtualElement {
-    return (
-      child !== null &&
-      typeof child === 'object' &&
-      'type' in child &&
-      'props' in child &&
-      'children' in child
-    );
   }
 
   protected applyProps(element: Element, props: ElementProps): void {
@@ -174,12 +158,7 @@ export abstract class BaseRenderer implements RendererAPI {
 
     children.flat().forEach((child) => {
       if (child != null) {
-        if (this.isVirtualElement(child)) {
-          // 如果是 VirtualElement，递归处理
-          this.appendChildren(parent, [
-            this.createElement(child.type, child.props, child.children),
-          ]);
-        } else if (child instanceof Node) {
+        if (child instanceof Node) {
           // 如果是 Node 实例，直接追加
           parent.appendChild(child);
         } else {

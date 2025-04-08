@@ -10,9 +10,10 @@ export const ShadcnSelectArrowPrototype = definePrototype<{}>({
     p.context.watch(ShadcnSelectContext);
 
     p.lifecycle.onMounted(() => {
-      const { updateRef } = p.context.get(ShadcnSelectContext);
-      updateRef('arrowRef', p.view.getElement());
-      p.view.getElement().className = 'w-4 h-4 opacity-50';
+      const { updateRef, arrowRef } = p.context.get(ShadcnSelectContext);
+      const element = p.view.getElement();
+      if (arrowRef !== element) updateRef('arrowRef', element);
+      element.className = 'w-4 h-4 opacity-50';
     });
 
     return {

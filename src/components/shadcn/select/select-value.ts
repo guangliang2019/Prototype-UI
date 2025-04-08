@@ -1,21 +1,26 @@
 import { ShadcnSelectContext, ShadcnSelectValueProps } from './interface';
-import { definePrototype, WebComponentAdapter } from '@/next-core';
+import { definePrototype, RendererAPI, WebComponentAdapter } from '@/next-core';
 import { asSelectValue } from '@/next-core/behaviors/as-select';
 import { CONFIG } from '../_config';
 
 export const ShadcnSelectValuePrototype = definePrototype<ShadcnSelectValueProps>({
   displayName: 'shadcn-select-value',
   setup: (p) => {
-    asSelectValue(p);
+    const { render: renderSelectValue } = asSelectValue(p);
 
     p.context.watch(ShadcnSelectContext);
 
     p.lifecycle.onMounted(() => {
-      const { updateRef } = p.context.get(ShadcnSelectContext);
-      updateRef('valueRef', p.view.getElement());
+      const { updateRef, valueRef } = p.context.get(ShadcnSelectContext);
+      const element = p.view.getElement();
+      if (valueRef !== element) updateRef('valueRef', element);
     });
 
-    return {};
+    return {
+      render: (renderer: RendererAPI) => {
+        return renderSelectValue(renderer);
+      },
+    };
   },
 });
 

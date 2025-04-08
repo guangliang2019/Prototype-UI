@@ -25,7 +25,7 @@ const asSelectValue = (p: PrototypeAPI<SelectValueProps>) => {
     render: (renderer: RendererAPI) => {
       const h = renderer.createElement;
       const context = p.context.get(SelectContext);
-      return h('span', {}, [context.value]);
+      return h('span', {}, [context.value]) as Element;
     },
   };
 };

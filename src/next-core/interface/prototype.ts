@@ -1,4 +1,3 @@
-import { ElementCommands } from './element';
 import { EventCommands } from './event';
 import { Context, State } from './managers';
 import { RendererAPI } from './renderer';
@@ -75,7 +74,7 @@ export interface Prototype<Props> {
   /**
    * 设置函数
    */
-  setup: (p: PrototypeAPI<Props>) => void;
+  setup: (p: PrototypeAPI<Props>) => PrototypeSetupResult<Props> | void;
 }
 
 /**

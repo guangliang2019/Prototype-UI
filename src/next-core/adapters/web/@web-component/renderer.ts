@@ -122,16 +122,7 @@ export class WebRenderer extends BaseRenderer {
 
     children.flat().forEach((child) => {
       if (child != null) {
-        if (this.isVirtualElement(child)) {
-          const childElement = this.createElement(child.type, child.props, child.children);
-          if (isSvg && childElement instanceof Element) {
-            const svgChild = SVGUtils.createSvgElement(childElement.tagName);
-            SVGUtils.copyAttributes(childElement, svgChild);
-            parent.appendChild(svgChild);
-          } else {
-            parent.appendChild(childElement as Node);
-          }
-        } else if (child instanceof Node) {
+        if (child instanceof Node) {
           if (isSvg && child instanceof Element) {
             const svgChild = SVGUtils.createSvgElement(child.tagName);
             SVGUtils.copyAttributes(child, svgChild);
@@ -198,21 +189,15 @@ export class WebRenderer extends BaseRenderer {
     });
   }
 
-  protected createFragment(props?: ElementProps, children?: ElementChildren[]): Element {
+  createFragment(children?: ElementChildren[]): Element {
     // 创建一个 div 作为 Fragment 的容器
     // 这样可以满足返回类型要求，同时保持 Fragment 的语义
-    const container = document.createElement('div');
-    container.setAttribute('data-fragment', '');
-
-    // 应用属性
-    if (props && this.context) {
-      this.applyProps(container, props);
-    }
+    const fragment = document.createDocumentFragment();
 
     // 添加子元素
-    this.appendChildren(container, children);
+    this.appendChildren(fragment as unknown as Element, children);
 
-    return container;
+    return fragment as unknown as Element;
   }
 
   protected createFromPrototype(
