@@ -58,7 +58,7 @@
 - [ ] Shadcn UI 主题原型
   - [x] Button
   - [ ] Input
-  - [ ] Select
+  - [x] Select
   - [ ] Checkbox
   - [ ] Radio
   - [ ] Switch
