@@ -27,7 +27,6 @@ const asSelect = (p: PrototypeAPI<SelectProps>) => {
           index: context.items.indexOf(value),
           value: value,
         });
-
         if (focus) context.focus?.();
         context.close?.();
       },

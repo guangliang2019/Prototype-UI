@@ -1,46 +1,43 @@
-import { PrototypeSelectItem } from '@/components/prototype/select';
-import { ShadcnSelectContext } from './interface';
-import { PrototypeSelectContext } from '@/components/prototype/select/interface';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
+import { ShadcnSelectContext, ShadcnSelectItemProps } from './interface';
+import { asSelectItem, SelectContext } from '@/next-core/behaviors/as-select';
 
-export default class ShadcnSelectItem extends PrototypeSelectItem<ShadcnSelectContext> {
-  protected _consumerKeys = ['shadcn-select', 'prototype-select'];
+const SHADCN_SELECT_ITEM_CLASS =
+  'shadcn-select-item relative flex justify-between w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50';
 
-  private _class = '';
-  private _computedClass = '';
-  private _checkRef = document.createElement('shadcn-select-check');
+export const ShadcnSelectItemPrototype = definePrototype<ShadcnSelectItemProps>({
+  displayName: 'shadcn-select-item',
+  setup: (p) => {
+    // role
+    p.context.watch(ShadcnSelectContext);
+    asSelectItem(p);
+    
+    
 
-  private _handlePrototypeSelectValueChange = (
-    context: PrototypeSelectContext['prototype-select'],
-    keys: string[]
-  ) => {
-    if (keys.includes('value')) {
-      if (this.value === context.value) {
-        this._checkRef.setAttribute('data-selected', '');
-      } else {
-        this._checkRef.removeAttribute('data-selected');
+    // context
+    p.context.watch(SelectContext, (context, changedKeys) => {
+      const { checkRef } = p.context.get(ShadcnSelectContext);
+      const props = p.props.get();
+      const root = p.view.getElement();
+      if (changedKeys.includes('value')) {
+        if (props.value === context.value) {
+          root.appendChild(checkRef);
+        } else {
+          // root.removeChild(checkRef);
+        }
       }
-    }
-  };
+    });
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._setup();
-    this._handlePrototypeSelectValueChange(this._contextValues['prototype-select'], ['value']);
-    this.addContextListener('prototype-select', this._handlePrototypeSelectValueChange);
-  }
+    return {
+      render: () => {
+        const root = p.view.getElement();
+        const className = root.className || '';
+        root.className = [SHADCN_SELECT_ITEM_CLASS, className].join(' ').trimEnd();
+      },
+    };
+  },
+});
 
-  disconnectedCallback() {
-    this.removeContextListener('prototype-select', this._handlePrototypeSelectValueChange);
-    super.disconnectedCallback();
-  }
-
-  private _setup() {
-    this._computedClass =
-      'relative flex justify-between w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50';
-    if (!this.contains(this._checkRef)) this.appendChild(this._checkRef);
-
-    this.className = [this._computedClass, this._class].join(' ').trimEnd();
-  }
-}
+export const ShadcnSelectItem = WebComponentAdapter(ShadcnSelectItemPrototype);
 
 customElements.define('shadcn-select-item', ShadcnSelectItem);

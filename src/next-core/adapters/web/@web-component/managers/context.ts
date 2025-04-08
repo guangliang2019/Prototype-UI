@@ -1,5 +1,5 @@
 import { Component, Context, ContextManager } from '@/next-core/interface';
-import { WebContextCenter } from '@/next-core/adapters/web/context';
+import { WebContextCenter } from '@/next-core/adapters/web/context-center';
 
 interface ContextListener<T> {
   callback: (value: T, changedKeys: string[]) => void;
@@ -33,14 +33,14 @@ export class WebComponentContextManager implements ContextManager {
     this.contextCenter.registerProvider(context, this.component);
   }
 
-  consumeContext<T>(context: Context<T>, value: T, notifyListeners = true): void {
+  consumeContext<T>(context: Context<T>, notifyListeners = true): void {
     this.consumedContexts.add(context);
-    this.consumedValues.set(context, value);
     // 注册到 ContextCenter
     this.contextCenter.registerConsumer(context, this.component);
+
     // 通知监听器
     if (notifyListeners) {
-      this.notifyListeners(context, value, []);
+      this.notifyListeners(context, this.consumedValues.get(context), []);
     }
   }
 

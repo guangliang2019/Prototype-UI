@@ -12,7 +12,7 @@
   - [ ] Radio
   - [ ] Checkbox
   - [ ] Input
-  - [ ] Select
+  - [x] Select
   - [ ] Slider
   - [ ] Rate
   - [ ] Progress
@@ -39,7 +39,7 @@
 
 - [ ] 适配器库开发
 
-  - [ ] PureJS
+  - [ ] JS
   - [x] WebComponent
   - [ ] Vue2
   - [ ] Vue3
@@ -58,7 +58,7 @@
 - [ ] Shadcn UI 主题原型
   - [x] Button
   - [ ] Input
-  - [ ] Select
+  - [x] Select
   - [ ] Checkbox
   - [ ] Radio
   - [ ] Switch

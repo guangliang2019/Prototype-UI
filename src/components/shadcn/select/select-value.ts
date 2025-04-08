@@ -1,23 +1,29 @@
-import { PrototypeSelectValue } from '@/components/prototype/select';
-import { ShadcnSelectContext } from './interface';
+import { ShadcnSelectContext, ShadcnSelectValueProps } from './interface';
+import { definePrototype, RendererAPI, WebComponentAdapter } from '@/next-core';
+import { asSelectValue } from '@/next-core/behaviors/as-select';
+import { CONFIG } from '../_config';
 
-export default class ShadcnSelectValue extends PrototypeSelectValue<ShadcnSelectContext> {
-  protected _consumerKeys = ['shadcn-select', 'prototype-select'];
+export const ShadcnSelectValuePrototype = definePrototype<ShadcnSelectValueProps>({
+  displayName: 'shadcn-select-value',
+  setup: (p) => {
+    const { render: renderSelectValue } = asSelectValue(p);
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._contextValues['shadcn-select'].valueRef = this;
-    if (this.children.length > 0 || this.textContent !== '') {
-      this._contextValues['shadcn-select'].updateRef('valueRef', this);
-      return;
-    }
-  }
+    p.context.watch(ShadcnSelectContext);
 
-  renderValue: (value: string) => HTMLElement = (value: string) => {
-    const span = document.createElement('span');
-    span.textContent = value;
-    return span;
-  };
-}
+    p.lifecycle.onMounted(() => {
+      const { updateRef, valueRef } = p.context.get(ShadcnSelectContext);
+      const element = p.view.getElement();
+      if (valueRef !== element) updateRef('valueRef', element);
+    });
 
-customElements.define('shadcn-select-value', ShadcnSelectValue);
+    return {
+      render: (renderer: RendererAPI) => {
+        return renderSelectValue(renderer);
+      },
+    };
+  },
+});
+
+export const ShadcnSelectValue = WebComponentAdapter(ShadcnSelectValuePrototype);
+
+customElements.define(`${CONFIG.shadcn.prefix}-select-value`, ShadcnSelectValue);

@@ -1,30 +1,47 @@
-import { PrototypeSelectContent } from '@/components/prototype/select';
-import { ShadcnSelectContext } from './interface';
+import { ShadcnSelectContentProps, ShadcnSelectContext } from './interface';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
+import { asSelectContent } from '@/next-core/behaviors/as-select';
 
-export default class ShadcnSelectContent extends PrototypeSelectContent<ShadcnSelectContext> {
-  protected _consumerKeys = ['shadcn-select', 'prototype-select'];
+const flexCls = 'flex flex-col items-start';
+const positionCls = 'absolute z-50 top-10';
+const sizeCls = 'max-h-96 min-w-[8rem] p-1';
+const shapeCls = 'rounded-md shadow-md';
+const borderCls = 'border';
+const colorCls = 'bg-popover text-popover-foreground';
+const otherCls = 'popover-animated-in overflow-hidden';
+const SHADCN_SELECT_CONTENT_CLASS = [
+  'shadcn-select-content',
+  'data-[visible]:visible invisible',
+  flexCls,
+  positionCls,
+  sizeCls,
+  shapeCls,
+  borderCls,
+  colorCls,
+  otherCls,
+]
+  .join(' ')
+  .trimEnd();
 
-  private _class = '';
-  private _computedClass = '';
+export const ShadcnSelectContentPrototype = definePrototype<ShadcnSelectContentProps>({
+  displayName: 'shadcn-select-content',
+  setup: (p) => {
+    // role
+    asSelectContent(p);
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._setup();
-  }
+    // context
+    p.context.watch(ShadcnSelectContext);
 
-  private _setup() {
-    const flexCls = 'flex flex-col items-start';
-    const positionCls = 'relative z-50 top-1';
-    const sizeCls = 'max-h-96 min-w-[8rem] p-1';
-    const shapeCls = 'rounded-md shadow-md';
-    const borderCls = 'border';
-    const colorCls = 'bg-popover text-popover-foreground';
-    const otherCls = 'popover-animated-in overflow-hidden';
+    return {
+      render: () => {
+        const root = p.view.getElement();
+        const className = root.className || '';
+        root.className = [SHADCN_SELECT_CONTENT_CLASS, className].join(' ').trimEnd();
+      },
+    };
+  },
+});
 
-    // prettier-ignore
-    this._computedClass = [flexCls, positionCls, sizeCls, shapeCls, borderCls, colorCls, otherCls].join(' ').trimEnd();
-    this._computedClass = this.className = [this._computedClass, this._class].join(' ').trimEnd();
-  }
-}
+export const ShadcnSelectContent = WebComponentAdapter(ShadcnSelectContentPrototype);
 
 customElements.define('shadcn-select-content', ShadcnSelectContent);

@@ -1,4 +1,4 @@
-import type { PropType, Prototype } from './interface';
+import type { Prototype } from './interface';
 
 /**
  * 定义组件原型
@@ -34,5 +34,5 @@ export function definePrototype<Props extends object>(
 export * from './interface';
 
 // 导出适配器相关内容
-export * from './adapters/web/context';
+export * from './adapters/web/context-center';
 export { WebComponentAdapter } from './adapters/web/@web-component';

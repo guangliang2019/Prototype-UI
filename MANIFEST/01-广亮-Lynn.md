@@ -1,12 +1,9 @@
 # 创作动机 | Motivation
 
-Q「如果已经有太多项目，比 Prototype UI 做的更好；如果根本就没人会用这套方案」
-Q「如果这一切都没有意义，那么为什么要坚持？」
-A「因为我“想”这么做」
+Q「如果已经有太多项目，比 Prototype UI 做的更好；如果根本就没人会用这套方案」Q「如果这一切都没有意义，那么为什么要坚持？」A「因为我“想”这么做」
 
-> Q: “What if too many projects already do better than Prototype UI?
-> Q: “What if no one ever uses it? What if none of this means anything?”  
-> A: “Because I *want* to do it.”
+> Q: “What if too many projects already do better than Prototype UI? Q: “What if no one ever uses it? What if none of this means anything?”  
+> A: “Because I _want_ to do it.”
 
 现实来说，如果苦学多年的画师，有了自己独特的画风，却看到 AI 仿照他的画风画的比他还像他，画师该摔家伙走人吗？  
 我觉得正式这样的考验，让创作本身的意义得以凸显，让我们能有机会直面自己身为创作者的本心。
@@ -23,7 +20,7 @@ Prototype UI 是一副作品，就像是孩子的涂鸦，它为什么非要有�
 > Prototype UI is a work — like a child's drawing. Why must it be "meaningful"?  
 > Even if no one helps me, I will joyfully complete it.  
 > I need no justification — the joy of creating is enough.  
-> And I will strive to make it *useful*, because utility is also part of the Prototype UI philosophy.
+> And I will strive to make it _useful_, because utility is also part of the Prototype UI philosophy.
 
 ---
 
@@ -32,14 +29,14 @@ Prototype UI 是一副作品，就像是孩子的涂鸦，它为什么非要有�
 ## 简要总结 | Summary
 
 - 交互本质由人类生理特质与设备媒介决定，故长期不变  
-  → 所以项目将纯粹的 HCI 提取成描述文件  
-- 实现生态分层，每层可独立拓展，定制成本不高  
+  → 所以项目将纯粹的 HCI 提取成描述文件
+- 实现生态分层，每层可独立拓展，定制成本不高
 - 产物不是“框架”或“库”，是一堆可复制、粘贴、按需修改的“代码”
 
 > - Interaction is shaped by human physiology and device interfaces — thus it changes slowly over time.  
->   → So Prototype UI extracts pure HCI logic into declarative files.  
-> - The system is layered: each layer can be extended independently at low cost.  
-> - This is not a “framework” or a “library” — it’s a set of modifiable, copy-paste-friendly *code*.
+>   → So Prototype UI extracts pure HCI logic into declarative files.
+> - The system is layered: each layer can be extended independently at low cost.
+> - This is not a “framework” or a “library” — it’s a set of modifiable, copy-paste-friendly _code_.
 
 ---
 
@@ -60,10 +57,10 @@ Prototype UI 的底层哲学是让交互变得纯粹：
 
 > The core philosophy of Prototype UI is to make **interaction pure**:
 
-- 人类长期内还需要依赖视觉、听觉、触觉  
+- 人类长期内还需要依赖视觉、听觉、触觉
 - 交互的媒介长期内还会是键鼠、触屏、阅读器、VR/AR、脑机接口等方式
 
-> - Humans will rely on vision, sound, and touch for the foreseeable future.  
+> - Humans will rely on vision, sound, and touch for the foreseeable future.
 > - Our interaction methods will remain — keyboards, touch, screen readers, VR/AR, neural input, etc.
 
 可以发现，交互的本质长期不变；  
@@ -79,32 +76,31 @@ Prototype UI 的底层哲学是让交互变得纯粹：
 
 交互原型 Prototype  
 → 技术适配 Adapter  
-→ 渲染组件 Component  
-→ 平台原生实例 Element
+→ 渲染组件 Component
 
 > Prototype (pure interaction model)  
 > → Adapter (translates to implementation)  
-> → Component (platform-native rendering instance)
+> → Component (framework-native/platform-native rendering instance)
 
-- Prototype：平台无关的交互描述，可扩展、可运行  
-- Adapter：高度模块化、可重组，用于翻译 Prototype 为原生组件  
+- Prototype：平台无关的交互描述，可扩展、可运行
+- Adapter：高度模块化、可重组，用于翻译 Prototype 为原生组件
 - Component：不属于项目关注范围，由 Adapter 产出并交由技术栈处理
 
-> - **Prototype** is the abstract interaction contract — extensible and executable, but framework-agnostic.  
-> - **Adapter** is a modular, recomposable layer that translates prototypes into actual component logic.  
+> - **Prototype** is the abstract interaction contract — extensible and executable, but framework-agnostic.
+> - **Adapter** is a modular, recomposable layer that translates prototypes into actual component logic.
 > - **Component** is the byproduct — rendering is delegated to the target tech stack.
 
 由此，项目形成了天然的生态分层：
 
 > This naturally creates an ecosystem-wide layering:
 
-- **设计师**只关注 Prototype（交互）；DSL 简单、可修改，逻辑表达力强  
-- **开发者**聚焦 Adapter 定制，一次性工作即可服务多个平台  
+- **设计师**只关注 Prototype（交互）；DSL 简单、可修改，逻辑表达力强
+- **开发者**聚焦 Adapter 定制，一次性工作即可服务多个平台
 - **业务方**直接使用 Component，可集成至 CI/CD，全平台一致性由设计部门主导
 
-> - Designers focus on *Prototypes*. The DSL is approachable and expressive enough to define logic directly.  
-> - Developers maintain *Adapters*, a one-time effort that supports multiple platforms.  
-> - Business teams consume generated *Components*, usable across platforms and pipelines, with consistency driven by design.
+> - Designers focus on _Prototypes_. The DSL is approachable and expressive enough to define logic directly.
+> - Developers maintain _Adapters_, a one-time effort that supports multiple platforms.
+> - Business teams consume generated _Components_, usable across platforms and pipelines, with consistency driven by design.
 
 此外，Prototype UI 可实现 0 运行时开销；生成的组件代码具备良好可读性，任意过程都可以增删拓展。
 

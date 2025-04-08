@@ -26,6 +26,7 @@ const asButton = <Props extends ButtonProps>(
   const focusVisible = p.state.define<boolean>(false, 'data-focus-visible');
   const active = p.state.define<boolean>(false, 'data-active');
 
+  // props
   p.props.define(DEFAULT_BUTTON_PROPS as Props);
 
   const handleDisabledChange = (disabled: boolean) => {

@@ -1,0 +1,19 @@
+<script>
+  // 使用 try-catch 来安全地检查环境变量
+  try {
+    if (import.meta.env.VITE_APP_ENV === 'production') {
+      window.va =
+        window.va ||
+        function () {
+          (window.vaq = window.vaq || []).push(arguments);
+        };
+
+      const script = document.createElement('script');
+      script.src = '/_vercel/insights/script.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  } catch (e) {
+    console.log('Development environment detected, Vercel Analytics disabled');
+  }
+</script>

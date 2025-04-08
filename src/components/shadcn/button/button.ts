@@ -12,10 +12,7 @@ export const ShadcnButtonPrototype = definePrototype<ShadcnButtonProps>({
 
     // props
     p.props.define({ variant: 'secondary', iconOnly: false });
-    p.props.watch(['variant'], () => {
-      // TODO:requestRender
-      console.log('watchProps', p.view.getElement());
-    });
+    p.props.watch(['variant'], () => p.view.update());
 
     // handle class names
     let _originalCls = '';

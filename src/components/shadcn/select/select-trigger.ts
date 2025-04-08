@@ -1,52 +1,51 @@
-import { PrototypeSelectTrigger } from '@/components/prototype/select';
-import './select-arrow';
-import { ShadcnSelectContext } from './interface';
-export default class ShadcnSelectTrigger extends PrototypeSelectTrigger<ShadcnSelectContext> {
-  protected _consumerKeys = ['shadcn-select', 'prototype-select'];
-  // 用户添加的 class 属性
-  private _class = '';
-  // 组件自身的 class 属性
-  private _computedClass = '';
-  private _arrowRef?: HTMLElement;
-  private _valueRef?: HTMLElement;
+import { asSelectTrigger } from '@/next-core/behaviors/as-select';
+import { ShadcnSelectContext, ShadcnSelectTriggerProps } from './interface';
+import { definePrototype, RendererAPI, WebComponentAdapter } from '@/next-core';
 
-  private _handleShadcnSelectContextChange = (context: ShadcnSelectContext['shadcn-select']) => {
-    if (this._arrowRef !== context.arrowRef) {
-      this._arrowRef?.remove();
-      this._arrowRef = context.arrowRef;
-    }
-    if (this._valueRef !== context.valueRef) {
-      this._valueRef?.remove();
-      this._valueRef = context.valueRef;
-    }
-  };
+const SHADCN_SELECT_TRIGGER_CLASS =
+  'shadcn-select-trigger cursor-pointer flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1';
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._class = this.className || '';
+export const ShadcnSelectTriggerPrototype = definePrototype<ShadcnSelectTriggerProps>({
+  setup: (p) => {
+    // role
+    p.context.watch(ShadcnSelectContext);
+    asSelectTrigger(p);
 
-    this._setup();
-    this.addContextListener('shadcn-select', this._handleShadcnSelectContextChange);
-  }
+    let _currentValueRef: HTMLElement | undefined;
+    let _currentArrowRef: HTMLElement | undefined;
+    let _dirty = false;
+    p.context.watch(ShadcnSelectContext, (context, changedKeys) => {
+      if (changedKeys.length === 0) return;
+      const { valueRef, arrowRef } = context;
+      if (_currentValueRef !== valueRef) _dirty = true;
+      if (_currentArrowRef !== arrowRef) _dirty = true;
+      if (_dirty) {
+        p.view.update();
+        _dirty = false;
+      }
+    });
 
-  disconnectedCallback() {
-    this.removeContextListener('shadcn-select', this._handleShadcnSelectContextChange);
-    super.disconnectedCallback();
-  }
+    return {
+      render: (renderer) => {
+        const root = p.view.getElement();
+        // class name
+        const className = root.className || '';
+        root.className = [SHADCN_SELECT_TRIGGER_CLASS, className].join(' ').trimEnd();
 
-  private _setup() {
-    this._computedClass =
-      'cursor-pointer flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1';
+        // 获取 context 中的 valueRef 和 arrowRef
+        const { valueRef, arrowRef } = p.context.get(ShadcnSelectContext);
 
-    if (!this.contains(this._contextValues['shadcn-select'].valueRef))
-      this.appendChild(this._contextValues['shadcn-select'].valueRef);
-    this._valueRef = this._contextValues['shadcn-select'].valueRef;
-    if (!this.contains(this._contextValues['shadcn-select'].arrowRef))
-      this.appendChild(this._contextValues['shadcn-select'].arrowRef);
-    this._arrowRef = this._contextValues['shadcn-select'].arrowRef;
+        _currentArrowRef?.remove();
+        _currentValueRef?.remove();
+        _currentValueRef = valueRef;
+        _currentArrowRef = arrowRef;
 
-    this.className = [this._computedClass, this._class].join(' ').trimEnd();
-  }
-}
+        return renderer.createFragment([valueRef, arrowRef]);
+      },
+    };
+  },
+});
+
+export const ShadcnSelectTrigger = WebComponentAdapter(ShadcnSelectTriggerPrototype);
 
 customElements.define('shadcn-select-trigger', ShadcnSelectTrigger);

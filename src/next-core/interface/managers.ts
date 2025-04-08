@@ -222,7 +222,7 @@ export interface ContextManager {
    * @param context Context 实例
    * @param value Context 值
    */
-  consumeContext<T>(context: Context<T>, value: T): void;
+  consumeContext<T>(context: Context<T>): void;
 
   /**
    * 更新消费的 Context 值
@@ -245,4 +245,12 @@ export interface ContextManager {
    * @param context Context 实例
    */
   getConsumedValue<T>(context: Context<T>): T | undefined;
+}
+
+// 定义视图状态
+export enum ViewState {
+  NORMAL = 'normal', // 正常状态
+  RESTRUCTURING = 'restructuring', // 结构重组中
+  INITIALIZING = 'initializing', // 初始化中
+  SUSPENDED = 'suspended', // 挂起状态
 }

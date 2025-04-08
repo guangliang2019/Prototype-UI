@@ -10,16 +10,10 @@ import {
 import { Prototype } from './prototype';
 
 export type ElementType = string | Prototype<any> | Component | symbol;
-export type ElementChild = string | number | boolean | null | undefined | Element | VirtualElement;
+export type ElementChild = string | number | boolean | null | undefined | Element;
 
 export type ElementChildren = ElementChild | ElementChild[];
 
-export interface VirtualElement {
-  type: ElementType;
-  props: ElementProps;
-  children: ElementChildren[];
-  key?: string | number;
-}
 export interface ElementProps {
   // 基础属性
   id?: string;
@@ -46,17 +40,13 @@ export interface RendererContext {
   attributeManager: AttributeManager;
   lifecycleManager: LifecycleManager;
   stateManager: StateManager;
-  propsManager: PropsManager;
+  propsManager: PropsManager<any>;
 }
 
 export interface RendererAPI {
-  createElement(
-    type: ElementType,
-    props?: ElementProps,
-    children?: ElementChildren[]
-  ): Element | VirtualElement;
+  createElement(type: ElementType, props?: ElementProps, children?: ElementChildren[]): Element;
 
-  createText(content: string): Text | VirtualElement;
-  createComment(content: string): Comment | VirtualElement;
-  readonly Fragment: symbol;
+  createText(content: string): Text;
+  createComment(content: string): Comment;
+  createFragment(children?: ElementChildren[]): Element;
 }

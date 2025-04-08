@@ -1,18 +1,42 @@
-import { definePrototype } from '@/core';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { definePrototype, WebComponentAdapter } from '@/next-core';
 import {
   asSelect,
   asSelectContent,
   asSelectItem,
   asSelectTrigger,
   asSelectValue,
-} from '@/core/components/select';
+} from '@/next-core/behaviors/as-select';
 
-export const PrototypeSelect = WebComponentAdapter(definePrototype(asSelect));
-export const PrototypeSelectTrigger = WebComponentAdapter(definePrototype(asSelectTrigger));
-export const PrototypeSelectContent = WebComponentAdapter(definePrototype(asSelectContent));
-export const PrototypeSelectItem = WebComponentAdapter(definePrototype(asSelectItem));
-export const PrototypeSelectValue = WebComponentAdapter(definePrototype(asSelectValue));
+export const PrototypeSelect = WebComponentAdapter(
+  definePrototype({
+    displayName: 'prototype-select',
+    setup: asSelect,
+  })
+);
+export const PrototypeSelectTrigger = WebComponentAdapter(
+  definePrototype({
+    displayName: 'prototype-select-trigger',
+    setup: asSelectTrigger,
+  })
+);
+export const PrototypeSelectContent = WebComponentAdapter(
+  definePrototype({
+    displayName: 'prototype-select-content',
+    setup: asSelectContent,
+  })
+);
+export const PrototypeSelectItem = WebComponentAdapter(
+  definePrototype({
+    displayName: 'prototype-select-item',
+    setup: asSelectItem,
+  })
+);
+export const PrototypeSelectValue = WebComponentAdapter(
+  definePrototype({
+    displayName: 'prototype-select-value',
+    setup: asSelectValue,
+  })
+);
 
 customElements.define('prototype-select', PrototypeSelect);
 customElements.define('prototype-select-trigger', PrototypeSelectTrigger);

@@ -9,28 +9,29 @@ const asSelectContent = (p: PrototypeAPI<SelectContentProps>) => {
   // role
   const { actions } = asOverlay(p);
 
-  p.lifecycle.onCreated(() => {
-    const props = p.props.get();
-    props.onVisibleChange = (visible) => {
-      const context = p.context.get(SelectContext);
-      const _element = p.view.getElement();
-      switch (visible) {
-        case true:
-          if (context.selecting.value) return;
-          context.selecting.set(true);
-          _element.style.width = context.width + 'px';
-          break;
-        case false:
-          if (!context.selecting.value) return;
-          context.triggerRef.focus();
-          context.selecting.set(false);
-          break;
-      }
-    };
-    props.clickOutsideInterceptor = (e) => {
-      const context = p.context.get(SelectContext);
-      return e.target === context.triggerRef;
-    };
+  p.lifecycle.onMounted(() => {
+    p.props.set({
+      onVisibleChange: (visible) => {
+        const context = p.context.get(SelectContext);
+        const _element = p.view.getElement();
+        switch (visible) {
+          case true:
+            if (context.selecting.value) return;
+            context.selecting.set(true);
+            _element.style.width = context.width + 'px';
+            break;
+          case false:
+            if (!context.selecting.value) return;
+            context.triggerRef.focus();
+            context.selecting.set(false);
+            break;
+        }
+      },
+      clickOutsideInterceptor: (e) => {
+        const context = p.context.get(SelectContext);
+        return e.target !== context.triggerRef;
+      },
+    });
   });
 
   p.lifecycle.onMounted(() => {
