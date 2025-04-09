@@ -22,7 +22,7 @@ const asSelectContent = (p: PrototypeAPI<SelectContentProps>) => {
             break;
           case false:
             if (!context.selecting.value) return;
-            context.triggerRef.focus();
+            context.focus();
             context.selecting.set(false);
             break;
         }
