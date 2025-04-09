@@ -1,10 +1,10 @@
 import { ShadcnSelectContext } from './interface';
-import { definePrototype, RendererAPI, WebComponentAdapter } from '@/next-core';
-import { SelectContext } from '@/next-core/behaviors/as-select';
+import { definePrototype, RendererAPI, WebComponentAdapter } from '@/core';
+import { SelectContext } from '@/core/behaviors/as-select';
 import { CONFIG } from '../_config';
 
 export const ShadcnSelectArrowPrototype = definePrototype<{}>({
-  displayName: 'shadcn-select-arrow',
+  name: 'shadcn-select-arrow',
   setup: (p) => {
     p.context.watch(SelectContext);
     p.context.watch(ShadcnSelectContext);
@@ -19,7 +19,6 @@ export const ShadcnSelectArrowPrototype = definePrototype<{}>({
     return {
       render: (renderer: RendererAPI) => {
         const h = renderer.createElement;
-        console.log(p.view.getElement());
         const element = h(
           'svg',
           {
@@ -42,8 +41,6 @@ export const ShadcnSelectArrowPrototype = definePrototype<{}>({
             }),
           ]
         ) as HTMLElement;
-        console.log('arrow');
-        console.log(element);
         return element;
       },
     };
@@ -51,5 +48,3 @@ export const ShadcnSelectArrowPrototype = definePrototype<{}>({
 });
 
 export const ShadcnSelectArrow = WebComponentAdapter(ShadcnSelectArrowPrototype);
-
-customElements.define(`${CONFIG.shadcn.prefix}-select-arrow`, ShadcnSelectArrow);

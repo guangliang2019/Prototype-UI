@@ -1,7 +1,8 @@
-import { definePrototype, WebComponentAdapter } from '@/next-core';
-import { asTabsContent, TabsContentProps } from '@/next-core/behaviors/as-tabs';
-
+import { definePrototype, WebComponentAdapter } from '@/core';
+import { asTabsContent, TabsContentProps } from '@/core/behaviors/as-tabs';
+import { CONFIG } from '../_config';
 export const ShadcnTabsContentPrototype = definePrototype<TabsContentProps>({
+  name: `${CONFIG.shadcn.prefix}-tabs-content`,
   setup: (p) => {
     asTabsContent(p);
 
@@ -22,5 +23,3 @@ export const ShadcnTabsContentPrototype = definePrototype<TabsContentProps>({
 });
 
 export const ShadcnTabsContent = WebComponentAdapter(ShadcnTabsContentPrototype);
-
-customElements.define('shadcn-tabs-content', ShadcnTabsContent);

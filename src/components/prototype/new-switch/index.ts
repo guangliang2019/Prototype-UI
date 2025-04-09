@@ -1,12 +1,17 @@
-import { definePrototype } from '@/core';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
-import { asSwitch, asSwitchThumb } from '@/core/components/switch';
+import { definePrototype, WebComponentAdapter } from '@/core';
+import { asSwitch, asSwitchThumb } from '@/core/behaviors/as-switch';
 
-export const PrototypeSwitch = WebComponentAdapter(definePrototype(asSwitch));
-export const PrototypeSwitchThumb = WebComponentAdapter(definePrototype(asSwitchThumb));
+export const PrototypeSwitch = WebComponentAdapter(
+  definePrototype({
+    name: 'prototype-new-switch',
+    setup: asSwitch,
+  })
+);
+export const PrototypeSwitchThumb = WebComponentAdapter(
+  definePrototype({
+    name: 'prototype-new-switch-thumb',
+    setup: asSwitchThumb,
+  })
+);
 
-
-customElements.define('prototype-new-switch', PrototypeSwitch);
-customElements.define('prototype-new-switch-thumb', PrototypeSwitchThumb);
-
-export default PrototypeSwitch; 
+export default PrototypeSwitch;

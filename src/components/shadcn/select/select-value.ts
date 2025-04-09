@@ -1,10 +1,10 @@
 import { ShadcnSelectContext, ShadcnSelectValueProps } from './interface';
-import { definePrototype, RendererAPI, WebComponentAdapter } from '@/next-core';
-import { asSelectValue } from '@/next-core/behaviors/as-select';
+import { definePrototype, RendererAPI, WebComponentAdapter } from '@/core';
+import { asSelectValue } from '@/core/behaviors/as-select';
 import { CONFIG } from '../_config';
 
 export const ShadcnSelectValuePrototype = definePrototype<ShadcnSelectValueProps>({
-  displayName: 'shadcn-select-value',
+  name: `${CONFIG.shadcn.prefix}-select-value`,
   setup: (p) => {
     const { render: renderSelectValue } = asSelectValue(p);
 
@@ -25,5 +25,3 @@ export const ShadcnSelectValuePrototype = definePrototype<ShadcnSelectValueProps
 });
 
 export const ShadcnSelectValue = WebComponentAdapter(ShadcnSelectValuePrototype);
-
-customElements.define(`${CONFIG.shadcn.prefix}-select-value`, ShadcnSelectValue);

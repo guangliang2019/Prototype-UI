@@ -1,7 +1,9 @@
-import { definePrototype, WebComponentAdapter } from '@/next-core';
-import { asTabsTrigger, TabsTriggerProps } from '@/next-core/behaviors/as-tabs';
+import { definePrototype, WebComponentAdapter } from '@/core';
+import { asTabsTrigger, TabsTriggerProps } from '@/core/behaviors/as-tabs';
+import { CONFIG } from '../_config';
 
 export const ShadcnTabsTriggerPrototype = definePrototype<TabsTriggerProps>({
+  name: `${CONFIG.shadcn.prefix}-tabs-trigger`,
   setup: (p) => {
     asTabsTrigger(p);
 
@@ -22,5 +24,3 @@ export const ShadcnTabsTriggerPrototype = definePrototype<TabsTriggerProps>({
 });
 
 export const ShadcnTabsTrigger = WebComponentAdapter(ShadcnTabsTriggerPrototype);
-
-customElements.define('shadcn-tabs-trigger', ShadcnTabsTrigger);

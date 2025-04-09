@@ -1,11 +1,11 @@
-import { createContext } from '@/next-core';
+import { createContext } from '@/core';
 import {
   SelectProps,
   SelectContentProps,
   SelectItemProps,
   SelectTriggerProps,
   SelectValueProps,
-} from '@/next-core/behaviors/as-select';
+} from '@/core/behaviors/as-select';
 
 export interface ShadcnSelectProps extends SelectProps {}
 
