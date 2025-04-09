@@ -1,11 +1,9 @@
-import { definePrototype, WebComponentAdapter } from '@/next-core';
-import { asButton, ButtonProps } from '@/next-core/behaviors/as-button';
+import { definePrototype, WebComponentAdapter } from '@/core';
+import { asButton, ButtonProps } from '@/core/behaviors/as-button';
 
-export const PrototypeButton = WebComponentAdapter(
+export const PrototypeButton = WebComponentAdapter<ButtonProps>(
   definePrototype({
-    displayName: 'prototype-button',
+    name: 'prototype-button',
     setup: asButton,
   })
 );
-
-customElements.define('prototype-button', PrototypeButton);

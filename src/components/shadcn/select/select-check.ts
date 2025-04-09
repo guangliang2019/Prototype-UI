@@ -1,10 +1,10 @@
 import { ShadcnSelectContext } from './interface';
-import { definePrototype, RendererAPI, WebComponentAdapter } from '@/next-core';
-import { SelectContext } from '@/next-core/behaviors/as-select';
+import { definePrototype, RendererAPI, WebComponentAdapter } from '@/core';
+import { SelectContext } from '@/core/behaviors/as-select';
 import { CONFIG } from '../_config';
 
 export const ShadcnSelectCheckPrototype = definePrototype<{}>({
-  displayName: 'shadcn-select-check',
+  name: 'shadcn-select-check',
   setup: (p) => {
     p.context.watch(SelectContext);
     p.context.watch(ShadcnSelectContext);
@@ -48,5 +48,3 @@ export const ShadcnSelectCheckPrototype = definePrototype<{}>({
 });
 
 export const ShadcnSelectCheck = WebComponentAdapter(ShadcnSelectCheckPrototype);
-
-customElements.define(`${CONFIG.shadcn.prefix}-select-check`, ShadcnSelectCheck);

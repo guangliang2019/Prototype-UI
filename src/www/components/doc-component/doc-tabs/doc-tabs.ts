@@ -4,8 +4,8 @@ import {
   PrototypeTabsIndicator,
   PrototypeTabsTrigger,
 } from '@/components/prototype/tabs';
-import { CONTEXT_MANAGER_SYMBOL } from '@/next-core';
-import { TabsContext, TabsContextType } from '@/next-core/behaviors/as-tabs';
+import { CONTEXT_MANAGER_SYMBOL } from '@/core';
+import { TabsContext, TabsContextType } from '@/core/behaviors/as-tabs';
 
 class DocTabs extends PrototypeTabs {
   connectedCallback() {

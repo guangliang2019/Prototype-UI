@@ -1,7 +1,8 @@
-import { definePrototype, WebComponentAdapter } from '@/next-core';
-import { TabsContext } from '@/next-core/behaviors/as-tabs';
-
+import { definePrototype, WebComponentAdapter } from '@/core';
+import { TabsContext } from '@/core/behaviors/as-tabs';
+import { CONFIG } from '../_config';
 export const ShadcnTabsListPrototype = definePrototype({
+  name: `${CONFIG.shadcn.prefix}-tabs-list`,
   setup: (p) => {
     p.context.watch(TabsContext);
 
@@ -22,5 +23,3 @@ export const ShadcnTabsListPrototype = definePrototype({
 });
 
 export const ShadcnTabsList = WebComponentAdapter(ShadcnTabsListPrototype);
-
-customElements.define('shadcn-tabs-list', ShadcnTabsList);

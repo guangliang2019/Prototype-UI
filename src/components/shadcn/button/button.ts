@@ -1,11 +1,11 @@
-import { definePrototype, WebComponentAdapter } from '@/next-core';
-import { asButton } from '@/next-core/behaviors/as-button';
+import { definePrototype, WebComponentAdapter } from '@/core';
+import { asButton } from '@/core/behaviors/as-button';
 import { ShadcnButtonProps } from './interface';
 import { CONFIG } from '../_config';
 import { optimizeTailwindClasses } from '@/www/utils/tailwind';
 
 export const ShadcnButtonPrototype = definePrototype<ShadcnButtonProps>({
-  displayName: 'shadcn-button',
+  name: 'shadcn-button',
   setup: (p) => {
     // role
     asButton(p);
@@ -71,5 +71,3 @@ export const ShadcnButtonPrototype = definePrototype<ShadcnButtonProps>({
 });
 
 export const ShadcnButton = WebComponentAdapter(ShadcnButtonPrototype);
-
-customElements.define(`${CONFIG.shadcn.prefix}-button`, ShadcnButton);

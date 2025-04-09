@@ -1,27 +1,27 @@
 import './style.css';
-import { definePrototype, PrototypeAPI, WebComponentAdapter } from '@/next-core';
+import { definePrototype, WebComponentAdapter } from '@/core';
 import {
   asTabs,
   asTabsContent,
   asTabsIndicator,
   asTabsTrigger,
   TabsContentProps,
-} from '@/next-core/behaviors/as-tabs';
+} from '@/core/behaviors/as-tabs';
 
 export const PrototypeTabs = WebComponentAdapter(
   definePrototype({
-    displayName: 'prototype-tabs',
+    name: 'prototype-tabs',
     setup: asTabs,
   })
 );
 export const PrototypeTabsTrigger = WebComponentAdapter(
   definePrototype({
-    displayName: 'prototype-tabs-trigger',
+    name: 'prototype-tabs-trigger',
     setup: asTabsTrigger,
   })
 );
 export const PrototypeTabsContent = WebComponentAdapter<TabsContentProps>({
-  displayName: 'prototype-tabs-content',
+  name: 'prototype-tabs-content',
   setup: (p) => {
     // role
     asTabsContent(p);
@@ -43,11 +43,6 @@ export const PrototypeTabsContent = WebComponentAdapter<TabsContentProps>({
   },
 });
 export const PrototypeTabsIndicator = WebComponentAdapter({
-  displayName: 'prototype-tabs-indicator',
+  name: 'prototype-tabs-indicator',
   setup: asTabsIndicator,
 });
-
-customElements.define('prototype-tabs', PrototypeTabs);
-customElements.define('prototype-tabs-trigger', PrototypeTabsTrigger);
-customElements.define('prototype-tabs-content', PrototypeTabsContent);
-customElements.define('prototype-tabs-indicator', PrototypeTabsIndicator);

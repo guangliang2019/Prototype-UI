@@ -8,9 +8,8 @@ import './components/prototype';
 import './examples';
 
 import '@/components/lucide/chevrons-up-down';
-import { RouteChange } from '../router';
-import { WebComponent } from '@/core/adapter/web-component';
-import { TabsProps } from '@/core/components/tabs';
+import { RouteChange, Router } from '../router';
+import { TabsExpose } from '@/core/behaviors/as-tabs/interface';
 
 export default class AppRoot extends HTMLElement {
   connectedCallback() {
@@ -30,7 +29,7 @@ export default class AppRoot extends HTMLElement {
   };
 
   disconnectedCallback() {
-    // Router.getInstance().removeGuard(this._handleRouteChange);
+    Router.getInstance().removeGuard(this._handleRouteChange);
     this._changeNav = () => {};
     this._changeDocs = () => {};
     window
@@ -71,7 +70,7 @@ export default class AppRoot extends HTMLElement {
   };
 
   private _setup() {
-    // Router.getInstance().addGuard(this._handleRouteChange);
+    Router.getInstance().addGuard(this._handleRouteChange);
 
     const docsTab = h(
       'prototype-tabs',
@@ -86,7 +85,7 @@ export default class AppRoot extends HTMLElement {
         h('shadcn-docs'),
         h('prototype-docs'),
       ]
-    ) as WebComponent<TabsProps>;
+    ) as HTMLElement & TabsExpose;
     const navTab = h('prototype-tabs', { 'default-value': 'docs' }, [
       h('website-nav'),
       h('main', { class: 'flex-1 flex justify-center' }, [
@@ -94,9 +93,10 @@ export default class AppRoot extends HTMLElement {
         h('prototype-tabs-content', { value: 'components' }, ['components']),
         h('prototype-tabs-content', { value: 'examples' }, [h('examples-page')]),
       ]),
-    ]) as WebComponent<TabsProps>;
-    this._changeNav = navTab.changTab ?? (() => {});
-    this._changeDocs = docsTab.changTab ?? (() => {});
+    ]) as HTMLElement & TabsExpose;
+
+    this._changeNav = navTab.changeTab ?? (() => {});
+    this._changeDocs = docsTab.changeTab ?? (() => {});
     const content = h('div', { id: 'app' }, [h('prototype-overlay-provider', {}, [navTab])]);
 
     this.appendChild(content);

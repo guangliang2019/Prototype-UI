@@ -6,25 +6,30 @@
  * @date 2024-08-11
  */
 
-import useClickOutside from '@/core/hooks/use-click-outside';
-import { definePrototype, useCreated } from '@/core';
-import { WebComponentAdapter } from '@/core/adapter/web-component';
+import { definePrototype } from '@/core';
 
-interface ClickOutsideProps {
+interface ClickOutsideExposes {
   onClickOutside: (event: MouseEvent) => void;
 }
 
-const DEFAULT_CLICK_OUTSIDE_PROPS = {
-  onClickOutside: (_: MouseEvent) => {},
-};
+const ClickOutside = definePrototype<{}, {}, {}, ClickOutsideExposes>({
+  name: 'click-outside',
+  setup: (p) => {
+    const exposes: ClickOutsideExposes = {
+      onClickOutside: () => {},
+    };
 
-const ClickOutside = definePrototype<ClickOutsideProps>((self) => {
-  useCreated(self, () => {
-    self.componentRef.onClickOutside = DEFAULT_CLICK_OUTSIDE_PROPS['onClickOutside'];
-  });
-  useClickOutside(self, (e) => self.onClickOutside(e));
+    p.event.onGlobal('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.contains(p.view.getElement())) {
+        exposes.onClickOutside(e);
+      }
+    });
+
+    return {
+      exposes,
+    };
+  },
 });
 
 export default ClickOutside;
-
-customElements.define('click-outside', WebComponentAdapter(ClickOutside));

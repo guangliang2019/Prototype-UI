@@ -1,10 +1,10 @@
-import { asSelect } from '@/next-core/behaviors/as-select';
+import { asSelect } from '@/core/behaviors/as-select';
 import { CONFIG } from '../_config';
 import { ShadcnSelectContext, ShadcnSelectContextType, ShadcnSelectProps } from './interface';
-import { definePrototype, WebComponentAdapter } from '@/next-core';
+import { definePrototype, WebComponentAdapter } from '@/core';
 
 export const ShadcnSelectPrototype = definePrototype<ShadcnSelectProps>({
-  displayName: 'shadcn-select',
+  name: `${CONFIG.shadcn.prefix}-select`,
   setup: (p) => {
     asSelect(p);
 
@@ -38,5 +38,3 @@ export const ShadcnSelectPrototype = definePrototype<ShadcnSelectProps>({
 });
 
 export const ShadcnSelect = WebComponentAdapter(ShadcnSelectPrototype);
-
-customElements.define(`${CONFIG.shadcn.prefix}-select`, ShadcnSelect);
