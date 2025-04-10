@@ -81,7 +81,7 @@ export default class AppRoot extends HTMLElement {
       [
         h('website-aside'),
         h('doc-introduction'),
-        h('doc-pdsl'),
+        h('doc-quick-start'),
         h('shadcn-docs'),
         h('prototype-docs'),
       ]

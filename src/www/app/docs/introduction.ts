@@ -6,7 +6,7 @@ class DocIntroduction extends DocComponent {
     title: 'Introduction',
     id: 'docs-introduction',
     desc: 'A UI component generation solution that starts from the essence of interaction',
-    route: ['Docs', 'introduction'],
+    route: ['Docs', 'Introduction'],
     links: [],
     sections: [
       {
@@ -24,16 +24,24 @@ class DocIntroduction extends DocComponent {
         ],
       },
       {
-        title: 'How to use',
+        title: 'Project Status',
         contents: [
           {
             type: 'markdown',
             key: '',
-            content: `At this stage, you can directly package the website's JS and CSS files and include them in your project. In other words, it's not ready for use yet.
-            
-            In the future, a CLI will be used to write components directly into your project.
-            
-            If you need to use it now, you can directly take the project source code.
+            content: `
+            🚧 This project is currently in early development stage.
+
+            ### What's Available
+            - Basic Web Component implementation
+            - Documentation site (you're looking at it)
+            - Core prototype system
+
+            ### What's Coming
+            - CLI tool for component installation
+            - More component implementations
+            - More theme options
+            - Framework adapters (React, Vue, etc.)
             `,
           },
         ],
@@ -59,17 +67,36 @@ class DocIntroduction extends DocComponent {
         ],
       },
       {
-        title: 'Project Milestones',
+        title: 'Get Involved',
         contents: [
           {
             type: 'markdown',
             key: '',
             content: `
-            Phase One: First, clarify the Prototype syntax. The initial platforms chosen for implementation are Web Component and pure JavaScript, followed by popular web frontend frameworks like React. We will also improve the documentation site and refine the user experience.
+            We're in the early stages of development and would love your input!
 
-            Phase Two: Adapt to other platforms like Qt and Flutter. Meanwhile, we will expand Prototype's capabilities and provide more prototype-based design language themes.
+            ### How to Contribute
+            - Star the project on [GitHub](https://github.com/guangliang2019/Prototype-UI)
+            - Open issues to discuss ideas or report bugs
+            - Submit pull requests for improvements
+            - Share your thoughts in discussions
 
-            Currently in the early stages of Phase One. If you share similar ideas with us, you're welcome to contribute.
+            ### Development Roadmap
+            1. Phase One: Web Platform
+               - Complete core prototype system
+               - Implement basic components
+               - Build CLI tool
+               - Improve documentation
+
+            2. Phase Two: Cross Platform
+               - Add framework adapters
+               - Support more platforms
+               - Expand design language themes
+
+            ### Current Focus
+            - Stabilizing the core prototype system
+            - Implementing basic components
+            - Building the documentation site
             `,
           },
         ],
