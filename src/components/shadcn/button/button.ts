@@ -5,7 +5,7 @@ import { CONFIG } from '../_config';
 import { optimizeTailwindClasses } from '@/www/utils/tailwind';
 
 export const ShadcnButtonPrototype = definePrototype<ShadcnButtonProps>({
-  name: 'shadcn-button',
+  name: `${CONFIG.shadcn.prefix}-button`,
   setup: (p) => {
     // role
     asButton(p);

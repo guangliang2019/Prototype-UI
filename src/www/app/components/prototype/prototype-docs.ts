@@ -1,5 +1,5 @@
 // 该文件是 dev-cli 自动生成的，请勿手动修改
-// 如需添加新的文档，请运行 npm run dev-cli 
+// 如需添加新的文档，请运行 npm run dev-cli
 
 import './transition';
 import './select';

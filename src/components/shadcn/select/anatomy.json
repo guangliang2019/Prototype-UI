@@ -1,0 +1,35 @@
+{
+  "name": "shadcn-select",
+  "description": "Select 组件的根容器，提供上下文和状态管理",
+  "children": [
+    {
+      "name": "shadcn-select-trigger",
+      "description": "触发下拉菜单的按钮",
+      "default": true,
+      "children": [
+        {
+          "name": "shadcn-select-value",
+          "description": "显示选中值的容器",
+          "default": true
+        },
+        {
+          "name": "shadcn-select-arrow",
+          "description": "指示下拉状态的箭头图标",
+          "default": true
+        }
+      ]
+    },
+    {
+      "name": "shadcn-select-content",
+      "description": "下拉菜单的内容容器",
+      "default": true,
+      "children": [
+        {
+          "name": "shadcn-select-item",
+          "description": "下拉菜单的选项",
+          "teleport": true
+        }
+      ]
+    }
+  ]
+}

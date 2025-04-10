@@ -5,62 +5,98 @@ class DocIntroduction extends DocComponent {
   protected _doc: Doc = {
     title: 'Introduction',
     id: 'docs-introduction',
-    desc: 'The web component version of Headless UI & Shadcn/ui. Still in progress.',
-    route: ['Docs', 'introduction'],
+    desc: 'A UI component generation solution that starts from the essence of interaction',
+    route: ['Docs', 'Introduction'],
     links: [],
     sections: [
       {
-        title: '',
+        title: 'What is this',
         contents: [
           {
             type: 'markdown',
             key: '',
-            content: `### 这是什么？
-            此项目的名称为 [Prototype UI](https://github.com/guangliang2019/Prototype-UI), 正在开发中, 欢迎你的贡献。
+            content: `
+            This project is named [Prototype UI](https://github.com/guangliang2019/Prototype-UI), a component generation solution based on Prototype.
 
-            这是一个使用 Web Component 搭建的无渲染 UI 库, 简单来说, 它包含了所有的 UI 交互逻辑, 但唯独不包括样式, 它可以被塑造为任何你希望的样子。并且由于实现方案是 Web Component, 所以它可以在任何 Web 框架中使用，那怕是纯 HTML。
+            Currently in its early stages, it appears to be a Web Component or pure JavaScript version of [Radix UI](https://www.radix-ui.com/). Additionally, the documentation site and component styles are inspired by [shadcn/ui](https://ui.shadcn.com).
+            `,
+          },
+        ],
+      },
+      {
+        title: 'Project Status',
+        contents: [
+          {
+            type: 'markdown',
+            key: '',
+            content: `
+            🚧 This project is currently in early development stage.
+
+            ### What's Available
+            - Basic Web Component implementation
+            - Documentation site (you're looking at it)
+            - Core prototype system
+
+            ### What's Coming
+            - CLI tool for component installation
+            - More component implementations
+            - More theme options
+            - Framework adapters (React, Vue, etc.)
+            `,
+          },
+        ],
+      },
+      {
+        title: 'Why we do this',
+        contents: [
+          {
+            type: 'markdown',
+            key: '',
+            content: `
+            The design philosophy of Prototype UI is \`Adapter(Prototype) => Component\`
+
+            We have used too many technologies to build interfaces, such as React, Vue, Svelte, Solid for the web, native Flutter, Qt, etc. Every time we write UI, we always start with components like Button. We've written Button too many times, yet their interactive essence remains the same.
+
+            Prototype UI hopes to find a balance between interaction and development, seeking a solution that is adaptable enough for all platforms while starting from the essence of interaction.
             
-            你可以认为这是 [Radix UI](https://www.radix-ui.com/) 或者 [Headless UI](https://headlessui.com/) 的 Web Component 版本。
+            When the next operating system emerges, we won't need to develop a new set of UI libraries for each design language; when the next design language appears, we won't need to struggle to adapt it to all technical solutions.
+
+            Perhaps when the next interaction system appears, we can have a more reasonable starting point, rather than rewriting Button over and over again.
             `,
           },
         ],
       },
       {
-        title: '',
+        title: 'Get Involved',
         contents: [
           {
             type: 'markdown',
             key: '',
-            content: `### 如何使用
-            有两种安装方式，一种是直接通过\`script\`标签引入，另一种是借由 NPM CLI 工具安装, 其中后者会把项目源码连带注释直接写到你的项目里。后者是受到 [shadcn/ui](https://ui.shadcn.com) 的启发。
-            `,
-          },
-        ],
-      },
-      {
-        title: '',
-        contents: [
-          {
-            type: 'markdown',
-            key: '',
-            content: `### 特性
-            - 按需安装, 小到极致
-            - 完全的键盘交互支持
-            - 提供流行的 UI 库样式, 支持样式完全自定制
-            - 不使用 Shadow DOM, 无样式隔离
-            - 无 XSS 漏洞
-            `,
-          },
-        ],
-      },
-      {
-        title: '',
-        contents: [
-          {
-            type: 'markdown',
-            key: '',
-            content: `### 欢迎共建
-            - [Github](https://github.com/guangliang2019/Prototype-UI)
+            content: `
+            We're in the early stages of development and would love your input!
+
+            ### How to Contribute
+            - Star the project on [GitHub](https://github.com/guangliang2019/Prototype-UI)
+            - Open issues to discuss ideas or report bugs
+            - Submit pull requests for improvements
+            - Share your thoughts in discussions
+
+            ### Development Roadmap
+            1. Phase One: Web Platform
+               - Complete core prototype system
+               - Implement basic components
+               - Build CLI tool
+               - Improve documentation
+
+            2. Phase Two: Cross Platform
+               - Add framework adapters
+               - Support more platforms
+               - Expand design language themes
+
+            ### Current Focus
+            - Stabilizing the core prototype system
+            - Implementing basic components
+            - Building the documentation site
             `,
           },
         ],

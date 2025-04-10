@@ -4,7 +4,7 @@ import { SelectContext } from '@/core/behaviors/as-select';
 import { CONFIG } from '../_config';
 
 export const ShadcnSelectArrowPrototype = definePrototype<{}>({
-  name: 'shadcn-select-arrow',
+  name: `${CONFIG.shadcn.prefix}-select-arrow`,
   setup: (p) => {
     p.context.watch(SelectContext);
     p.context.watch(ShadcnSelectContext);

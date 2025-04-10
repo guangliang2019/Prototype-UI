@@ -80,10 +80,12 @@ export default class AppRoot extends HTMLElement {
       },
       [
         h('website-aside'),
-        h('doc-introduction'),
-        h('doc-pdsl'),
-        h('shadcn-docs'),
-        h('prototype-docs'),
+        h('div', { class: 'w-full flex flex-col' }, [
+          h('doc-introduction'),
+          h('doc-quick-start'),
+          h('shadcn-docs'),
+          h('prototype-docs'),
+        ]),
       ]
     ) as HTMLElement & TabsExpose;
     const navTab = h('prototype-tabs', { 'default-value': 'docs' }, [
