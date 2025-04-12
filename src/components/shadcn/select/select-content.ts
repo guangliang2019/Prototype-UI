@@ -1,6 +1,7 @@
 import { ShadcnSelectContentProps, ShadcnSelectContext } from './interface';
 import { definePrototype, WebComponentAdapter } from '@/core';
 import { asSelectContent } from '@/core/behaviors/as-select';
+import { CONFIG } from '../_config';
 
 const flexCls = 'flex flex-col items-start';
 const positionCls = 'absolute z-50 top-10';
@@ -24,7 +25,7 @@ const SHADCN_SELECT_CONTENT_CLASS = [
   .trimEnd();
 
 export const ShadcnSelectContentPrototype = definePrototype<ShadcnSelectContentProps>({
-  name: 'shadcn-select-content',
+  name: `${CONFIG.shadcn.prefix}-select-content`,
   setup: (p) => {
     // role
     asSelectContent(p);

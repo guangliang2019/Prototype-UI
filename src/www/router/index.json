@@ -6,9 +6,9 @@
       "href": "/docs/introduction"
     },
     {
-      "title": "PDSL",
-      "value": "docs-pdsl",
-      "href": "/docs/pdsl"
+      "title": "Quick Start",
+      "value": "docs-quick-start",
+      "href": "/docs/quick-start"
     }
   ],
   "Shadcn UI": [

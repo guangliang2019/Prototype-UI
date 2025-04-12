@@ -23,6 +23,7 @@ export default abstract class DocComponent extends ContextProvider<{
         "DocComponent should be initialized with '_doc' property before connectedCallback"
       );
     }
+    // this.className = 'w-full';
 
     const sections = this._doc.sections;
     const content = PrototypeTabsContent({ value: this._doc.id }, [
@@ -32,7 +33,7 @@ export default abstract class DocComponent extends ContextProvider<{
             'lg:ml-[calc(2.5rem+240px)] md:ml-[calc(2rem+220px)] flex relative flex-1 py-6 lg:gap-10 items-start justify-between  lg:py-8 max-w-[1104px] lg:w-[calc(100vw-240px-4rem)] md:w-[calc(100vw-220px-6rem)] sm:w-full xs:w-[100vw]',
         },
         [
-          Div({ class: 'w-full' }, [
+          Div({ class: 'w-full max-w-[764px]' }, [
             h('doc-breadcrumb'),
             Div({ class: 'space-y-2' }, [
               h('h1', { class: 'scroll-m-20 text-3xl font-bold tracking-tight' }, [
@@ -58,7 +59,7 @@ export default abstract class DocComponent extends ContextProvider<{
                       'h2',
                       {
                         class:
-                          'font-heading mt-12 scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0',
+                          'font-heading mt-12 scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-4',
                         id: sections.title,
                       },
                       [

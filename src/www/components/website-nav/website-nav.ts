@@ -20,15 +20,16 @@ export default class WebsiteNav extends HTMLElement {
         },
         [
           Div({ class: 'container flex h-14 items-center' }, [
-            Span({ class: 'font-bold mr-6' }, ['shadcn/web']),
+            Span({ class: 'font-bold mr-6' }, ['Prototype UI']),
             Nav({ class: 'relative flex items-center gap-4 text-sm lg:gap-6' }, [
               PrototypeTabsTrigger({ value: 'docs', class: this._navItemsCls }, ['Docs']),
-              PrototypeTabsTrigger({ value: 'docs', class: this._navItemsCls }, ['Components']),
-              PrototypeTabsTrigger({ value: 'blocks', class: this._navItemsCls }, ['Blocks']),
-              PrototypeTabsTrigger({ value: 'charts', class: this._navItemsCls }, ['Charts']),
-              PrototypeTabsTrigger({ value: 'themes', class: this._navItemsCls }, ['Themes']),
+              PrototypeTabsTrigger({ value: 'components', class: this._navItemsCls }, [
+                'Components',
+              ]),
+              PrototypeTabsTrigger({ value: 'design-systems', class: this._navItemsCls }, [
+                'Design Systems',
+              ]),
               PrototypeTabsTrigger({ value: 'examples', class: this._navItemsCls }, ['Examples']),
-              PrototypeTabsTrigger({ value: 'colors', class: this._navItemsCls }, ['Colors']),
             ]),
             Div({ class: 'flex flex-1 items-center justify-between space-x-2 md:justify-end' }, [
               h('github-button'),

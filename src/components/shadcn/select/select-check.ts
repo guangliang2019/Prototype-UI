@@ -4,7 +4,7 @@ import { SelectContext } from '@/core/behaviors/as-select';
 import { CONFIG } from '../_config';
 
 export const ShadcnSelectCheckPrototype = definePrototype<{}>({
-  name: 'shadcn-select-check',
+  name: `${CONFIG.shadcn.prefix}-select-check`,
   setup: (p) => {
     p.context.watch(SelectContext);
     p.context.watch(ShadcnSelectContext);
