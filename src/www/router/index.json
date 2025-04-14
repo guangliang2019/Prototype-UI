@@ -18,6 +18,11 @@
       "href": "/shadcn/button"
     },
     {
+      "title": "Card",
+      "value": "shadcn-card",
+      "href": "/shadcn/card"
+    },
+    {
       "title": "Tabs",
       "value": "shadcn-tabs",
       "href": "/shadcn/tabs"

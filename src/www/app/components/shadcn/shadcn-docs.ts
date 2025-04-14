@@ -9,6 +9,7 @@ export default class ShadcnDoc extends HTMLElement {
     const fragment = document.createDocumentFragment();
 
     fragment.appendChild(h('shadcn-button-doc'));
+    fragment.appendChild(h('shadcn-card-doc'));
     fragment.appendChild(h('shadcn-tabs-doc'));
     fragment.appendChild(h('shadcn-select-doc'));
     fragment.appendChild(h('shadcn-input-doc'));

@@ -1,4 +1,5 @@
 export { ShadcnButton } from './button';
+export { ShadcnCard, ShadcnCardFooter, ShadcnCardHeader,ShadcnCardContent} from './card';
 export {
   ShadcnSelect,
   ShadcnSelectContent,
