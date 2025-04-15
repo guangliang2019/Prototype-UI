@@ -1,7 +1,13 @@
 import { definePrototype, WebComponentAdapter } from '@/core';
-import { asSwitch, SwitchState } from '@/core/behaviors/as-switch';
-import { ShadcnSwitchProps, SHADCN_SWITCH_DEFAULT_PROPS } from './interface';
+import { asSwitch, SwitchContext } from '@/core/behaviors/as-switch';
+import { ShadcnSwitchProps, SHADCN_SWITCH_DEFAULT_PROPS, ShadcnSwitchContext, ShadcnSwitchContextType } from './interface';
 import { optimizeTailwindClasses } from '@/www/utils/tailwind';
+import { ShadcnSwitchThumb } from './switch-thumb';
+
+// 确保 Thumb 组件已注册
+if (!customElements.get('shadcn-switch-thumb')) {
+  customElements.define('shadcn-switch-thumb', ShadcnSwitchThumb);
+}
 
 export const ShadcnSwitchPrototype = definePrototype<ShadcnSwitchProps>({
   name: 'shadcn-switch',
@@ -9,57 +15,48 @@ export const ShadcnSwitchPrototype = definePrototype<ShadcnSwitchProps>({
     // 注入基础 Switch 行为
     const { states } = asSwitch(p);
 
-    // 定义 Props 及其默认值
-    p.props.define(SHADCN_SWITCH_DEFAULT_PROPS);
 
-    // 监听会影响样式的 Props
+    p.context.provide(SwitchContext, () => ({
+      checked: states.checked,
+    }));
+
+
+    p.context.provide(ShadcnSwitchContext, (updateContext) => {
+
+      const context: ShadcnSwitchContextType = {
+        thumbRef: document.createElement('shadcn-switch-thumb'),
+        updateRef: (name, ref) => {
+         
+          const originalRef = context[name];
+        
+          updateContext({
+            [name]: ref,
+          });
+          // 如果原始引用存在，移除它
+          if (originalRef) originalRef.remove();
+        },
+      };
+      return context;
+    });
+
+
+
+    p.props.define(SHADCN_SWITCH_DEFAULT_PROPS);
+ 
     p.props.watch(['disabled'], () => p.view.update());
 
     let _originalCls = '';
-    let thumbElement: HTMLSpanElement | null = null;
-    let observer: MutationObserver | null = null;
 
     p.lifecycle.onMounted(() => {
       _originalCls = p.view.getElement().className;
+
+      // 添加点击监听器
       const hostElement = p.view.getElement();
-
-      // 设置初始样式
-      hostElement.style.width = '56px';
-      hostElement.style.height = '30px';
-      hostElement.style.display = 'inline-flex';
-      hostElement.style.alignItems = 'center';
-      hostElement.style.position = 'relative';
-
-      // 创建滑块元素
-      thumbElement = document.createElement('span');
-      hostElement.appendChild(thumbElement);
-
-      // 使用 MutationObserver 监听 data-checked 属性变化
-      observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'data-checked') {
-            console.log(`data-checked 属性变化，从 ${mutation.oldValue} 变为 ${hostElement.getAttribute('data-checked')}`);
-            p.view.update();
-          }
-        });
+      hostElement.addEventListener('click', () => {
+        setTimeout(() => p.view.update(), 10);
       });
 
-      observer.observe(hostElement, {
-        attributes: true,
-        attributeFilter: ['data-checked'],
-        attributeOldValue: true
-      });
-
-      // 初始渲染
       p.view.update();
-    });
-
-    // 清理观察器
-    p.lifecycle.onBeforeUnmount(() => {
-      if (observer) {
-        observer.disconnect();
-        observer = null;
-      }
     });
 
     return {
@@ -67,52 +64,44 @@ export const ShadcnSwitchPrototype = definePrototype<ShadcnSwitchProps>({
         const { disabled } = p.props.get();
         const hostElement = p.view.getElement();
 
-        const dataChecked = hostElement.getAttribute('data-checked');
-        const isChecked = dataChecked !== null;
+     
+        const isChecked = hostElement.getAttribute('data-checked') !== null;
 
-        // 设置宿主元素样式
-        hostElement.style.width = '56px';
-        hostElement.style.height = '30px';
-        hostElement.style.display = 'inline-flex';
-        hostElement.style.alignItems = 'center';
-        hostElement.style.position = 'relative';
-        hostElement.style.borderRadius = '9999px';
-        hostElement.style.cursor = disabled ? 'not-allowed' : 'pointer';
+       
+        const { thumbRef } = p.context.get(ShadcnSwitchContext);
+        if (!thumbRef || !hostElement.contains(thumbRef)) {
+          const newThumb = document.createElement('shadcn-switch-thumb');
+          hostElement.appendChild(newThumb);
+        }
 
-        hostElement.style.backgroundColor = isChecked ? 'rgb(250, 250, 250)' : 'rgb(39, 39, 42)';
-        hostElement.style.transition = 'background-color 0.2s ease';
+        // Switch 样式
+        const baseClasses = [
+          'inline-flex',
+          'items-center',
+          'w-14',
+          'h-[30px]',
+          'relative',
+          'rounded-full',
+          'transition-colors',
+          'focus-visible:outline-none',
+          'focus-visible:ring-2',
+          'focus-visible:ring-offset-2'
+        ];
 
+        const stateClasses = [
+          isChecked ? 'bg-[rgb(250,250,250)]' : 'bg-[rgb(39,39,42)]',
+          disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+        ];
 
-        const focusClasses = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
-        hostElement.className = `${focusClasses} ${_originalCls || ''}`.trim();
+        const allClasses = [...baseClasses, ...stateClasses, _originalCls].filter(Boolean).join(' ');
+        hostElement.className = optimizeTailwindClasses(allClasses);
 
         if (disabled) {
-          hostElement.style.opacity = '0.5';
+          hostElement.setAttribute('disabled', '');
         } else {
-          hostElement.style.opacity = '1';
+          hostElement.removeAttribute('disabled');
         }
 
-
-        if (thumbElement) {
-          const thumbSize = 26;
-          const verticalOffset = (30 - thumbSize) / 2;
-          thumbElement.style.position = 'absolute';
-          thumbElement.style.top = `${verticalOffset}px`;
-          thumbElement.style.left = '2px';
-          thumbElement.style.width = `${thumbSize}px`;
-          thumbElement.style.height = `${thumbSize}px`;
-          thumbElement.style.borderRadius = '9999px';
-          thumbElement.style.backgroundColor = 'rgb(9, 9, 11)';
-          thumbElement.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
-
-
-          const moveDistance = 56 - thumbSize - 4;
-          thumbElement.style.transform = isChecked ? `translateX(${moveDistance}px)` : 'translateX(0)';
-
-          thumbElement.style.transition = 'transform 0.2s ease';
-          thumbElement.style.zIndex = '2';
-          thumbElement.style.pointerEvents = 'none';
-        }
       },
     };
   },

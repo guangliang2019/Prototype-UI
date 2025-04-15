@@ -1,5 +1,5 @@
 import { SwitchProps } from '@/core/behaviors/as-switch';
-
+import { createContext } from '@/core';
 
 export interface ShadcnSwitchProps extends SwitchProps {
     'aria-label'?: string;
@@ -15,8 +15,14 @@ export interface ShadcnSwitchProps extends SwitchProps {
     value?: string;
 }
 
+export type ShadcnSwitchContextType = {
+    thumbRef: HTMLElement | null;
+    updateRef: (name: 'thumbRef', ref: HTMLElement) => void;
+};
+
+export const ShadcnSwitchContext = createContext<ShadcnSwitchContextType>('shadcn-switch-context');
 
 export const SHADCN_SWITCH_DEFAULT_PROPS: Partial<ShadcnSwitchProps> = {
     disabled: false,
-    value: 'on', 
+    value: 'on',
 };
