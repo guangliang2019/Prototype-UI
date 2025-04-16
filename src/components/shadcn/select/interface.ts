@@ -6,10 +6,11 @@ import {
   SelectTriggerProps,
   SelectValueProps,
 } from '@/core/behaviors/as-select';
+import { TransitionProps } from '@/core/behaviors/as-transition';
 
 export interface ShadcnSelectProps extends SelectProps {}
 
-export interface ShadcnSelectContentProps extends SelectContentProps {}
+export interface ShadcnSelectContentProps extends SelectContentProps, TransitionProps {}
 
 export interface ShadcnSelectItemProps extends SelectItemProps {}
 
