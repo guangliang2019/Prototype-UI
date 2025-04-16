@@ -28,6 +28,7 @@ const asSelectContent = (p: PrototypeAPI<SelectContentProps>) => {
         }
       },
       clickOutsideInterceptor: (e) => {
+        console.log('clickOutsideInterceptor', e.target);
         const context = p.context.get(SelectContext);
         return e.target !== context.triggerRef;
       },
