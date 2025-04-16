@@ -29,8 +29,9 @@ const asOverlay = (p: PrototypeAPI<OverlayProps>) => {
   p.event.onGlobal('click', (e: MouseEvent) => {
     if (!visible.value) return;
     const target = e.target as HTMLElement;
+    const root = p.view.getElement();
     if (!target) return;
-    if (target?.contains(p.view.getElement())) {
+    if (!root.contains(target) && root !== target) {
       const props = p.props.get();
       // if the click outside is intercepted, do not hide
       if (!props.clickOutsideInterceptor?.(e)) return;
