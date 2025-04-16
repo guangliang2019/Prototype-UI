@@ -66,7 +66,7 @@ const asSelectTrigger = (p: PrototypeAPI<SelectTriggerProps>) => {
     const context = p.context.get(SelectContext);
     const component = p.view.getElement();
     context.width = component.offsetWidth;
-    context.selecting.value ? context.close() : context.open();
+    if (!context.selecting.value) context.open();
     _focusSelectedItem(context);
   };
 

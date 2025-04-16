@@ -7,7 +7,7 @@ const asSelectContent = (p: PrototypeAPI<SelectContentProps>) => {
   p.context.watch(SelectContext);
 
   // role
-  const { actions } = asOverlay(p);
+  const { actions, states } = asOverlay(p);
 
   p.lifecycle.onMounted(() => {
     p.props.set({
@@ -40,6 +40,11 @@ const asSelectContent = (p: PrototypeAPI<SelectContentProps>) => {
     context.open = actions.show;
     context.close = actions.hide;
   });
+
+  return {
+    states: states,
+    actions: actions,
+  };
 };
 
 export default asSelectContent;
