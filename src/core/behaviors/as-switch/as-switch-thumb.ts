@@ -8,7 +8,18 @@ const asSwitchThumb = (p: PrototypeAPI<{}>) => {
     if (changedKeys.includes('checked')) {
       _checked.set(context.checked.value);
     }
+    if (changedKeys.includes('disabled')) {
+      const element = p.view.getElement()
+      context.disabled ? element.setAttribute('disabled', '') : element.removeAttribute('disabled')
+    }
   });
+
+  p.lifecycle.onMounted(() => {
+    const context = p.context.get(SwitchContext)
+    const element = p.view.getElement()
+    context.disabled ? element.setAttribute('disabled', '') : element.removeAttribute('disabled')
+  })
+
 
   return {
     states: {

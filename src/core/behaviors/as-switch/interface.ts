@@ -13,6 +13,7 @@ export interface SwitchState {
 
 export interface SwitchContextType {
   checked: State<boolean>;
+  disabled: State<boolean>;
 }
 
 export const SwitchContext = createContext<SwitchContextType>('switch');
