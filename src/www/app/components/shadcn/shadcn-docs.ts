@@ -14,7 +14,8 @@ export default class ShadcnDoc extends HTMLElement {
     fragment.appendChild(h('shadcn-select-doc'));
     fragment.appendChild(h('shadcn-input-doc'));
     fragment.appendChild(h('shadcn-scroll-area-doc'));
-
+    fragment.appendChild(h('shadcn-switch-doc'));
+    
     this.appendChild(fragment);
     this.className = 'w-full';
   }

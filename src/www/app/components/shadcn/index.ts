@@ -6,3 +6,4 @@ import './input';
 import './scroll-area';
 
 import './shadcn-docs';
+import './switch';

@@ -24,8 +24,9 @@ const asSwitch = (
     const props = p.props.get();
     _updateContext = updateContext;
     _checked.set(props.checked ?? false);
+    _disabled.set(props.disabled ?? false)
 
-    return { checked: _checked };
+    return { checked: _checked, disabled: _disabled };
   });
 
   //props
