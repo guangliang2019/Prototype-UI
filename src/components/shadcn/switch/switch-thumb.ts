@@ -1,60 +1,57 @@
 import { definePrototype, WebComponentAdapter } from '@/core';
 import { asSwitchThumb } from '@/core/behaviors/as-switch';
-import { ShadcnSwitchContext } from './interface';
+import { ShadcnSwitchContext, ShadcnSwitchThumbProps } from './interface';
 import { optimizeTailwindClasses } from '@/www/utils/tailwind';
 
-export interface ThumbProps { }
-
-
 const baseClasses = [
-    'block',
-    'rounded-full',
-    'bg-background',
-    'shadow-lg',
-    'pointer-events-none',
-    'transition-transform',
-    'w-5',
-    'h-5',
+  'block',
+  'rounded-full',
+  'bg-background',
+  'shadow-lg',
+  'pointer-events-none',
+  'transition-transform',
+  'w-4',
+  'h-4',
+  'bg-background',
 ];
 
-
 const stateClasses = [
-    'translate-x-0',
-    'data-[checked]:translate-x-5',
-    'disabled:cursor-not-allowed disabled:opacity-50'
-]
+  'translate-x-0',
+  'data-[checked]:translate-x-4',
+  'disabled:cursor-not-allowed disabled:opacity-50',
+];
 
-export const ThumbPrototype = definePrototype<ThumbProps>({
-    name: 'shadcn-switch-thumb',
-    setup: (p) => {
-        // 监听两个上下文
-        asSwitchThumb(p)
+const SHADCN_SWITCH_THUMB_CLASS = [...baseClasses, ...stateClasses].join(' ');
 
-        p.context.watch(ShadcnSwitchContext);
+export const ThumbPrototype = definePrototype<ShadcnSwitchThumbProps>({
+  name: 'shadcn-switch-thumb',
+  setup: (p) => {
+    asSwitchThumb(p);
+    let _originalCls = '';
 
-        p.lifecycle.onMounted(() => {
+    // watch shadcn-switch context
+    p.context.watch(ShadcnSwitchContext);
 
-            const { updateRef, thumbRef } = p.context.get(ShadcnSwitchContext);
-            const element = p.view.getElement();
+    // update thumbRef
+    p.lifecycle.onMounted(() => {
+      const { updateRef, thumbRef } = p.context.get(ShadcnSwitchContext);
+      const element = p.view.getElement();
+      _originalCls = element.className;
 
-            if (thumbRef !== element) {
-                updateRef('thumbRef', element);
-            }
-        });
+      if (thumbRef !== element) {
+        updateRef('thumbRef', element);
+      }
+    });
 
-        return {
-            render() {
-                const hostElement = p.view.getElement();
-
-                const allClasses = [
-                    ...baseClasses,
-                    ...stateClasses,
-                ].join(' ');
-
-                hostElement.className = optimizeTailwindClasses(allClasses);
-            }
-        };
-    }
+    return {
+      render() {
+        const hostElement = p.view.getElement();
+        hostElement.className = optimizeTailwindClasses(
+          [_originalCls, SHADCN_SWITCH_THUMB_CLASS].join(' ')
+        );
+      },
+    };
+  },
 });
 
 export const ShadcnSwitchThumb = WebComponentAdapter(ThumbPrototype);
