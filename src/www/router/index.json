@@ -41,6 +41,11 @@
       "title": "Scroll Area",
       "value": "shadcn-scroll-area",
       "href": "/shadcn/scroll-area"
+    },
+    {
+      "title": "Switch",
+      "value": "shadcn-switch",
+      "href": "/shadcn/switch"
     }
   ],
   "Prototype UI": [
