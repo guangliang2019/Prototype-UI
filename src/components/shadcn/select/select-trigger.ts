@@ -1,6 +1,6 @@
 import { asSelectTrigger } from '@/core/behaviors/as-select';
 import { ShadcnSelectContext, ShadcnSelectTriggerProps } from './interface';
-import { definePrototype, RendererAPI, WebComponentAdapter } from '@/core';
+import { definePrototype, WebComponentAdapter } from '@/core';
 import { CONFIG } from '../_config';
 const SHADCN_SELECT_TRIGGER_CLASS =
   'shadcn-select-trigger cursor-pointer flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1';

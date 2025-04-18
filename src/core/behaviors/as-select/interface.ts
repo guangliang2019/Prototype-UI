@@ -20,7 +20,6 @@ export interface SelectItemProps extends ButtonProps {
 
 export interface SelectValueProps {
   renderValue: (value: string) => HTMLElement | string;
-  children?: any;
 }
 
 export interface SelectContextType {

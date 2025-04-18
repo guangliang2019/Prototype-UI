@@ -26,7 +26,7 @@ const asOverlay = (p: PrototypeAPI<OverlayProps>) => {
   };
 
   // event: when click outside, hide the overlay
-  p.event.onGlobal('click', (e: MouseEvent) => {
+  p.event.onGlobal('click', (e: PointerEvent) => {
     if (!visible.value) return;
     const target = e.target as HTMLElement;
     const root = p.view.getElement();
