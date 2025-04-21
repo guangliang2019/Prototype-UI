@@ -13,6 +13,8 @@ export type { ShadcnSelectContext, ShadcnSelectProps } from './select';
 
 export { ShadcnTabs, ShadcnTabsContent, ShadcnTabsTrigger, ShadcnTabsList } from './tabs';
 
+export {  ShadcnTooltipProvier, ShadcnTooltip } from './tooltip';
+
 export { ShadcnInput } from './input';
 
 export { ShadcnScrollArea, ShadcnScrollBar } from './scroll-area';

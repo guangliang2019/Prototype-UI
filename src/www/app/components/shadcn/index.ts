@@ -1,6 +1,7 @@
 import './button';
 import './card';
 import './tabs';
+import './tooltip';
 import './select';
 import './input';
 import './scroll-area';
