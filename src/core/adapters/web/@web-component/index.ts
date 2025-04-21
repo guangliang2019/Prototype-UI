@@ -118,6 +118,8 @@ export const WebComponentAdapter = <Props extends object>(
 
       // 执行 setup 获取结果
       this._setupResult = prototype.setup(this.createHooks()) ?? {};
+
+      // 将暴露 API 设置到组件实例上，这样更符合 Web Component 的使用习惯
       if (this._setupResult?.exposes) {
         Object.entries(this._setupResult.exposes).forEach(([key, value]) => {
           // 跳过已存在的属性
@@ -274,6 +276,9 @@ export const WebComponentAdapter = <Props extends object>(
         },
 
         view: {
+          createElement: (type, props, children) => {
+            return this._renderer.createElement(type, props, children);
+          },
           getElement: () => {
             if (!this._lifecycle.hasTriggered('mounting')) {
               throw new Error(

@@ -30,7 +30,7 @@ export function definePrototype<
   Actions extends {} = {},
   Exposes extends {} = {},
 >(
-  prototype: Prototype<Props, States, Actions, Exposes>
+  prototype: Pick<Prototype<Props, States, Actions, Exposes>, 'name' | 'setup'>
 ): Prototype<Props, States, Actions, Exposes> {
   return prototype;
 }

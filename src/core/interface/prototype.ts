@@ -1,6 +1,6 @@
 import { EventCommands } from './event';
 import { Context, State } from './managers';
-import { RendererAPI } from './renderer';
+import { ElementChildren, ElementProps, ElementType, RendererAPI } from './renderer';
 
 /**
  * 可以通过属性监听的类型
@@ -92,6 +92,18 @@ export interface PrototypeAPI<Props = {}> {
      * @returns A bitmask representing the positional relationship of elements.
      */
     compareElementPosition: (target: HTMLElement, element?: HTMLElement) => number;
+    /**
+     * Create an element.
+     * @param tag the tag name of the element
+     * @param props the properties of the element
+     * @param children the children of the element
+     * @returns the created element
+     */
+    createElement: (
+      tag: ElementType,
+      props?: ElementProps,
+      children?: ElementChildren[]
+    ) => Element;
   };
 
   lifecycle: {
@@ -170,7 +182,6 @@ export interface Prototype<
   name: string;
   /** 可观察的属性 */
   observedAttributes?: string[];
-
   /**
    * 设置函数
    */

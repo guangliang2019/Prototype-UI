@@ -205,8 +205,8 @@ export class WebRenderer extends BaseRenderer {
     props?: ElementProps,
     children?: ElementChildren[]
   ): Element {
-    const ComponentClass = WebComponentAdapter(prototype);
-    const instance = new ComponentClass();
+    if (!customElements.get(prototype.name)) WebComponentAdapter(prototype);
+    const instance = document.createElement(prototype.name);
 
     if (props && this.context) {
       // 通过 PropsManager 设置属性
