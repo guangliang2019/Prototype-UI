@@ -123,7 +123,7 @@ export const WebComponentAdapter = <Props extends {}, Exposes extends {} = {}>(
         // 跳过已存在的属性
         if (key in this) {
           console.warn(
-            `[WebComponentAdapter] Property "${key}" already exists on the component, ` +
+            `[WebComponentAdapter] Property "${key}" already exists on the "${prototype.name}", ` +
               'exposing it will override the original property.'
           );
         }

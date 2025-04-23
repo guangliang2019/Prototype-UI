@@ -19,3 +19,5 @@ export interface SwitchContextType {
 }
 
 export const SwitchContext = createContext<SwitchContextType>('switch');
+
+export const DEFAULT_SWITCH_PROPS: SwitchProps = { checked: false, onChange: () => {} };

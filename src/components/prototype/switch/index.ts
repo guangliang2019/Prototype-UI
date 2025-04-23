@@ -1,6 +1,5 @@
 import { definePrototype, WebComponentAdapter } from '@/core';
-import { asSwitch, asSwitchThumb } from '@/core/behaviors/as-switch';
-import { SwitchExposes, SwitchProps } from '@/core/behaviors/as-switch/interface';
+import { asSwitch, asSwitchThumb, SwitchExposes, SwitchProps } from '@/core/behaviors/as-switch';
 
 export const PrototypeSwitch = WebComponentAdapter(
   definePrototype<SwitchProps, SwitchExposes>({

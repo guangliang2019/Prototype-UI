@@ -6,8 +6,6 @@ import {
   asSelectTrigger,
   asSelectValue,
   SelectContentProps,
-} from '@/core/behaviors/as-select';
-import {
   SelectContentExposes,
   SelectItemExposes,
   SelectItemProps,
@@ -15,7 +13,7 @@ import {
   SelectTriggerProps,
   SelectValueExposes,
   SelectValueProps,
-} from '@/core/behaviors/as-select/interface';
+} from '@/core/behaviors/as-select';
 
 export const PrototypeSelect = WebComponentAdapter(
   definePrototype({

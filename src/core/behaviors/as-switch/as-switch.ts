@@ -1,5 +1,6 @@
 import { PrototypeAPI } from '@/core/interface';
 import {
+  DEFAULT_SWITCH_PROPS,
   SwitchContext,
   SwitchContextType,
   SwitchExposes,
@@ -8,8 +9,11 @@ import {
 } from './interface';
 import { asButton } from '../as-button';
 
-const asSwitch = (
-  p: PrototypeAPI<SwitchProps, SwitchExposes>
+const asSwitch = <
+  Props extends SwitchProps = SwitchProps,
+  Exposes extends SwitchExposes = SwitchExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
 ): {
   states: SwitchState;
 } => {
@@ -36,7 +40,7 @@ const asSwitch = (
   });
 
   //props
-  p.props.define({ checked: false, onChange: () => {} });
+  p.props.define(DEFAULT_SWITCH_PROPS as Props);
   p.props.watch(['checked'], ({ checked }) => {
     _checked.set(checked ?? false);
     _updateContext?.({ checked: _checked });

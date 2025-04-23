@@ -16,33 +16,31 @@ export const ShadcnSelectArrowPrototype = definePrototype<{}>({
       element.className = 'w-4 h-4 opacity-50';
     });
 
-    return {
-      render: (renderer: RendererAPI) => {
-        const h = renderer.createElement;
-        const element = h(
-          'svg',
-          {
-            viewBox: '0 0 24 24',
-            fill: 'none',
-            stroke: 'currentColor',
-            strokeWidth: '2',
-            strokeLinecap: 'round',
-            strokeLinejoin: 'round',
-            class: 'shadcn-icon shadcn-select-arrow',
-          },
-          [
-            h('path', {
-              d: 'M8.5 15L12 18.5L15.5 15',
-              strokeWidth: '1.5',
-            }),
-            h('path', {
-              d: 'M8.5 9L12 5.5L15.5 9',
-              strokeWidth: '1.5',
-            }),
-          ]
-        ) as HTMLElement;
-        return element;
-      },
+    return (renderer: RendererAPI) => {
+      const h = renderer.createElement;
+      const element = h(
+        'svg',
+        {
+          viewBox: '0 0 24 24',
+          fill: 'none',
+          stroke: 'currentColor',
+          strokeWidth: '2',
+          strokeLinecap: 'round',
+          strokeLinejoin: 'round',
+          class: 'shadcn-icon shadcn-select-arrow',
+        },
+        [
+          h('path', {
+            d: 'M8.5 15L12 18.5L15.5 15',
+            strokeWidth: '1.5',
+          }),
+          h('path', {
+            d: 'M8.5 9L12 5.5L15.5 9',
+            strokeWidth: '1.5',
+          }),
+        ]
+      );
+      return element;
     };
   },
 });

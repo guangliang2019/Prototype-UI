@@ -12,12 +12,10 @@ export const ShadcnTabsContentPrototype = definePrototype<TabsContentProps>({
       _originalCls = p.view.getElement().className;
     });
 
-    return {
-      render: () => {
-        p.view.getElement().className = [_originalCls, 'data-[state=inactive]:hidden']
-          .join(' ')
-          .trimEnd();
-      },
+    return () => {
+      p.view.getElement().className = [_originalCls, 'data-[state=inactive]:hidden']
+        .join(' ')
+        .trimEnd();
     };
   },
 });

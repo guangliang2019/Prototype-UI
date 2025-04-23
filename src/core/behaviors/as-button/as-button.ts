@@ -87,18 +87,18 @@ const asButton = <
   });
 
   // 导出动作
-  p.expose.define('focus', () => {
-    p.event.focus.set(true);
-  });
-  p.expose.define('blur', () => {
-    p.event.focus.set(false);
-  });
-  p.expose.define('click', () => {
-    const props = p.props.get();
-    if (!props.disabled) {
-      p.event.click();
-    }
-  });
+  // p.expose.define('focus', () => {
+  //   p.event.focus.set(true);
+  // });
+  // p.expose.define('blur', () => {
+  //   p.event.focus.set(false);
+  // });
+  // p.expose.define('click', () => {
+  //   const props = p.props.get();
+  //   if (!props.disabled) {
+  //     p.event.click();
+  //   }
+  // });
 
   return {
     states: {
