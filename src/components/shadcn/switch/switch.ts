@@ -1,8 +1,14 @@
 import { definePrototype, WebComponentAdapter } from '@/core';
 import { asSwitch, SwitchContext } from '@/core/behaviors/as-switch';
-import { ShadcnSwitchProps, SHADCN_SWITCH_DEFAULT_PROPS, ShadcnSwitchContext, ShadcnSwitchContextType } from './interface';
+import {
+  ShadcnSwitchProps,
+  SHADCN_SWITCH_DEFAULT_PROPS,
+  ShadcnSwitchContext,
+  ShadcnSwitchContextType,
+} from './interface';
 import { optimizeTailwindClasses } from '@/www/utils/tailwind';
 import { ShadcnSwitchThumb } from './switch-thumb';
+import { SwitchExposes } from '@/core/behaviors/as-switch/interface';
 
 // 确保 Thumb 组件已注册
 if (!customElements.get('shadcn-switch-thumb')) {
@@ -29,23 +35,18 @@ const stateClasses = [
   'disabled:cursor-not-allowed disabled:opacity-50',
 ];
 
-const SHADCN_SWITCH_DEFAULT_CLASS = [...baseClasses, ...stateClasses].join(' ')
+const SHADCN_SWITCH_DEFAULT_CLASS = [...baseClasses, ...stateClasses].join(' ');
 
-export const ShadcnSwitchPrototype = definePrototype<ShadcnSwitchProps>({
+export const ShadcnSwitchPrototype = definePrototype<ShadcnSwitchProps, SwitchExposes>({
   name: 'shadcn-switch',
   setup: (p) => {
     // 注入基础 Switch 行为
     asSwitch(p);
 
-
-
-
     p.context.provide(ShadcnSwitchContext, (updateContext) => {
-
       const context: ShadcnSwitchContextType = {
         thumbRef: document.createElement('shadcn-switch-thumb'),
         updateRef: (name, ref) => {
-
           const originalRef = context[name];
 
           updateContext({
@@ -58,33 +59,23 @@ export const ShadcnSwitchPrototype = definePrototype<ShadcnSwitchProps>({
       return context;
     });
 
-
-
-
     let _originalCls = '';
 
     p.lifecycle.onMounted(() => {
       _originalCls = p.view.getElement().className;
     });
 
-    return {
-      render() {
-        const hostElement = p.view.getElement();
+    return () => {
+      const hostElement = p.view.getElement();
 
+      const { thumbRef } = p.context.get(ShadcnSwitchContext);
+      if (!thumbRef || !hostElement.contains(thumbRef)) {
+        const newThumb = document.createElement('shadcn-switch-thumb');
+        hostElement.appendChild(newThumb);
+      }
 
-
-        const { thumbRef } = p.context.get(ShadcnSwitchContext);
-        if (!thumbRef || !hostElement.contains(thumbRef)) {
-          const newThumb = document.createElement('shadcn-switch-thumb');
-          hostElement.appendChild(newThumb);
-        }
-
-
-
-        const allClasses = [SHADCN_SWITCH_DEFAULT_CLASS, _originalCls].filter(Boolean).join(' ');
-        hostElement.className = optimizeTailwindClasses(allClasses);
-
-      },
+      const allClasses = [SHADCN_SWITCH_DEFAULT_CLASS, _originalCls].filter(Boolean).join(' ');
+      hostElement.className = optimizeTailwindClasses(allClasses);
     };
   },
 });

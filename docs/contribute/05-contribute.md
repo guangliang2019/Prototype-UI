@@ -8,7 +8,7 @@
 - [ ] 原型需要拓展
 
   - [x] Button
-  - [ ] Switch
+  - [x] Switch
   - [ ] Radio
   - [ ] Checkbox
   - [ ] Input
@@ -61,7 +61,7 @@
   - [x] Select
   - [ ] Checkbox
   - [ ] Radio
-  - [ ] Switch
+  - [x] Switch
   - [ ] Slider
   - [ ] Rate
   - [ ] Progress

@@ -1,12 +1,19 @@
 import { PrototypeAPI } from '@/core/interface';
-import { TabsContext, TabsIndicatorProps } from './interface';
+import {
+  DEFAULT_TABS_INDICATOR_PROPS,
+  TabsContext,
+  TabsIndicatorExposes,
+  TabsIndicatorProps,
+} from './interface';
 
-const asTabsIndicator = (p: PrototypeAPI<TabsIndicatorProps>) => {
+const asTabsIndicator = <
+  Props extends TabsIndicatorProps = TabsIndicatorProps,
+  Exposes extends TabsIndicatorExposes = TabsIndicatorExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   // props
-  p.props.define({
-    onTabChange: () => {},
-    onTabResize: () => {},
-  });
+  p.props.define(DEFAULT_TABS_INDICATOR_PROPS as Props);
 
   // inner state
   let _tabChangedFlag = false;

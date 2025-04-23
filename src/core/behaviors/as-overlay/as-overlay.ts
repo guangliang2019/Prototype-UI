@@ -1,13 +1,16 @@
 import { PrototypeAPI } from '@/core/interface';
-import { OverlayProps } from './interface';
+import { DEFAULT_OVERLAY_PROPS, OverlayExposes, OverlayProps, OverlayState } from './interface';
 
-const asOverlay = (p: PrototypeAPI<OverlayProps>) => {
+const asOverlay = <
+  Props extends OverlayProps = OverlayProps,
+  Exposes extends OverlayExposes = OverlayExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+): {
+  states: OverlayState;
+} => {
   // props
-  p.props.define({
-    visible: false,
-    onVisibleChange: () => {},
-    clickOutsideInterceptor: () => true,
-  });
+  p.props.define(DEFAULT_OVERLAY_PROPS as Props);
 
   // state
   const visible = p.state.define<boolean>(false, 'data-visible');
@@ -39,13 +42,12 @@ const asOverlay = (p: PrototypeAPI<OverlayProps>) => {
     }
   });
 
+  p.expose.define('show', show);
+  p.expose.define('hide', hide);
+
   return {
     states: {
       visible,
-    },
-    actions: {
-      show,
-      hide,
     },
   };
 };

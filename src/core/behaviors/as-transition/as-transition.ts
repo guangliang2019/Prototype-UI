@@ -1,18 +1,17 @@
 import { PrototypeAPI } from '@/core/interface';
 import {
   DEFAULT_TRANSITION_PROPS,
-  TransitionActions,
+  TransitionExposes,
   TransitionContext,
   TransitionProps,
   TransitionStateEnum,
   TransitionStates,
 } from './interface';
 
-const asTransition = <Props extends TransitionProps>(
-  p: PrototypeAPI<Props>
+const asTransition = <Props extends TransitionProps, Exposes extends TransitionExposes>(
+  p: PrototypeAPI<Props, Exposes>
 ): {
   states: TransitionStates;
-  actions: TransitionActions;
 } => {
   // props
   p.props.define(DEFAULT_TRANSITION_PROPS as Props);
@@ -115,13 +114,13 @@ const asTransition = <Props extends TransitionProps>(
     };
   });
 
+  // exposes
+  p.expose.define('enter', enter);
+  p.expose.define('leave', leave);
+
   return {
     states: {
       state,
-    },
-    actions: {
-      enter,
-      leave,
     },
   };
 };

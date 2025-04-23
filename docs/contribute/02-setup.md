@@ -1,4 +1,4 @@
-# Prototype 原型系统
+# Setup 原型系统
 
 ## 核心特性
 

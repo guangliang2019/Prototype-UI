@@ -1,9 +1,20 @@
 import { PrototypeAPI } from '@/core/interface';
-import { TabsContext, TabsContextType, TabsContentProps } from './interface';
+import {
+  TabsContext,
+  TabsContextType,
+  TabsContentExposes,
+  TabsContentProps,
+  DEFAULT_TABS_CONTENT_PROPS,
+} from './interface';
 
-const asTabsContent = (p: PrototypeAPI<TabsContentProps>) => {
+const asTabsContent = <
+  Props extends TabsContentProps = TabsContentProps,
+  Exposes extends TabsContentExposes = TabsContentExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   // props
-  p.props.define({ value: '' });
+  p.props.define(DEFAULT_TABS_CONTENT_PROPS as Props);
 
   // ui-state
   const state = p.state.define<'active' | 'inactive'>('inactive', 'data-state');

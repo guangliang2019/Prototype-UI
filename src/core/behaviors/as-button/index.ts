@@ -1,2 +1,12 @@
+// behaviors
 export { default as asButton } from './as-button';
-export type { ButtonProps, ButtonState, ButtonActions } from './interface';
+
+// types
+export type {
+  ButtonProps,
+  ButtonState,
+  ButtonExposes,
+} from './interface';
+
+// constants
+export { DEFAULT_BUTTON_PROPS } from './interface';

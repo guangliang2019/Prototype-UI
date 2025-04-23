@@ -1,2 +1,11 @@
+// behaviors
 export { default as asOverlay } from './as-overlay';
-export type { OverlayProps } from './interface';
+
+// types
+export type {
+  OverlayProps,
+  OverlayExposes,
+} from './interface';
+
+// constants
+export { DEFAULT_OVERLAY_PROPS } from './interface';

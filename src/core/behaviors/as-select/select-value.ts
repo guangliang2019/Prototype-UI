@@ -1,14 +1,19 @@
 import { PrototypeAPI, RendererAPI } from '@/core/interface';
-import { SelectContext, SelectValueProps } from './interface';
+import { SelectContext, SelectValueExposes, SelectValueProps } from './interface';
 
-const asSelectValue = (p: PrototypeAPI<SelectValueProps>) => {
+const asSelectValue = <
+  Props extends SelectValueProps = SelectValueProps,
+  Exposes extends SelectValueExposes = SelectValueExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   p.props.define({
     renderValue: (value: string) => {
       const span = document.createElement('span');
       span.textContent = value;
       return span;
     },
-  });
+  } as Props);
 
   p.context.watch(SelectContext, (_, keys) => {
     if (keys.includes('value')) {

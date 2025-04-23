@@ -57,8 +57,8 @@ export type WebComponentConstructor<T extends HTMLElement> = Constructor<WebComp
  * Web Components 适配器
  * 将组件原型转换为 Web Component 类
  */
-export const WebComponentAdapter = <Props extends object>(
-  prototype: Prototype<Props>
+export const WebComponentAdapter = <Props extends {}, Exposes extends {} = {}>(
+  prototype: Prototype<Props, Exposes>
 ): WebComponentConstructor<HTMLElement> => {
   const Constructor = class extends HTMLElement implements Component {
     private _lifecycle = new WebLifecycleManager();
@@ -80,7 +80,8 @@ export const WebComponentAdapter = <Props extends object>(
     });
 
     private _isDestroyed = false;
-    private _setupResult: PrototypeSetupResult | void;
+    private _setupResult: PrototypeSetupResult;
+    private _exposes: Exposes = {} as Exposes;
     private _setupPhase: boolean = true;
     private _pendingContextOperations: PendingContextOperation[] = [];
 
@@ -117,25 +118,23 @@ export const WebComponentAdapter = <Props extends object>(
       attachComponent(this, this);
 
       // 执行 setup 获取结果
-      this._setupResult = prototype.setup(this.createHooks()) ?? {};
-      if (this._setupResult?.exposes) {
-        Object.entries(this._setupResult.exposes).forEach(([key, value]) => {
-          // 跳过已存在的属性
-          if (key in this) {
-            console.warn(
-              `[WebComponentAdapter] Property "${key}" already exists on the component, ` +
-                'exposing it will override the original property.'
-            );
-          }
+      this._setupResult = prototype.setup(this.createHooks()) ?? (() => {});
+      Object.entries(this._exposes).forEach(([key, value]) => {
+        // 跳过已存在的属性
+        if (key in this) {
+          console.warn(
+            `[WebComponentAdapter] Property "${key}" already exists on the "${prototype.name}", ` +
+              'exposing it will override the original property.'
+          );
+        }
 
-          // 暴露 API
-          Object.defineProperty(this, key, {
-            value,
-            configurable: true,
-            enumerable: true,
-          });
+        // 暴露 API
+        Object.defineProperty(this, key, {
+          value,
+          configurable: true,
+          enumerable: true,
         });
-      }
+      });
       this._setupPhase = false;
 
       // 触发 created 回调
@@ -147,8 +146,15 @@ export const WebComponentAdapter = <Props extends object>(
         throw new Error(`${name} can only be called at the root of the prototype.`);
     }
 
-    private createHooks(): PrototypeAPI<Props> {
+    private createHooks(): PrototypeAPI<Props, Exposes> {
       return {
+        expose: {
+          define: (key, value) => {
+            this._exposes[key] = value;
+          },
+          get: (key) => this._exposes[key],
+        },
+
         lifecycle: {
           onCreated: (cb) => {
             this.checkSetupPhase('onCreated');
@@ -438,8 +444,8 @@ export const WebComponentAdapter = <Props extends object>(
       if (this._isDestroyed) return;
 
       // 如果有 render 函数，使用它来更新
-      if (this._setupResult?.render) {
-        const element = this._setupResult.render(this._renderer);
+      if (this._setupResult) {
+        const element = this._setupResult(this._renderer);
         if (element) {
           this._renderManager.update(element);
         }

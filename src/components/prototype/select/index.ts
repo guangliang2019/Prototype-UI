@@ -5,35 +5,53 @@ import {
   asSelectItem,
   asSelectTrigger,
   asSelectValue,
+  SelectContentProps,
+  SelectContentExposes,
+  SelectItemExposes,
+  SelectItemProps,
+  SelectTriggerExposes,
+  SelectTriggerProps,
+  SelectValueExposes,
+  SelectValueProps,
 } from '@/core/behaviors/as-select';
 
 export const PrototypeSelect = WebComponentAdapter(
   definePrototype({
     name: 'prototype-select',
-    setup: asSelect,
+    setup: (p) => {
+      asSelect(p);
+    },
   })
 );
 export const PrototypeSelectTrigger = WebComponentAdapter(
-  definePrototype({
+  definePrototype<SelectTriggerProps, SelectTriggerExposes>({
     name: 'prototype-select-trigger',
-    setup: asSelectTrigger,
+    setup: (p) => {
+      asSelectTrigger(p);
+    },
   })
 );
 export const PrototypeSelectContent = WebComponentAdapter(
-  definePrototype({
+  definePrototype<SelectContentProps, SelectContentExposes>({
     name: 'prototype-select-content',
-    setup: asSelectContent,
+    setup: (p) => {
+      asSelectContent(p);
+    },
   })
 );
 export const PrototypeSelectItem = WebComponentAdapter(
-  definePrototype({
+  definePrototype<SelectItemProps, SelectItemExposes>({
     name: 'prototype-select-item',
-    setup: asSelectItem,
+    setup: (p) => {
+      asSelectItem(p);
+    },
   })
 );
 export const PrototypeSelectValue = WebComponentAdapter(
-  definePrototype({
+  definePrototype<SelectValueProps, SelectValueExposes>({
     name: 'prototype-select-value',
-    setup: asSelectValue,
+    setup: (p) => {
+      asSelectValue(p);
+    },
   })
 );

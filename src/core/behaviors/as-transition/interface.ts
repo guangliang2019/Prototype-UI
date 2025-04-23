@@ -19,10 +19,13 @@ export interface TransitionStates {
   state: State<TransitionStateEnum>;
 }
 
-export interface TransitionActions {
+export interface TransitionExposes {
   enter: () => void;
   leave: () => void;
 }
+
+export interface TransitionChildProps {}
+export interface TransitionChildExposes {}
 
 export interface TransitionContextType {
   show: boolean;

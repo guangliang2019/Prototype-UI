@@ -7,7 +7,7 @@ import { RendererAPI } from './renderer';
  */
 export type AttributeValue = string | number | boolean;
 
-export interface PrototypeAPI<Props> {
+export interface PrototypeAPI<Props extends {} = {}, Exposes extends {} = {}> {
   props: {
     define: (props: Props) => void;
     set: (props: Partial<Props>) => void;
@@ -56,6 +56,11 @@ export interface PrototypeAPI<Props> {
   role: {
     asTrigger: () => void;
   };
+
+  expose: {
+    define: <K extends keyof Exposes>(name: K, value: Exposes[K]) => void;
+    get: <K extends keyof Exposes>(name: K) => Exposes[K];
+  };
 }
 
 export interface UpdateContext<T> {
@@ -65,12 +70,7 @@ export interface UpdateContext<T> {
 /**
  * 原型配置项
  */
-export interface Prototype<
-  Props extends {} = {},
-  States extends {} = {},
-  Actions extends {} = {},
-  Exposes extends {} = {},
-> {
+export interface Prototype<Props extends {} = {}, Exposes extends {} = {}> {
   /** 组件名称 */
   name: string;
   /** 可观察的属性 */
@@ -79,44 +79,17 @@ export interface Prototype<
   /**
    * 设置函数
    */
-  setup: (p: PrototypeAPI<Props>) => PrototypeSetupResult<States, Actions, Exposes> | void;
+  setup: PrototypeSetup<Props, Exposes>;
 }
 
 /**
  * 原型设置函数的返回值
  */
-export interface PrototypeSetupResult<
-  States extends {} = {},
-  Actions extends {} = {},
-  Exposes extends {} = {},
-> {
-  /**
-   * 组件状态
-   */
-  states?: States;
-
-  /**
-   * 组件动作/方法
-   */
-  actions?: Actions;
-
-  /**
-   * 暴露给外部的接口
-   */
-  exposes?: Exposes;
-
-  /**
-   * 渲染函数
-   */
-  render?: (renderer: RendererAPI) => Element | void;
-}
+export type PrototypeSetupResult = (renderer: RendererAPI) => Element | void;
 
 /**
  * 原型设置函数
  */
-export type PrototypeSetup<
-  Props extends {} = {},
-  States extends {} = {},
-  Actions extends {} = {},
-  Exposes extends {} = {},
-> = (p: PrototypeAPI<Props>) => PrototypeSetupResult<States, Actions, Exposes> | void;
+export type PrototypeSetup<Props extends {} = {}, Exposes extends {} = {}> = (
+  p: PrototypeAPI<Props, Exposes>
+) => PrototypeSetupResult | void;

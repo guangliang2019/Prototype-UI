@@ -27,12 +27,10 @@ export const ShadcnSelectPrototype = definePrototype<ShadcnSelectProps>({
       return context;
     });
 
-    return {
-      render() {
-        const _class = p.view.getElement().className;
-        const _computedClass = 'block relative';
-        p.view.getElement().className = [_computedClass, _class].join(' ').trimEnd();
-      },
+    return () => {
+      const _class = p.view.getElement().className;
+      const _computedClass = 'block relative';
+      p.view.getElement().className = [_computedClass, _class].join(' ').trimEnd();
     };
   },
 });

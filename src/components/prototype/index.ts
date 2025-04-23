@@ -22,5 +22,4 @@ export { PrototypeTransition } from './transition';
 export { PrototypeResizable, PrototypeResizableHandle, PrototypeResizablePanel } from './resizable';
 export { PrototypeTestTab, PrototypeTestTabTrigger, PrototypeTestTabContent } from './test-tab';
 export { PrototypeTestButton } from './test-button';
-export { PrototypeSwitch} from './new-switch';
 

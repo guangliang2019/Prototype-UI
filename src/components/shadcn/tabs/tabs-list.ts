@@ -12,12 +12,10 @@ export const ShadcnTabsListPrototype = definePrototype({
       _originalCls = p.view.getElement().className;
     });
 
-    return {
-      render: () => {
-        const _computedClass =
-          'h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground grid w-full grid-cols-2';
-        p.view.getElement().className = [_computedClass, _originalCls].join(' ').trimEnd();
-      },
+    return () => {
+      const _computedClass =
+        'h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground grid w-full grid-cols-2';
+      p.view.getElement().className = [_computedClass, _originalCls].join(' ').trimEnd();
     };
   },
 });

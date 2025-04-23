@@ -1,6 +1,9 @@
+// behaviors
 export { default as asSwitch } from './as-switch';
 export { default as asSwitchThumb } from './as-switch-thumb';
 
-export type { SwitchProps, SwitchState, SwitchContextType } from './interface';
+// types
+export type { SwitchProps, SwitchState, SwitchExposes, SwitchContextType } from './interface';
 
-export { SwitchContext } from './interface';
+// context and constants
+export { SwitchContext, DEFAULT_SWITCH_PROPS } from './interface';

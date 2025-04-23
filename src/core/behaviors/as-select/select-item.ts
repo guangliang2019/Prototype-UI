@@ -1,13 +1,18 @@
 import { PrototypeAPI } from '@/core/interface';
-import { SelectContext, SelectItemProps } from './interface';
+import { DEFAULT_SELECT_ITEM_PROPS, SelectContext, SelectItemExposes, SelectItemProps } from './interface';
 import { asButton } from '../as-button';
 
-const asSelectItem = (p: PrototypeAPI<SelectItemProps>) => {
+const asSelectItem = <
+  Props extends SelectItemProps = SelectItemProps,
+  Exposes extends SelectItemExposes = SelectItemExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   // role
   asButton(p);
 
   // props
-  p.props.define({ value: ' ' });
+  p.props.define(DEFAULT_SELECT_ITEM_PROPS as Props);
 
   // state
   const selected = p.state.define<boolean>(false, 'data-selected');
@@ -69,8 +74,10 @@ const asSelectItem = (p: PrototypeAPI<SelectItemProps>) => {
     const props = p.props.get();
     const context = p.context.get(SelectContext);
     p.props.set({
-      onClick: () => context.changeValue(props.value, true),
-    });
+      onClick: () => {
+        context.changeValue(props.value, true);
+      },
+    } as Partial<Props>);
   });
 };
 

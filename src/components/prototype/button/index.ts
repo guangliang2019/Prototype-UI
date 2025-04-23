@@ -1,9 +1,11 @@
 import { definePrototype, WebComponentAdapter } from '@/core';
-import { asButton, ButtonProps } from '@/core/behaviors/as-button';
+import { asButton, ButtonProps, ButtonExposes } from '@/core/behaviors/as-button';
 
-export const PrototypeButton = WebComponentAdapter<ButtonProps>(
-  definePrototype({
+export const PrototypeButton = WebComponentAdapter(
+  definePrototype<ButtonProps, ButtonExposes>({
     name: 'prototype-button',
-    setup: asButton,
+    setup: (p) => {
+      asButton(p);
+    },
   })
 );

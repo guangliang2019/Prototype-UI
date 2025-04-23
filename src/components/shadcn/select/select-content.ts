@@ -1,4 +1,8 @@
-import { ShadcnSelectContentProps, ShadcnSelectContext } from './interface';
+import {
+  ShadcnSelectContentExposes,
+  ShadcnSelectContentProps,
+  ShadcnSelectContext,
+} from './interface';
 import { definePrototype, WebComponentAdapter } from '@/core';
 import { asSelectContent } from '@/core/behaviors/as-select';
 import { CONFIG } from '../_config';
@@ -28,12 +32,15 @@ const SHADCN_SELECT_CONTENT_CLASS = [
   .join(' ')
   .trimEnd();
 
-export const ShadcnSelectContentPrototype = definePrototype<ShadcnSelectContentProps>({
+export const ShadcnSelectContentPrototype = definePrototype<
+  ShadcnSelectContentProps,
+  ShadcnSelectContentExposes
+>({
   name: `${CONFIG.shadcn.prefix}-select-content`,
   setup: (p) => {
     // role
     const { states } = asSelectContent(p);
-    const { actions: transitionActions } = asTransition(p);
+    asTransition(p);
 
     p.props.define({
       enterDuration: 80,
@@ -42,18 +49,16 @@ export const ShadcnSelectContentPrototype = definePrototype<ShadcnSelectContentP
     } as ShadcnSelectContentProps);
 
     p.state.watch(states.visible, (v) => {
-      v ? transitionActions.enter() : transitionActions.leave();
+      v ? p.expose.get('enter')() : p.expose.get('leave')();
     });
 
     // context
     p.context.watch(ShadcnSelectContext);
 
-    return {
-      render: () => {
-        const root = p.view.getElement();
-        const className = root.className || '';
-        root.className = [SHADCN_SELECT_CONTENT_CLASS, className].join(' ').trimEnd();
-      },
+    return () => {
+      const root = p.view.getElement();
+      const className = root.className || '';
+      root.className = [SHADCN_SELECT_CONTENT_CLASS, className].join(' ').trimEnd();
     };
   },
 });
