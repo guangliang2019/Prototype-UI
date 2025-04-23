@@ -1,98 +1,113 @@
-# Prototype UI 简介
+# Proto UI Introduction
 
-## 项目愿景
+> Any Design System ✕ Any Platform Technology
 
-Prototype UI 致力于打造交互的元语言，让任何设计体系都能获得以下核心能力：
+## Project Vision
 
-1. **技术无关性**
-   - 支持任意技术栈的实现（React、Vue、Flutter、Qt 等）
-   - 一次定义，多处使用
-   - 框架迁移成本最小化
+Proto UI is a component generation solution that starts from the essence of interaction, aiming to create a meta-language for interaction. The project will achieve this goal in three phases:
 
-2. **完全的可定制性**
-   - 灵活的组件定制
-   - 自由的样式调整
-   - 行为逻辑的重写
+### Phase 1: Web Platform Component Generation Solution
+- **Technology Agnostic**
+  - Support for any Web technology stack (React, Vue, Web Components, etc.)
+  - Write once, run anywhere
+  - Minimal framework migration cost
 
-3. **极致的性能**
-   - 最小运行时开销
-   - 精确的渲染控制
-   - 高效的状态管理
+- **Complete Customizability**
+  - Flexible component customization
+  - Free style adjustments
+  - Allow behavior logic rewriting
 
-4. **一流的无障碍性**
-   - 完整的 WCAG 2.1 支持
-   - 符合 ARIA 规范
-   - 键盘导航支持
-   - 屏幕阅读器优化
+- **Extreme Performance**
+  - Minimal runtime overhead
+  - Precise rendering control
+  - Efficient state management
 
-5. **内置的安全性**
-   - XSS 防护
-   - 输入验证
-   - 安全的渲染策略
+- **Web Platform Accessibility**
+  - Full WCAG 2.1 compliance
+  - ARIA specification compliance
+  - Keyboard navigation support
+  - Screen reader optimization
 
-## 核心概念
+- **Built-in Security**
+  - XSS protection
+  - Input validation
+  - Secure rendering strategy
 
-### 组件生命周期
+### Phase 2: Cross-Platform Component Generation Solution
+- Extend support to native platforms (iOS, Android)
+- Extend support to embedded platforms (Flutter, Qt, Unity, etc.)
+- Provide platform-specific accessibility support
+- Unified component definition, multi-platform implementation
+
+### Phase 3: Interaction Meta-Language
+- Establish a complete interaction modeling language
+- Support cross-platform interaction pattern definition
+- Achieve verifiability of interaction design
+- Provide reusability of interaction patterns
+
+## Core Concepts
+
+### Component Lifecycle
 
 ```
-Prototype --Adapter--> Component --框架原生--> Element
+Prototype --Adapter--> Component --Native Framework--> Element
 ```
 
-#### 1. Prototype（原型）
+#### 1. Prototype
 
-原型是对组件交互本质的抽象描述：
-- 与具体技术实现解耦
-- 专注于行为和状态定义
-- 作为所有实现的共享基础
-- 确保行为的一致性
+Prototype is an abstract description of the essence of component interaction:
+- Decoupled from specific technology implementations
+- Focused on behavior and state definition
+- Serves as the shared foundation for all implementations
+- Ensures behavioral consistency
 
 ```typescript
-// 原型示例
+// Prototype example
 interface ButtonPrototype {
   setup(hooks: PrototypeHooks): PrototypeSetupResult;
 }
 ```
 
-#### 2. Adapter（适配器）
+#### 2. Adapter
 
-适配器负责将原型转换为具体框架的组件：
-- 处理平台特定的生命周期
-- 管理状态同步机制
-- 提供事件系统适配
-- 实现渲染系统转换
+Adapter is responsible for converting prototypes into framework-specific components:
+- Handles platform-specific lifecycle
+- Manages state synchronization mechanism
+- Provides event system adaptation
+- Implements rendering system conversion
 
 ```typescript
-// 适配器示例
-const WebButton = WebComponentAdapter(ButtonPrototype);
+// Adapter examples
+const WebComponentButton = WebComponentAdapter(ButtonPrototype);
 const ReactButton = ReactAdapter(ButtonPrototype);
 ```
 
-#### 3. Component（组件）
+#### 3. Component
 
-最终在各框架中的具体实现：
-- 遵循框架的组件模型
-- 利用框架的渲染机制
-- 复用框架的优化策略
-- 性能取决于框架本身和适配器质量
+The final implementation in various frameworks:
+- Follows framework's component model
+- Utilizes framework's rendering mechanism
+- Reuses framework's optimization strategies
+- Performance depends on the framework itself and adapter quality
 
-## 设计原则
+## Design Principles
 
-1. **关注点分离**
-   - 行为与渲染分离
-   - 状态与视图分离
-   - 平台相关代码隔离
+1. **Separation of Concerns**
+   - Separation of behavior and rendering
+   - Separation of state and view
+   - Isolation of platform-specific code
 
-2. **最小运行时**
-   - 精简的核心实现
-   - 按需加载的功能
-   - 高效的执行性能
+2. **Minimal Runtime**
+   - Streamlined core implementation
+   - On-demand feature loading
+   - Efficient execution performance
 
-3. **开发体验优先**
-   - 完整的类型定义
-   - 清晰的错误提示
-   - 丰富的开发工具
+3. **Developer Experience First**
+   - Complete type definitions
+   - Clear error messages
+   - Rich development tools
 
-4. **渐进式采用**
-   - 从简单开始
-   - 按需引入特性
-   - 平滑的升级路径 
+4. **Progressive Adoption**
+   - Start with Web platform
+   - Gradually expand to other platforms
+   - Smooth upgrade path 

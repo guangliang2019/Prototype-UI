@@ -1,12 +1,17 @@
 import { PrototypeAPI } from '@/core/interface';
-import { TabsProps, TabsContext, TabsContextType, TabsExpose } from './interface';
+import {
+  DEFAULT_TABS_PROPS,
+  TabsContext,
+  TabsContextType,
+  TabsExposes,
+  TabsProps,
+} from './interface';
 
-const asTabs = (p: PrototypeAPI<TabsProps>): { exposes: TabsExpose } => {
+const asTabs = <Props extends TabsProps = TabsProps, Exposes extends TabsExposes = TabsExposes>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   // props
-  p.props.define({
-    defaultValue: '',
-    onTabChange: () => {},
-  });
+  p.props.define(DEFAULT_TABS_PROPS as Props);
 
   // context
   p.context.provide(TabsContext, (updateContext) => {
@@ -31,14 +36,11 @@ const asTabs = (p: PrototypeAPI<TabsProps>): { exposes: TabsExpose } => {
     return context;
   });
 
-  return {
-    exposes: {
-      changeTab: (value: string, focus?: boolean) => {
-        const context = p.context.get(TabsContext);
-        context.changeTab(value, focus);
-      },
-    },
-  };
+  // exposes
+  p.expose.define('changeTab', (value: string, focus?: boolean) => {
+    const context = p.context.get(TabsContext);
+    context.changeTab(value, focus);
+  });
 };
 
 export default asTabs;

@@ -1,12 +1,23 @@
 import { PrototypeAPI } from '@/core/interface';
-import { TabsContext, TabsContextType, TabsTriggerProps } from './interface';
+import {
+  DEFAULT_TABS_TRIGGER_PROPS,
+  TabsContext,
+  TabsContextType,
+  TabsTriggerExposes,
+  TabsTriggerProps,
+} from './interface';
 
-const asTabsTrigger = (p: PrototypeAPI<TabsTriggerProps>) => {
+const asTabsTrigger = <
+  Props extends TabsTriggerProps = TabsTriggerProps,
+  Exposes extends TabsTriggerExposes = TabsTriggerExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   // role
   p.role.asTrigger();
 
   // props
-  p.props.define({ value: '' });
+  p.props.define(DEFAULT_TABS_TRIGGER_PROPS as Props);
 
   // ui-state
   const state = p.state.define<'active' | 'inactive'>('inactive', 'data-state');

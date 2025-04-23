@@ -6,21 +6,34 @@ import {
   asTabsIndicator,
   asTabsTrigger,
   TabsContentProps,
+  TabsProps,
 } from '@/core/behaviors/as-tabs';
+import {
+  TabsContentExposes,
+  TabsExposes,
+  TabsIndicatorExposes,
+  TabsIndicatorProps,
+  TabsTriggerExposes,
+  TabsTriggerProps,
+} from '@/core/behaviors/as-tabs/interface';
 
 export const PrototypeTabs = WebComponentAdapter(
-  definePrototype({
+  definePrototype<TabsProps, TabsExposes>({
     name: 'prototype-tabs',
-    setup: asTabs,
+    setup: (p) => {
+      asTabs(p);
+    },
   })
 );
 export const PrototypeTabsTrigger = WebComponentAdapter(
-  definePrototype({
+  definePrototype<TabsTriggerProps, TabsTriggerExposes>({
     name: 'prototype-tabs-trigger',
-    setup: asTabsTrigger,
+    setup: (p) => {
+      asTabsTrigger(p);
+    },
   })
 );
-export const PrototypeTabsContent = WebComponentAdapter<TabsContentProps>({
+export const PrototypeTabsContent = WebComponentAdapter<TabsContentProps, TabsContentExposes>({
   name: 'prototype-tabs-content',
   setup: (p) => {
     // role
@@ -33,16 +46,18 @@ export const PrototypeTabsContent = WebComponentAdapter<TabsContentProps>({
     });
 
     // set hidden style
-    return {
-      render: () => {
-        p.view.getElement().className = [_originalCls, 'data-[state=inactive]:hidden']
-          .join(' ')
-          .trimEnd();
-      },
+    return () => {
+      p.view.getElement().className = [_originalCls, 'data-[state=inactive]:hidden']
+        .join(' ')
+        .trimEnd();
     };
   },
 });
-export const PrototypeTabsIndicator = WebComponentAdapter({
-  name: 'prototype-tabs-indicator',
-  setup: asTabsIndicator,
-});
+export const PrototypeTabsIndicator = WebComponentAdapter<TabsIndicatorProps, TabsIndicatorExposes>(
+  {
+    name: 'prototype-tabs-indicator',
+    setup: (p) => {
+      asTabsIndicator(p);
+    },
+  }
+);

@@ -4,7 +4,7 @@ export { default as asTransitionChild } from './as-transition-child';
 export type {
   TransitionProps,
   TransitionStates,
-  TransitionActions,
+  TransitionExposes,
   TransitionStateEnum,
   TransitionContextType,
 } from './interface';

@@ -24,14 +24,9 @@ import type { Prototype } from './interface';
  * });
  * ```
  */
-export function definePrototype<
-  Props extends {} = {},
-  States extends {} = {},
-  Actions extends {} = {},
-  Exposes extends {} = {},
->(
-  prototype: Prototype<Props, States, Actions, Exposes>
-): Prototype<Props, States, Actions, Exposes> {
+export function definePrototype<Props extends {} = {}, Exposes extends {} = {}>(
+  prototype: Prototype<Props, Exposes>
+): Prototype<Props, Exposes> {
   return prototype;
 }
 

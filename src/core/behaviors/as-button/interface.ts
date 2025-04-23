@@ -6,7 +6,7 @@ export interface ButtonProps {
   /** 是否自动聚焦 */
   autoFocus?: boolean;
   /** 点击事件处理器 */
-  onClick?: (event: MouseEvent | KeyboardEvent) => void;
+  onClick?: (event?: MouseEvent | KeyboardEvent) => void;
 }
 
 export interface ButtonState {
@@ -20,7 +20,7 @@ export interface ButtonState {
   active: State<boolean>;
 }
 
-export interface ButtonActions {
+export interface ButtonExposes {
   /** 聚焦按钮 */
   focus(): void;
   /** 失焦按钮 */
@@ -28,3 +28,9 @@ export interface ButtonActions {
   /** 点击按钮 */
   click(): void;
 }
+
+export const DEFAULT_BUTTON_PROPS: ButtonProps = {
+  disabled: false,
+  autoFocus: false,
+  onClick: () => {},
+};

@@ -1,9 +1,15 @@
 import { PrototypeAPI } from '@/core/interface';
-import { SwitchContext, SwitchContextType, SwitchProps, SwitchState } from './interface';
+import {
+  SwitchContext,
+  SwitchContextType,
+  SwitchExposes,
+  SwitchProps,
+  SwitchState,
+} from './interface';
 import { asButton } from '../as-button';
 
 const asSwitch = (
-  p: PrototypeAPI<SwitchProps>
+  p: PrototypeAPI<SwitchProps, SwitchExposes>
 ): {
   states: SwitchState;
 } => {
@@ -24,7 +30,7 @@ const asSwitch = (
     const props = p.props.get();
     _updateContext = updateContext;
     _checked.set(props.checked ?? false);
-    _disabled.set(props.disabled ?? false)
+    _disabled.set(props.disabled ?? false);
 
     return { checked: _checked, disabled: _disabled };
   });

@@ -1,10 +1,20 @@
 import { PrototypeAPI } from '@/core/interface';
-import { SelectContext, SelectContextType, SelectTriggerProps } from './interface';
+import {
+  SelectContext,
+  SelectContextType,
+  SelectTriggerExposes,
+  SelectTriggerProps,
+} from './interface';
 import { asButton } from '../as-button';
 
-const asSelectTrigger = (p: PrototypeAPI<SelectTriggerProps>) => {
+const asSelectTrigger = <
+  Props extends SelectTriggerProps = SelectTriggerProps,
+  Exposes extends SelectTriggerExposes = SelectTriggerExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   // role
-  const { actions: ButtonActions } = asButton(p);
+  asButton(p);
   // context
   p.context.watch(SelectContext, (context, keys) => {
     if (keys.includes('width')) {
@@ -16,7 +26,7 @@ const asSelectTrigger = (p: PrototypeAPI<SelectTriggerProps>) => {
     const component = p.view.getElement();
     context.width = component.offsetWidth;
     context.triggerRef = component;
-    context.focus = ButtonActions.focus;
+    context.focus = p.expose.get('focus');
   });
 
   const _handleMouseDown = (event: MouseEvent): void => {

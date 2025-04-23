@@ -1,21 +1,17 @@
 import { PrototypeAPI } from '@/core/interface';
-import { ButtonActions, ButtonProps, ButtonState } from './interface';
-
-export const DEFAULT_BUTTON_PROPS: ButtonProps = {
-  disabled: false,
-  autoFocus: false,
-  onClick: () => {},
-};
+import { ButtonExposes, ButtonProps, ButtonState, DEFAULT_BUTTON_PROPS } from './interface';
 
 /**
  * 让使用了 asButton 的组件具有按钮的行为
  * @param p 原型 API
  */
-const asButton = <Props extends ButtonProps>(
-  p: PrototypeAPI<Props>
+const asButton = <
+  Props extends ButtonProps = ButtonProps,
+  Exposes extends ButtonExposes = ButtonExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
 ): {
   states: ButtonState;
-  actions: ButtonActions;
 } => {
   // 标记为触发器
   p.role.asTrigger();
@@ -91,32 +87,18 @@ const asButton = <Props extends ButtonProps>(
   });
 
   // 导出动作
-  const actions: ButtonActions = {
-    focus() {
-      try {
-        p.event.focus.set(true);
-      } catch (e) {
-        console.warn('Cannot focus button before it is mounted');
-      }
-    },
-    blur() {
-      try {
-        p.event.focus.set(false);
-      } catch (e) {
-        console.warn('Cannot blur button before it is mounted');
-      }
-    },
-    click() {
-      try {
-        const props = p.props.get();
-        if (!props.disabled) {
-          p.event.click();
-        }
-      } catch (e) {
-        console.warn('Cannot click button before it is mounted');
-      }
-    },
-  };
+  p.expose.define('focus', () => {
+    p.event.focus.set(true);
+  });
+  p.expose.define('blur', () => {
+    p.event.focus.set(false);
+  });
+  p.expose.define('click', () => {
+    const props = p.props.get();
+    if (!props.disabled) {
+      p.event.click();
+    }
+  });
 
   return {
     states: {
@@ -125,7 +107,6 @@ const asButton = <Props extends ButtonProps>(
       focusVisible,
       active,
     },
-    actions,
   };
 };
 

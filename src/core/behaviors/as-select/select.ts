@@ -1,13 +1,19 @@
 import { PrototypeAPI } from '@/core/interface';
-import { SelectContext, SelectContextType, SelectProps } from './interface';
+import {
+  SelectContext,
+  SelectContextType,
+  SelectProps,
+  SelectExposes,
+  DEFAULT_SELECT_PROPS,
+} from './interface';
 
-const asSelect = (p: PrototypeAPI<SelectProps>) => {
+const asSelect = <Props extends SelectProps, Exposes extends SelectExposes>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   const _itemRefs: SelectContextType['itemsRefs'] = [];
 
   // props
-  p.props.define({
-    defaultValue: '',
-  });
+  p.props.define(DEFAULT_SELECT_PROPS as Props);
 
   // state
   const selecting = p.state.define<boolean>(false, 'data-selecting');

@@ -10,7 +10,13 @@ export interface OverlayState {
   visible: State<boolean>;
 }
 
-export interface OverlayActions {
+export interface OverlayExposes {
   show: () => void;
   hide: () => void;
 }
+
+export const DEFAULT_OVERLAY_PROPS: OverlayProps = {
+  visible: false,
+  onVisibleChange: () => {},
+  clickOutsideInterceptor: () => true,
+};

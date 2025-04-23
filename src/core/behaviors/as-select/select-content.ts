@@ -1,13 +1,18 @@
 import { PrototypeAPI } from '@/core/interface';
-import { SelectContentProps, SelectContext } from './interface';
+import { SelectContentExposes, SelectContentProps, SelectContext } from './interface';
 import { asOverlay } from '../as-overlay';
 
-const asSelectContent = (p: PrototypeAPI<SelectContentProps>) => {
+const asSelectContent = <
+  Props extends SelectContentProps = SelectContentProps,
+  Exposes extends SelectContentExposes = SelectContentExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   // context
   p.context.watch(SelectContext);
 
   // role
-  const { actions, states } = asOverlay(p);
+  const { states } = asOverlay(p);
 
   p.lifecycle.onMounted(() => {
     p.props.set({
@@ -32,19 +37,18 @@ const asSelectContent = (p: PrototypeAPI<SelectContentProps>) => {
         const context = p.context.get(SelectContext);
         return e.target !== context.triggerRef;
       },
-    });
+    } as Partial<Props>);
   });
 
   p.lifecycle.onMounted(() => {
     const context = p.context.get(SelectContext);
 
-    context.open = actions.show;
-    context.close = actions.hide;
+    context.open = p.expose.get('show');
+    context.close = p.expose.get('hide');
   });
 
   return {
     states: states,
-    actions: actions,
   };
 };
 

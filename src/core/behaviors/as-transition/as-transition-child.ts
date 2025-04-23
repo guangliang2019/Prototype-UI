@@ -1,7 +1,17 @@
 import { PrototypeAPI } from '@/core/interface';
-import { TransitionContext, TransitionStateEnum } from './interface';
+import {
+  TransitionContext,
+  TransitionStateEnum,
+  TransitionChildProps,
+  TransitionChildExposes,
+} from './interface';
 
-const asTransitionChild = (p: PrototypeAPI<{}>) => {
+const asTransitionChild = <
+  Props extends TransitionChildProps,
+  Exposes extends TransitionChildExposes,
+>(
+  p: PrototypeAPI<Props, Exposes>
+) => {
   const state = p.state.define<TransitionStateEnum>('idle');
   const _closed = p.state.define(false, 'data-closed');
   const _enter = p.state.define(false, 'data-enter');

@@ -1,11 +1,13 @@
 import { State } from '@/core/interface';
-import { ButtonProps } from '../as-button';
+import { ButtonExposes, ButtonProps } from '../as-button';
 import { createContext } from '@/core/adapters/web/context-center';
 
 export interface SwitchProps extends ButtonProps {
   onChange?: (checked: boolean) => void;
   checked?: boolean;
 }
+
+export interface SwitchExposes extends ButtonExposes {}
 
 export interface SwitchState {
   checked: State<boolean>;
