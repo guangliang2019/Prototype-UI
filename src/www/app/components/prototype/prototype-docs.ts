@@ -11,6 +11,7 @@ import './button';
 import './test-tab';
 import './test-button';
 import './new-switch';
+
 import { h } from '@/www/utils/dom';
 
 export default class PrototypeDoc extends HTMLElement {
@@ -31,6 +32,7 @@ export default class PrototypeDoc extends HTMLElement {
     fragment.appendChild(h('test-tab-doc'));
     fragment.appendChild(h('test-button-doc'));
     fragment.appendChild(h('new-switch-doc'));
+
 
     this.appendChild(fragment);
     this.className = 'w-full';
