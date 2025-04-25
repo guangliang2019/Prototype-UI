@@ -34,12 +34,16 @@ export function dfsFindElement(
 }
 
 // 自定义 createElement 函数
-export function h<T extends HTMLElement>(
+export function h<T extends HTMLElement | SVGElement>(
   tag: string,
   props: Props = {},
   children: (Node | string)[] = []
 ): T {
-  const element = document.createElement(tag) as T;
+  // 检查是否是 SVG 相关标签
+  const isSVG = ['svg', 'path', 'circle', 'rect', 'line', 'polyline', 'polygon', 'text', 'g'].includes(tag);
+  const element = isSVG 
+    ? document.createElementNS('http://www.w3.org/2000/svg', tag) as T
+    : document.createElement(tag) as T;
 
   if (props) {
     Object.entries(props).forEach(([key, value]) => {
@@ -48,7 +52,16 @@ export function h<T extends HTMLElement>(
           // @ts-ignore
           element[key] = value;
         } else {
-          element.setAttribute(key, value as string);
+          if (isSVG) {
+            // 对于 SVG 元素，使用 setAttributeNS
+            if (key === 'xlink:href') {
+              element.setAttributeNS('http://www.w3.org/1999/xlink', 'href', value as string);
+            } else {
+              element.setAttributeNS(null, key, value as string);
+            }
+          } else {
+            element.setAttribute(key, value as string);
+          }
         }
       }
     });
