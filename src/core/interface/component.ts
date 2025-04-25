@@ -6,7 +6,7 @@ export const CONTEXT_MANAGER_SYMBOL = Symbol('contextManager');
 /**
  * 组件实例接口
  */
-export interface Component {
+export interface Component<Props extends {} = {}> {
   /**
    * 组件的渲染元素
    */
@@ -15,7 +15,7 @@ export interface Component {
   /**
    * 属性管理器
    */
-  readonly props: PropsManager;
+  readonly props: PropsManager<Props>;
 
   /**
    * 上下文管理器
