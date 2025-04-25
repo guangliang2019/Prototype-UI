@@ -103,6 +103,11 @@
       "title": "New-Switch",
       "value": "prototype-new-switch",
       "href": "/prototype/new-switch"
+    },
+    {
+      "title": "Checkbox",
+      "value": "prototype-checkbox",
+      "href": "/prototype/checkbox"
     }
   ]
 }
