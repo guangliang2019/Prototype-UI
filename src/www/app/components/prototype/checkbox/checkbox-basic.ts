@@ -12,7 +12,7 @@ export default class CheckboxBasic extends DocCode {
             Div({ class: 'w-full flex flex-col gap-4' }, [
 
                 Div({ class: 'flex items-center gap-2' }, [
-                    h('prototype-checkbox', { checked: true, style: 'position: relative; width: 40px; height: 20px; border-radius: 10px; background-color: #ccc; display: inline-block; --checkbox-width: 20px; --checkbox-height: 20px; --checkbox-thumb-size: 16px;' }, [
+                    h('prototype-checkbox', { checked: true, style: 'position: relative; width: 20px; height: 20px; border-radius: 5px; background-color: #ccc; display: inline-block;' }, [
                         h('prototype-checkbox-indicator', { style: 'display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; background-color: #2563eb; border-radius: 2px; color: white;' }, [
                             h('svg', {
                                 width: '12',
