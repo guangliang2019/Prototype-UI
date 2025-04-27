@@ -46,6 +46,11 @@
       "title": "Switch",
       "value": "shadcn-switch",
       "href": "/shadcn/switch"
+    },
+    {
+      "title": "Checkbox",
+      "value": "shadcn-checkbox",
+      "href": "/shadcn/checkbox"
     }
   ],
   "Prototype UI": [
