@@ -17,6 +17,7 @@ if (!customElements.get('shadcn-checkbox-indicator')) {
 
 // 基础样式
 const baseClasses = [
+    'inline-flex',
     'peer',
     'h-4',
     'w-4',
