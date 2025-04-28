@@ -50,35 +50,38 @@ export const CheckboxIndicatorPrototype = definePrototype<IndicatorProps>({
             if (indicatorRef !== element) {
                 updateRef('indicatorRef', element);
             }
-
-            // 添加默认的 check 图标
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('viewBox', '0 0 24 24');
-            svg.setAttribute('fill', 'none');
-            svg.setAttribute('stroke', 'currentColor');
-            svg.setAttribute('stroke-width', '2');
-            svg.setAttribute('stroke-linecap', 'round');
-            svg.setAttribute('stroke-linejoin', 'round');
-
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('d', 'M20 6L9 17L4 12');
-
-            svg.appendChild(path);
-            element.appendChild(svg);
         });
 
         // 渲染函数
-        return () => {
+        return (renderer) => {
             const hostElement = p.view.getElement();
             const allClasses = [...baseClasses, ...stateClasses].join(' ');
 
             hostElement.className = optimizeTailwindClasses(allClasses);
 
-            // 设置图标样式
-            const svg = hostElement.querySelector('svg');
-            if (svg) {
-                svg.setAttribute('class', iconClasses.join(' '));
-            }
+            // 清空已有内容，防止重复渲染
+            hostElement.innerHTML = '';
+
+            // 创建SVG图标
+            const h = renderer.createElement;
+            const svg = h(
+                'svg',
+                {
+                    viewBox: '0 0 24 24',
+                    fill: 'none',
+                    stroke: 'currentColor',
+                    strokeWidth: '2',
+                    strokeLinecap: 'round',
+                    strokeLinejoin: 'round',
+                    class: iconClasses.join(' '),
+                },
+                [
+                    h('path', {
+                        d: 'M20 6L9 17L4 12',
+                    }),
+                ]
+            );
+            hostElement.appendChild(svg);
         };
     },
 });
