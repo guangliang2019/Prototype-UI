@@ -8,3 +8,4 @@ import './scroll-area';
 import './shadcn-docs';
 import './switch';
 import './checkbox';
+import './toggle';
