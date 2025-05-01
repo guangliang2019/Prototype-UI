@@ -16,8 +16,8 @@ if (!customElements.get('shadcn-toggle-content')) {
 
 // shadcn/ui toggle 基础样式
 const baseClasses = [
-    'w-10',
-    'h-10',
+    'w-9',
+    'h-9',
     'inline-flex',
     'items-center',
     'justify-center',
