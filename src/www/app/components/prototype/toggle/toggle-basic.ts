@@ -12,22 +12,20 @@ export default class ToggleBasic extends DocCode {
             Div({ class: 'w-full flex flex-col gap-4' }, [
 
                 Div({ class: 'flex items-center gap-2' }, [
-                    h('prototype-toggle', { pressed: true, style: 'position: relative; width: 30px; height: 30px; border-radius: 5px; background-color: #ccc; display: inline-block;' }, [
-                        h('prototype-toggle-content', { style: 'display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; background-color: #2563eb; border-radius: 50%; color: white; position: absolute; left: 20px; top: 1px; transition: left 0.2s;' }, [
-                            h('svg', {
-                                width: '12',
-                                height: '12',
-                                viewBox: '0 0 12 12',
-                                fill: 'none'
-                            }, [
-                                h('circle', {
-                                    cx: '6',
-                                    cy: '6',
-                                    r: '5',
-                                    stroke: 'currentColor',
-                                    'stroke-width': '2'
-                                }, [])
-                            ])
+                    h('prototype-toggle', { pressed: true, style: 'width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;' }, [
+                        h('svg', {
+                            width: '24',
+                            height: '24',
+                            viewBox: '0 0 24 24',
+                            fill: 'none',
+                            stroke: '#fff',
+                            strokeWidth: '2',
+                            strokeLinecap: 'round',
+                            strokeLinejoin: 'round',
+                            style: 'background:; border-radius: 8px;'
+                        }, [
+                            h('path', { d: 'M6 4h8a4 4 0 0 1 0 8H6z' }),
+                            h('path', { d: 'M6 12h9a4 4 0 0 1 0 8H6z' }),
                         ])
                     ]),
                     h('span', {}, [''])

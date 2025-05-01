@@ -5,7 +5,7 @@ export default class ToggleDoc extends DocComponent {
     protected _doc: Doc = {
         id: 'prototype-toggle',
         title: 'Toggle',
-        desc: '复选框组件',
+        desc: 'toggle组件',
         route: ['Prototype', 'Toggle'],
         links: [],
         sections: [
