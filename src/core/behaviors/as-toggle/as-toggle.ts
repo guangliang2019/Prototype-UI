@@ -21,7 +21,7 @@ const asToggle = <
   asButton(p);
 
   // 状态定义
-  const _pressed = p.state.define(false, 'pressed');
+  const _pressed = p.state.define(false, 'data-pressed');
   const _disabled = p.state.define(false);
 
   // 上下文

@@ -1,29 +1,11 @@
-.data-\[state\=pressed\]\:bg-primary[data-hover] {
-    background-color: hsl(var(--accent));
+.data-\[pressed\]\:bg-accent[data-pressed] {
+  background-color: hsl(var(--accent));
 }
 
-
-
-.data-\[state\=pressed\]\:bg-primary[pressed] {
-    background-color: hsl(var(--accent));
+.data-\[hover\]\:bg-accent[data-hover] {
+  background-color: hsl(var(--accent));
 }
-
-.bg-background {
-    background-color: hsl(var(--background));
-}
-
 
 .rounded-sm {
-    border-radius: 4px;
+  border-radius: 4px;
 }
-
-
-
-[data-hover] svg {
-    opacity: 0.75;
-}
-
-[pressed] svg {
-    opacity: 1;
-}
-

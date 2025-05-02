@@ -29,8 +29,10 @@ const baseClasses = [
 ];
 
 const stateClasses = [
-  'data-[state=pressed]:bg-primary',
-  'data-[state=pressed]:text-primary-foreground',
+  'data-[hover]:opacity-75',
+  'data-[hover]:bg-accent',
+  'data-[pressed]:opacity-100',
+  'data-[pressed]:bg-accent',
 ];
 
 const iconClasses = ['h-4', 'w-4', 'pointer-events-none'];
@@ -54,9 +56,6 @@ export const ShadcnTogglePrototype = definePrototype<ShadcnToggleProps, ToggleEx
       const hostElement = p.view.getElement();
       const allClasses = [SHADCN_TOGGLE_DEFAULT_CLASS, _originalCls].filter(Boolean).join(' ');
       hostElement.className = optimizeTailwindClasses(allClasses);
-
-      // 清空已有内容，防止重复渲染
-      hostElement.innerHTML = '';
 
       // SVG 图标，状态与 toggle 保持一致
       const h = renderer.createElement;
