@@ -8,14 +8,25 @@ export default class ShadcnTooltipBasic extends DocCode {
   protected _highlightRules: HighlightRule[] = [];
 
   protected _preview = () => {
-    const tooltip = h('shadcn-tooltip-provider', { class: 'w-full',  }, [
-      h('p', {  }, [
-        "Hover",
+    const tooltip = h('shadcn-tooltip-provider', { class: 'w-full flex',  }, [
+      h('shadcn-tooltip', { class: 'w-full' }, [
+        h('shadcn-tooltip-trigger', {  }, [
+          h('shadcn-button', { variant: 'primary' }, ['Hover'])
+          // h('p', {  }, [
+          //   "Hover1",
+          // ]),
+        ]),
+        h('shadcn-tooltip-content', {}, [
+          h('div', { }, [
+            "Add to library",
+          ]),
+        ]),
+  
       ]),
       h('shadcn-tooltip', { class: 'w-full' }, [
         h('shadcn-tooltip-trigger', {  }, [
           h('p', {  }, [
-            "Hover",
+            "Hover2",
           ]),
         ]),
         h('shadcn-tooltip-content', {}, ["22",

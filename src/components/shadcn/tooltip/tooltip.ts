@@ -1,11 +1,23 @@
 import { definePrototype, WebComponentAdapter } from "@/core";
 import { CONFIG } from "../_config";
-import { asTooltip } from "@/core/behaviors/as-tooltip";
+import { asTooltipRoot,TooltipExpose, TooltipRootProps } from "@/core/behaviors/as-tooltip";
 
 
-export const ShadcnTooltipPrototype = definePrototype({
+const SHADCN_TOOLTIP_CONTENT_CLASS = 'relative';
+
+export const ShadcnTooltipPrototype = definePrototype<TooltipRootProps,TooltipExpose>({
   name: `${CONFIG.shadcn.prefix}-tooltip`,
-  setup: asTooltip,
+  setup: (p) => {
+    asTooltipRoot(p);
+
+    return () => {
+      const root = p.view.getElement();
+      const className = root.className || "";
+      root.className = [SHADCN_TOOLTIP_CONTENT_CLASS, className].join(' ').trimEnd();
+    };
+  },
+
+
 })
 
 export const ShadcnTooltip = WebComponentAdapter(ShadcnTooltipPrototype);

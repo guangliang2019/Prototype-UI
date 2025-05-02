@@ -1,11 +1,13 @@
 import { definePrototype, WebComponentAdapter } from "@/core";
 import { CONFIG } from "../_config";
-import { asTooltipTrigger, TooltipProviderProps } from "@/core/behaviors/as-tooltip";
+import { asTooltipTrigger, TooltipExpose, TooltipTriggerProps } from "@/core/behaviors/as-tooltip";
 
 
-export const ShadcnTooltipTriggerPrototype = definePrototype({
+export const ShadcnTooltipTriggerPrototype = definePrototype<TooltipTriggerProps,TooltipExpose>({
   name: `${CONFIG.shadcn.prefix}-tooltip-trigger`,
-  setup: asTooltipTrigger,
+  setup: (p) => {
+    asTooltipTrigger(p);
+  },
 
 
 });

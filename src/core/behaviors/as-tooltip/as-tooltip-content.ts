@@ -1,33 +1,36 @@
 import { PrototypeAPI } from "@/core/interface";
-import { TooltipContext, TooltipProviderContext, TooltipProviderProps } from "./interface";
+import { TooltipRootContext, TooltipContentExpose, TooltipContentProps } from "./interface";
 
-const asTooltipContent = (p: PrototypeAPI<TooltipProviderProps>) => {
+const asTooltipContent = <
+  Props extends TooltipContentProps = TooltipContentProps,
+  Exposes extends TooltipContentExpose = TooltipContentExpose
+>(
+  p: PrototypeAPI<Props,Exposes>
+) => {
   
-  const state = p.state.define<'active' | 'inactive'>('inactive', 'data-state');
-  p.context.watch(TooltipProviderContext, (context, keys) => {
-    
-  })
-  p.context.watch(TooltipContext, (context, keys) => {
-    if (context.tipState) {
-      state.set('active'); 
-
+  const state= p.state.define<'closed' | 'delayed-open'| 'instant-open'>('closed', 'data-state');
+  p.context.watch(TooltipRootContext, (context, keys) => {
+    if (context.tooltipRootState === 'open' ) {
+      state.set('delayed-open'); 
     } else {
-      state.set('inactive');
+      state.set('closed');
     }
+
   })
 
-    p.event.on('mouseenter', () => {
-      const context = p.context.get(TooltipContext);
-      context.changeState(true);
+  const handleDisabledChange = (disabled: boolean) => {
+    if (disabled) {
+      p.event.focus.setPriority(-1);
+      p.event.setAttribute('aria-disabled', 'true');
+    } else {
+      p.event.focus.setPriority(0);
+      p.event.removeAttribute('aria-disabled');
+    }
+  };
+  p.lifecycle.onMounted(() => {
+    handleDisabledChange(true);
+  })
 
-  
-    })
-  
-    p.event.on('mouseleave', () => {
-      const context = p.context.get(TooltipContext);
-      context.changeState(false);
-    })
-  
 }
 
 export default asTooltipContent;

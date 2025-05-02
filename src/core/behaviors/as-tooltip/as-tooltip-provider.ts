@@ -1,27 +1,32 @@
-import { Prototype, PrototypeAPI } from "@/core/interface";
-import { TooltipProviderContent, TooltipProviderContext, TooltipProviderProps, TooltipProviderState } from "./interface";
+import { PrototypeAPI } from "@/core/interface";
+import { TooltipContextType, TooltipContext, TooltipProviderProps, TooltipProviderExposes } from "./interface";
 
 
-const asTooltipProvider = (p: PrototypeAPI<TooltipProviderProps>):{ states: TooltipProviderState } => {
-
+const asTooltipProvider = <Props extends TooltipProviderProps = TooltipProviderProps, 
+  Exposes extends TooltipProviderExposes = TooltipProviderExposes>( p: PrototypeAPI<Props,Exposes> ) => {
   let time:number;
   // context
-  p.context.provide(TooltipProviderContext, (updateContext) => {
-    const context: TooltipProviderContent = {
-      tooltipProviderState: false,
+  p.context.provide(TooltipContext, (updateContext) => {
+    const context: TooltipContextType = {
+      tooltipState: false,
+      index: -1,
+      tooltipRefs: [],
       changeState: (state: boolean) => {
-        updateContext({ tooltipProviderState: state});
-      }
+        updateContext({ tooltipState: state});
+      },
+      changeFocus: (index: number) => {
+        updateContext({ index: index});
+        context.tooltipRefs[index].focus();
+      },
     };
     return context;
   });
 
-  // 暂时不考虑聚焦的情况
 
   p.event.on('mouseenter', () => {
-    const context= p.context.get(TooltipProviderContext);
+    const context= p.context.get(TooltipContext);
 
-    if ( context.tooltipProviderState === false) {
+    if ( context.tooltipState === false) {
       window.clearTimeout(time);
       time = window.setTimeout(() => {
         context.changeState(true);
@@ -29,20 +34,16 @@ const asTooltipProvider = (p: PrototypeAPI<TooltipProviderProps>):{ states: Tool
     }
 
   });
-
   p.event.on('mouseleave', () => {
-    const context= p.context.get(TooltipProviderContext);
+    const context= p.context.get(TooltipContext);
     window.clearTimeout(time);
     context.changeState(false);
-
   });
 
-  return {
-    states: {
-      tooltipProviderState: false,
 
-    }
-  }
+  // exposes
+  p.expose.define('tooltipProviderState', false);
+
 
 }
 

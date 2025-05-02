@@ -1,42 +1,60 @@
 import { createContext } from "@/core/adapters/web/context-center";
 
 
-export interface TooltipContentProps {
+export interface TooltipRootProps {
 
-}
-
-export interface TooltipExpose {
-  // changeState: (hover: boolean) => void;
 }
 
 export interface TooltipProviderProps {
-  // readonly defaultState?: boolean; 
-  // onTooltipTime: (context: TooltipContentType) => void;
+
+}
+
+export interface TooltipTriggerProps {
+  
+}
+
+export interface TooltipContentProps {
+  
+}
+
+export interface TooltipTiggerExpose {
+
+}
+
+export interface TooltipContentExpose {
+  
 }
 
 export interface TooltipState {
   tipState: boolean;
 }
 
-export interface TooltipProviderState {
+export interface TooltipProviderExposes {
   tooltipProviderState: boolean;
+
 }
 
 
-export interface TooltipProviderContent {
-  tooltipProviderState: boolean;
+export interface TooltipContextType {
+  tooltipState: boolean;
+  tooltipRefs: HTMLElement[];
+  index: number;
   changeState: (state: boolean) => void;
+  changeFocus: ( focus: number) => void;
 }
 
-export interface TooltipContent {
-  tipState: boolean;
-  changeState: (state: boolean) => void;
+export interface TooltipRootContxtType {
+
+  tooltipRootState: 'closed' | 'ready' | 'open';
+  changeState: (state: 'closed' | 'ready' | 'open') => void;
 }
+
 
 export interface TooltipExpose {
-  changeState: (state: boolean) => void;
+  changeState: (state: 'closed' | 'ready' | 'open') => void;
+  changeFocus: ( focus: number) => void;
 }
 
-export const TooltipProviderContext = createContext<TooltipProviderContent>('as-tooltip-provider');
+export const TooltipContext = createContext<TooltipContextType>('as-tooltip-provider');
 
-export const TooltipContext = createContext<TooltipContent>('as-tooltip');
+export const TooltipRootContext = createContext<TooltipRootContxtType>('as-tooltip');
