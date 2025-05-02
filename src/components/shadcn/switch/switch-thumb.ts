@@ -12,13 +12,13 @@ const baseClasses = [
   'shadow-lg',
   'pointer-events-none',
   'transition-transform',
-  'w-5',
-  'h-5',
+  'w-4',
+  'h-4',
 ];
 
 const stateClasses = [
   'translate-x-0',
-  'data-[checked]:translate-x-5',
+  'data-[checked]:translate-x-4',
   'disabled:cursor-not-allowed disabled:opacity-50',
 ];
 

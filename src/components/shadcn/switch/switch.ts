@@ -18,8 +18,10 @@ if (!customElements.get('shadcn-switch-thumb')) {
 const baseClasses = [
   'inline-flex',
   'items-center',
-  'w-11',
-  'h-6',
+  'w-9',
+  'h-5',
+  'border-2',
+  'border-transparent',
   'relative',
   'rounded-full',
   'transition-colors',
