@@ -23,4 +23,4 @@ export { PrototypeResizable, PrototypeResizableHandle, PrototypeResizablePanel }
 export { PrototypeTestTab, PrototypeTestTabTrigger, PrototypeTestTabContent } from './test-tab';
 export { PrototypeTestButton } from './test-button';
 export { PrototypeCheckbox, PrototypeCheckboxIndicator } from './checkbox'
-
+export {PrototypeToggle} from './toggle'

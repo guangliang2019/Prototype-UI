@@ -51,6 +51,11 @@
       "title": "Checkbox",
       "value": "shadcn-checkbox",
       "href": "/shadcn/checkbox"
+    },
+    {
+      "title": "Toggle",
+      "value": "shadcn-toggle",
+      "href": "/shadcn/toggle"
     }
   ],
   "Prototype UI": [
@@ -113,6 +118,11 @@
       "title": "Checkbox",
       "value": "prototype-checkbox",
       "href": "/prototype/checkbox"
+    },
+    {
+      "title": "Toggle",
+      "value": "prototype-toggle",
+      "href": "/prototype/toggle"
     }
   ]
 }
