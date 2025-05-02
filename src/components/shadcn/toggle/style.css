@@ -1,0 +1,25 @@
+.data-\[state\=pressed\]\:bg-primary[data-hover='true'] {
+    background-color: hsl(var(--accent));
+}
+
+
+
+.data-\[state\=pressed\]\:bg-primary[pressed] {
+    background-color: hsl(var(--accent));
+}
+
+.bg-background {
+    background-color: hsl(var(--background));
+}
+
+
+.rounded-sm {
+    border-radius: 4px;
+}
+
+
+/* 让 toggle 组件内 svg 在 hover 时变为 50% 透明度 */
+[data-hover='true'] svg {
+    opacity: 0.5;
+}
+

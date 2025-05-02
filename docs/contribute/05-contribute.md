@@ -4,7 +4,7 @@
 
 ### TODO
 
-- [ ] 旧内核以及比旧内核还旧的原型，需要迁移到新内核
+- [x] 旧内核以及比旧内核还旧的原型，需要迁移到新内核
 - [ ] 原型需要拓展
 
   - [x] Button
@@ -59,7 +59,7 @@
   - [x] Button
   - [ ] Input
   - [x] Select
-  - [ ] Checkbox
+  - [x] Checkbox
   - [ ] Radio
   - [x] Switch
   - [ ] Slider
@@ -73,7 +73,7 @@
   - [ ] Menu
   - [ ] SubMenu
   - [ ] Dropdown
-  - [ ] Tabs
+  - [x] Tabs
   - [ ] Breadcrumb
   - [ ] Pagination
   - [ ] Steps

@@ -1,74 +1,79 @@
-# Prototype UI
+```markdown
+# Proto UI
 
-## Overview
+> Any Design System ✕ Any Platform Technology
 
-Prototype UI is a headless UI library built with Web Components, offering a novel approach to component integration. Inspired by shadcn/ui, it bypasses traditional package management by directly incorporating component source code into your project via a CLI. This provides unparalleled customization and control, allowing you to tailor the components directly within your codebase while maintaining a lightweight footprint.
+Proto UI is a framework-agnostic UI architecture built on interaction-first principles. Instead of treating components as static visual elements, Proto UI introduces a reusable behavior modeling system—**Prototypes**—to enable cross-platform, design-system-independent UI development.
 
-Website: [https://prototype-ui.dev](https://prototype-ui.dev)
+---
 
-## Features
+## 🚀 Why Proto UI?
 
-- **Non-Package Distribution**: Instead of traditional package installation, components are seamlessly integrated into your project through our CLI, promoting a more tailored development experience.
-- **Customizable**: Full code transparency allows you to modify and adapt components to meet your specific requirements.
-- **Accessibility**: Committed to the latest accessibility standards, ensuring usability for all users.
-- **Lightweight**: The entire library contributes less than 10 KB to your project, emphasizing efficiency and performance.
+- Write once, run anywhere—React, Vue, Web Components, even native platforms
+- Fully customizable behaviors and structure, decoupled from rendering tech
+- Minimal runtime overhead, strict separation of concerns
+- Accessibility, security, and performance built in from day one
 
-## Installation (Working in Progress)
+---
 
-```bash
-npx @prototype-ui/cli init
-# Or for a specific theme:
-npx @prototype-ui/cli init
-(and choose your prefer theme in an interactive menu)
+## 🧠 Core Idea
+
+    Adapter(Prototype) => Component
+
+Define a behavior model once (Prototype), and apply it across platforms via adapters. Proto UI breaks down interaction into modular, testable, and composable units.
+
+---
+
+## 🛠 Getting Started
+
+Proto UI uses **Vite** as its development environment.
+
+### Requirements
+
+- **Node.js >= 18**
+- **npm** or other package managers (e.g. pnpm, yarn)
+
+### Setup
+
+    npm install
+    npm run dev
+
+Then open `http://localhost:5173` to explore the local playground.
+
+---
+
+## 📦 What’s in the Works?
+
+Proto UI is in **early active development**. Here’s what we’re working on:
+
+- ✅ Expanding the **Prototype & Behavior libraries**
+- ✅ Supporting more **platform adapters**
+- ✅ CLI tool for install-by-source (true zero-runtime, on-demand integration)
+- ✅ Growing the **documentation site** and contributor guides
+- ✅ Building **customized testing systems** for fast, reliable validation
+- ✅ Preparing for **community launch and outreach**—help us warm up the engine 🚀
+
+---
+
+## 🤝 How to Contribute
+
+We need your help building a better UI foundation—whether you're into systems design, platform tooling, or just love refining interactions.
+
+- Prototype missing components
+- Improve adapter quality
+- Expand documentation
+- Help with devtools, testing, or the CLI
+- Or just jump in and say hi
+
+👉 Check out `contribute/` to explore how things work  
+👉 Open a [Discussion](https://github.com/your-org/proto-ui/discussions)  
+👉 Or submit a [Pull Request](https://github.com/your-org/proto-ui/pulls)
+
+Let’s build something radically reusable.
+
+---
+
+## 📜 License
+
+MIT
 ```
-
-# Usage
-
-```shell
-$ npx @prototype-ui/cli --help
-
-
-██████╗ ██████╗  ██████╗ ████████╗ ██████╗
-██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗
-██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║
-██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║
-██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝
-╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝
-████████╗██╗   ██╗██████╗ ███████╗    ██╗   ██╗██╗
-╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝    ██║   ██║██║
-   ██║    ╚████╔╝ ██████╔╝█████╗█████╗██║   ██║██║
-   ██║     ╚██╔╝  ██╔═══╝ ██╔══╝╚════╝██║   ██║██║
-   ██║      ██║   ██║     ███████╗    ╚██████╔╝██║
-   ╚═╝      ╚═╝   ╚═╝     ╚══════╝     ╚═════╝ ╚═╝
-
-Usage: prototype-ui [options] [command]
-
-CLI for prototype-ui project
-
-Options:
-  -v, --version       Output the current version
-  -h, --help          display help for command
-
-Commands:
-  init                Initialize a new prototype-ui project
-  add <component>     Add a new component to the project
-  remove <component>  Remove a component from the project (maybe not safe)
-  list                List all components in the project
-  help [command]      display help for command
-```
-
-## Note
-
-The code is provided "as is" for maximum flexibility in use and integration into various projects.
-
-## Contributing
-
-Contributions are welcome and encouraged. Although the Web Components ecosystem may not be as extensive as those for frameworks like React, Vue, or Lit, Prototype UI strives to emulate best practices from these established communities. We convert and reimplement functionalities from these frameworks into Web Components, diligently crediting original developers and their contributions.
-
-## Development
-
-Run the project locally with `npm run dev`. For optimal performance, Node version 18 or higher is recommended.
-
-## Guangliang's Note
-
-For smaller projects or situations where CLI integration isn't ideal, you can include the entire Prototype UI library via a script tag. This method is also efficient (projected output size under 30KB) and provides a quick way to get started. However, it offers less granular control over individual components. See the documentation for details on script tag integration.

@@ -21,7 +21,7 @@ export const ShadcnSelectValuePrototype = definePrototype<
     });
 
     return (renderer) => {
-      renderSelectValue(renderer);
+      return renderSelectValue(renderer);
     };
   },
 });

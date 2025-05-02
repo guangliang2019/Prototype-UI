@@ -21,3 +21,7 @@ export { ShadcnScrollArea, ShadcnScrollBar } from './scroll-area';
 export type { ShadcnScrollAreaContext } from './scroll-area';
 
 export { ShadcnSwitch } from './switch';
+
+export { ShadcnCheckbox } from './checkbox';
+
+export { ShadcnToggle } from './toggle';

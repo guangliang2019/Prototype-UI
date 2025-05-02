@@ -51,6 +51,16 @@
       "title": "Switch",
       "value": "shadcn-switch",
       "href": "/shadcn/switch"
+    },
+    {
+      "title": "Checkbox",
+      "value": "shadcn-checkbox",
+      "href": "/shadcn/checkbox"
+    },
+    {
+      "title": "Toggle",
+      "value": "shadcn-toggle",
+      "href": "/shadcn/toggle"
     }
   ],
   "Prototype UI": [
@@ -108,6 +118,16 @@
       "title": "New-Switch",
       "value": "prototype-new-switch",
       "href": "/prototype/new-switch"
+    },
+    {
+      "title": "Checkbox",
+      "value": "prototype-checkbox",
+      "href": "/prototype/checkbox"
+    },
+    {
+      "title": "Toggle",
+      "value": "prototype-toggle",
+      "href": "/prototype/toggle"
     }
   ]
 }
