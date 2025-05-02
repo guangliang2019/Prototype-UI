@@ -17,6 +17,8 @@ const asSelectValue = <
 
   p.context.watch(SelectContext, (_, keys) => {
     if (keys.includes('value')) {
+      const context = p.context.get(SelectContext);
+      console.log(context);
       p.view.update();
     }
   });
@@ -30,6 +32,7 @@ const asSelectValue = <
     render: (renderer: RendererAPI) => {
       const h = renderer.createElement;
       const context = p.context.get(SelectContext);
+      const value = context.value;
       return h('span', {}, [context.value]) as Element;
     },
   };

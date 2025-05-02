@@ -26,7 +26,7 @@ const asSelectTrigger = <
     const component = p.view.getElement();
     context.width = component.offsetWidth;
     context.triggerRef = component;
-    context.focus = p.expose.get('focus');
+    context.focus = () => component.focus();
   });
 
   const _handleMouseDown = (event: MouseEvent): void => {

@@ -445,7 +445,9 @@ export const WebComponentAdapter = <Props extends {}, Exposes extends {} = {}>(
 
       // 如果有 render 函数，使用它来更新
       if (this._setupResult) {
+        console.log(this._setupResult(this._renderer), this._setupResult)
         const element = this._setupResult(this._renderer);
+        console.log(element)
         if (element) {
           this._renderManager.update(element);
         }
