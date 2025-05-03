@@ -3,23 +3,24 @@ import { CONFIG } from "../_config";
 import { asTooltipContent, TooltipContentProps, TooltipProviderProps } from "@/core/behaviors/as-tooltip";
 
 
-const borderCls = 'border border-black ';
-const backgroundCls = 'bg-black'
-const shapeCls = 'rounded-[4px] shadow-md';
-const sizeCls = ' min-w-[30px]';
-const textCls = 'text-white text-[15px]'
-const flexCls = 'flex flex-col';
+const borderCls = 'border';
+const colorCls = 'bg-popover text-popover-foreground';
+const shapeCls = 'rounded-md shadow-md';
+const sizeCls = ' min-w-[8rem] w-auto max-h-96 p-1';
+const flexCls = 'flex flex-col ';
 const selectCls = 'select-none';
-const positionCls = 'px-[15px] py-[10px] absolute top-8 -left-5 '; // 添加transform样式
+const positionCls = 'absolute z-50 top-6 transform translate-y-2 -translate-x-1/4'; 
+const arrowCls = 'before:absolute before:w-0 before:h-0 before:border-l-[5px] before:border-l-transparent before:border-r-[5px] before:border-r-transparent before:border-b-[5px] before:border-b-black before:top-[-5px] before:left-1/2 transform -translate-x-1/2';
+
 const SHADCN_TOOLTIP_CONTENT_CLASS = [
   borderCls,
-  backgroundCls,
   selectCls,
   flexCls,
-  textCls,
   shapeCls,
   positionCls,
-  sizeCls
+  sizeCls,
+  colorCls,
+  arrowCls,
 ]
   .join(' ')
   .trimEnd();
@@ -31,10 +32,6 @@ export const ShadcnTooltipContentPrototype = definePrototype<TooltipContentProps
     let _originalCls = '';
     p.lifecycle.onMounted(() => {
       _originalCls = p.view.getElement().className;
-
-      const tooltipElement = p.view.getElement().getBoundingClientRect();
-      console.log('tooltipElement',tooltipElement);
-
     });
 
 
