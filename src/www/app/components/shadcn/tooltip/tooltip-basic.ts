@@ -16,10 +16,10 @@ export default class ShadcnTooltipBasic extends DocCode {
         ]),    
         h('shadcn-tooltip-content', { class:'w-full'}, [
           h('p', { }, [
-            "Add to library",
+            "Add to library 111111",
           ]),
           h('div', { }, [
-            "Addtolibrary",
+            "Addtolibrary11111",
           ]),
         ]),
 
