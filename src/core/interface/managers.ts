@@ -41,9 +41,9 @@ export interface PropsManager<T extends object> {
 export interface LifecycleManager {
   /** 添加回调 */
   add(type: string, callback: () => void): void;
-  /** 触发回调 */
+  /** 触发某个生命周期，并且执行所有回调事件 */
   trigger(type: string): void;
-  /** 清理回调 */
+  /** 清理某个生命周期的所有回调 */
   clear(type?: string): void;
   /** 检查生命周期是否已触发 */
   hasTriggered(type: string): boolean;
@@ -106,20 +106,11 @@ export interface StateManager {
  * 渲染管理器接口
  */
 export interface RenderManager {
-  /** 创建元素 */
-  createElement(type: string, props: any, ...children: any[]): unknown;
-
   /** 请求一次渲染，可以被批处理 */
   requestRender(): void;
 
   /** 强制立即渲染 */
   forceRender(): void;
-
-  /** 更新渲染内容 */
-  update(content: unknown): void;
-
-  /** 清理渲染内容 */
-  clear(): void;
 }
 
 /**

@@ -1,29 +1,3 @@
-# 创作动机 | Motivation
-
-Q「如果已经有太多项目，比 Prototype UI 做的更好；如果根本就没人会用这套方案」Q「如果这一切都没有意义，那么为什么要坚持？」A「因为我“想”这么做」
-
-> Q: “What if too many projects already do better than Prototype UI? Q: “What if no one ever uses it? What if none of this means anything?”  
-> A: “Because I _want_ to do it.”
-
-现实来说，如果苦学多年的画师，有了自己独特的画风，却看到 AI 仿照他的画风画的比他还像他，画师该摔家伙走人吗？  
-我觉得正式这样的考验，让创作本身的意义得以凸显，让我们能有机会直面自己身为创作者的本心。
-
-> Imagine a painter who has spent years developing a unique style, only to see AI replicate it in seconds — sometimes better than they can.  
-> Should the painter give up and walk away?  
-> I believe it's precisely these moments that force us to confront the real meaning of creation —  
-> where we return to the core of ourselves as creators.
-
-Prototype UI 是一副作品，就像是孩子的涂鸦，它为什么非要有意义呢？  
-即使没有任何人帮助我，我也会乐此不疲地完成它。  
-我不需要理由，创作本身的快乐足以支撑我坚持完成它，而且我会让其尽可能地“有用”，因为这也是 Prototype UI 设计哲学的一环。
-
-> Prototype UI is a work — like a child's drawing. Why must it be "meaningful"?  
-> Even if no one helps me, I will joyfully complete it.  
-> I need no justification — the joy of creating is enough.  
-> And I will strive to make it _useful_, because utility is also part of the Prototype UI philosophy.
-
----
-
 # 设计哲学 | Design Philosophy
 
 ## 简要总结 | Summary
@@ -70,17 +44,11 @@ Prototype UI 的底层哲学是让交互变得纯粹：
 > our devices, OSes, and app frameworks constantly do.  
 > We’ve written the same Button and CheckBox a hundred times, though their behavior rarely differs.
 
-因此，Prototype UI 提出了三段式架构：
+因此，Prototype UI 提出了一个非常简单的公式：
 
-> Hence, Prototype UI proposes a **three-stage architecture**:
+> Hence, Prototype UI proposes a **simple formula**:
 
-交互原型 Prototype  
-→ 技术适配 Adapter  
-→ 渲染组件 Component
-
-> Prototype (pure interaction model)  
-> → Adapter (translates to implementation)  
-> → Component (framework-native/platform-native rendering instance)
+Adapter(Prototype) => Component
 
 - Prototype：平台无关的交互描述，可扩展、可运行
 - Adapter：高度模块化、可重组，用于翻译 Prototype 为原生组件
@@ -111,6 +79,32 @@ Prototype UI 不是框架，不是库，而是一个**组件生成方案**。默
 
 > Prototype UI is not a framework. It is not a library.  
 > It is a **generation strategy for component code** — ready to use by default, but fully open for modification.
+
+---
+
+# 创作动机 | Motivation
+
+Q「如果已经有太多项目，比 Prototype UI 做的更好；如果根本就没人会用这套方案」Q「如果这一切都没有意义，那么为什么要坚持？」A「因为我“想”这么做」
+
+> Q: “What if too many projects already do better than Prototype UI? Q: “What if no one ever uses it? What if none of this means anything?”  
+> A: “Because I _want_ to do it.”
+
+现实来说，如果苦学多年的画师，有了自己独特的画风，却看到 AI 仿照他的画风画的比他还像他，画师该摔家伙走人吗？  
+我觉得正式这样的考验，让创作本身的意义得以凸显，让我们能有机会直面自己身为创作者的本心。
+
+> Imagine a painter who has spent years developing a unique style, only to see AI replicate it in seconds — sometimes better than they can.  
+> Should the painter give up and walk away?  
+> I believe it's precisely these moments that force us to confront the real meaning of creation —  
+> where we return to the core of ourselves as creators.
+
+Prototype UI 是一副作品，就像是孩子的涂鸦，它为什么非要有意义呢？  
+即使没有任何人帮助我，我也会乐此不疲地完成它。  
+我不需要理由，创作本身的快乐足以支撑我坚持完成它，而且我会让其尽可能地“有用”，因为这也是 Prototype UI 设计哲学的一环。
+
+> Prototype UI is a work — like a child's drawing. Why must it be "meaningful"?  
+> Even if no one helps me, I will joyfully complete it.  
+> I need no justification — the joy of creating is enough.  
+> And I will strive to make it _useful_, because utility is also part of the Prototype UI philosophy.
 
 ---
 

@@ -1,23 +1,6 @@
-import { ComponentPublicInstance, defineComponent, onMounted, onUnmounted } from 'vue';
-import { Context, Prototype } from '@/core';
-import { PrototypeSetupResult } from '@/core/interface';
-type Constructor<T> = new (...args: any[]) => T;
-import type { PrototypeAPI, State, UpdateContext } from '@/core/interface';
-
-
-type ErrorCapturedHook = (
-  err: unknown,
-  instance: ComponentPublicInstance | null,
-  info: string
-) => boolean | void
-
-type VueInstance<T extends HTMLElement> = T ;
-
-export interface VueComponentStatic {
-  readonly observedAttributes: string[];
-}
-
-export type VueConstructor<T extends HTMLElement> = Constructor<VueInstance<T>> & VueComponentStatic;
+import { defineComponent, onMounted, onUnmounted, getCurrentInstance } from 'vue';
+import { Prototype, PrototypeAPI } from '@/core/interface';
+import type { ComponentPublicInstance } from 'vue';
 
 /**
  * 
@@ -26,55 +9,117 @@ export type VueConstructor<T extends HTMLElement> = Constructor<VueInstance<T>> 
  */
 export const VueAdapter = <Props extends {}, Exposes extends {} ={}>(
   prototype: Prototype<Props, Exposes>
-): VueConstructor<HTMLElement> => {
+): ComponentPublicInstance => {
   const Constructor = defineComponent({
     name: prototype.name,
-    setup(Constructor) {
+    setup() {
       let _exposes: Exposes = {} as Exposes;
-      const createHooks  = () : PrototypeAPI<Props, Exposes> => {
+      const instance = getCurrentInstance();
+      
+      const createHooks = (): PrototypeAPI<Props, Exposes> => {
         return {
-         expose: {
-          define: () => {},
-          get: (key) => { _exposes[key] }
-         },
-         lifecycle: {
-
-         },
-         props: {
-           
-         },
-         state: {
-           
-         },
-         context: {
-           
-         },
-         role: {
-
-         },
-         view: {
-
-         }, 
-
+          expose: {
+            define: (key, value) => {
+              _exposes[key] = value;
+            },
+            get: (key) => _exposes[key]
+          },
+          lifecycle: {
+            onCreated: () => {},
+            onMounted: () => {},
+            onUpdated: () => {},
+            onBeforeUnmount: () => {},
+            onBeforeDestroy: () => {}
+          },
+          props: {
+            define: () => {},
+            set: () => {},
+            get: () => ({} as Props),
+            watch: () => {}
+          },
+          state: {
+            define: <T>(initial: T) => ({ value: initial, set: (v: T) => {} }),
+            watch: () => {}
+          },
+          context: {
+            provide: () => {},
+            watch: () => {},
+            get: () => ({}) as any
+          },
+          role: {
+            asTrigger: () => {}
+          },
+          event: {
+            on: () => {},
+            off: () => {},
+            emit: () => {},
+            click: () => {},
+            setAttribute: () => {},
+            removeAttribute: () => {},
+            once: () => {},
+            addEventListener: () => {},
+            removeEventListener: () => {},
+            dispatchEvent: () => {},
+            focus: {
+              setPriority: (priority: number) => {},
+              getPriority: () => 0,
+              set: (focus: boolean) => {}
+            }
+          },
+          view: {
+            getElement: () => {
+              if (!instance?.proxy?.$el) {
+                throw new Error(
+                  'element.get can only be called after the component is mounted. ' +
+                  'Please use it in mounted or later lifecycle hooks.'
+                );
+              }
+              return instance.proxy.$el as HTMLElement;
+            },
+            update: async () => {
+              if (!instance?.proxy?.$el) {
+                throw new Error(
+                  'element.get can only be called after the component is mounted. ' +
+                  'Please use it in mounted or later lifecycle hooks.'
+                );
+              }
+              return Promise.resolve();
+            },
+            forceUpdate: async () => {
+              if (!instance?.proxy?.$el) {
+                throw new Error(
+                  'element.get can only be called after the component is mounted. ' +
+                  'Please use it in mounted or later lifecycle hooks.'
+                );
+              }
+              return Promise.resolve();
+            },
+            insertElement: (list: HTMLElement[], element?: HTMLElement, index?: number) => {
+              return index ?? list.length;
+            },
+            compareElementPosition: (target: HTMLElement, element?: HTMLElement) => {
+              return 0;
+            }
+          }
         };
-      }
-      const setup = prototype.setup(createHooks) ?? (() => {});
+      };
+
+      const hooks = createHooks();
+      const setup = prototype.setup(hooks);
 
       onMounted(() => {
-        if(){
-
+        if (setup) {
+          setup();
         }
       });
-  
+
       onUnmounted(() => {
-        
+        // 清理工作
       });
-  
+
       return {};
     }
-  })
+  });
   
-  return Constructor as unknown as VueConstructor<HTMLElement>;
-  
-
-}
+  return Constructor as unknown as ComponentPublicInstance;
+};
