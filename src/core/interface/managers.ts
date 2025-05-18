@@ -33,6 +33,13 @@ export interface PropsManager<T extends object> {
    * @returns 取消监听的函数
    */
   onPropsChange(callback: (props: T) => void): () => void;
+
+  /**
+   * 定义 props
+   * @param defaultProps 默认 props
+   * @returns 定义的 props
+   */
+  defineProps(defaultProps: T): void;
 }
 
 /**
