@@ -34,8 +34,8 @@ export const createPropsManager = <T extends object>(options: PropsOptions<T> = 
       return () => {};
     },
     defineProps: (defaultProps: T) => {
-      const props = defineProps<T>(defaultProps);
-      return props;
+      // TODO: 这个的defaultProps 转成vue的props的类型定义， 由TS -> JS
+      //defineProps(defaultProps);
     }
   };
 };

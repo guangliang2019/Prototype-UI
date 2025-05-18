@@ -6,10 +6,6 @@ export const createStateManager = (): StateManager => {
   const states = new Map<string, Ref<any>>();
   // 存储公开状态（用于 getStates）
   const publicStates = new Map<string, any>();
-  let _currentAttribute: string | undefined;
-  let _currentStateType: unknown;
-  let stateIndex = 0;
-
 
   
   return {
