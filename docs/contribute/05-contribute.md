@@ -59,7 +59,7 @@
   - [x] Button
   - [ ] Input
   - [x] Select
-  - [ ] Checkbox
+  - [x] Checkbox
   - [ ] Radio
   - [x] Switch
   - [ ] Slider
@@ -73,7 +73,7 @@
   - [ ] Menu
   - [ ] SubMenu
   - [ ] Dropdown
-  - [ ] Tabs
+  - [x] Tabs
   - [ ] Breadcrumb
   - [ ] Pagination
   - [ ] Steps

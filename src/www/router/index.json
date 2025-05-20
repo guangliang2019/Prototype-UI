@@ -28,6 +28,11 @@
       "href": "/shadcn/tabs"
     },
     {
+      "title": "Tooltip",
+      "value": "shadcn-tooltip",
+      "href": "/shadcn/tooltip"
+    },
+    {
       "title": "Select",
       "value": "shadcn-select",
       "href": "/shadcn/select"

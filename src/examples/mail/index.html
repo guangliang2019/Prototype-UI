@@ -502,7 +502,6 @@
     }, 1000);
 
     const mailInboxListRef = document.getElementById('mail-inbox-list');
-    console.log(mailInboxListRef);
     const mailInboxDetailRef = document.getElementById('mail-inbox-detail');
 
     const renderMailListItem = (mail) => {
@@ -577,8 +576,6 @@
     };
 
     setTimeout(() => {
-      console.log(document.getElementById('mail-inbox-list'));
-      console.log(mailInboxListRef);
       handleInboxTabChange('all mail');
     }, 1000);
 

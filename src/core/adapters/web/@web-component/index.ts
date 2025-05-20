@@ -118,7 +118,7 @@ export const WebComponentAdapter = <Props extends {}, Exposes extends {} = {}>(
       attachComponent(this, this);
 
       // 执行 setup 获取结果
-      this._setupResult = prototype.setup(this.createHooks()) ?? (() => {});
+      this._setupResult = prototype.setup(this.createP()) ?? (() => {});
       Object.entries(this._exposes).forEach(([key, value]) => {
         // 跳过已存在的属性
         if (key in this) {
@@ -146,7 +146,7 @@ export const WebComponentAdapter = <Props extends {}, Exposes extends {} = {}>(
         throw new Error(`${name} can only be called at the root of the prototype.`);
     }
 
-    private createHooks(): PrototypeAPI<Props, Exposes> {
+    private createP(): PrototypeAPI<Props, Exposes> {
       return {
         expose: {
           define: (key, value) => {
