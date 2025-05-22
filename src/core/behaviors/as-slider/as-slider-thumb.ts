@@ -9,8 +9,14 @@ import {
 const asSliderThumb = <Props extends SliderThumbProps, Exposes extends SliderThumbExposes>(
     p: PrototypeAPI<Props, Exposes>
 ) => {
-    // 先 watch，确保依赖关系建立
-    p.context.watch(SliderContext);
+    p.context.watch(SliderContext, (context, keys) => {
+        if (keys.includes('value')) {
+            const percent = (context.value - context.min) / (context.max - context.min);
+            const component = p.view.getElement();
+            component.style.position = 'absolute';
+            component.style.left = `calc(${percent * 100}% - 0.5em)`;
+        }
+    });
 
     // 处理键盘导航
     const _handleKeyDown = (event: KeyboardEvent): void => {
@@ -92,15 +98,6 @@ const asSliderThumb = <Props extends SliderThumbProps, Exposes extends SliderThu
     p.expose.define('blur', () => {
         const component = p.view.getElement();
         component.blur();
-    });
-
-    p.context.watch(SliderContext, (context, keys) => {
-        if (keys.includes('value')) {
-            const percent = (context.value - context.min) / (context.max - context.min);
-            const component = p.view.getElement();
-            component.style.position = 'absolute';
-            component.style.left = `calc(${percent * 100}% - 0.5em)`;
-        }
     });
 };
 

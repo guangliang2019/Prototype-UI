@@ -32,12 +32,13 @@ const asSlider = <Props extends SliderProps, Exposes extends SliderExposes>(
             trackRef: null as unknown as HTMLElement,
             thumbRef: null as unknown as HTMLElement,
             updateValue: (newValue: number) => {
-                // 每次都用最新的 props
                 const { min, max, step } = p.props.get();
                 const clampedValue = Math.max(min ?? 0, Math.min(max ?? 100, newValue));
                 const steppedValue = Math.round(clampedValue / (step ?? 1)) * (step ?? 1);
-                console.log('updateValue called, newValue:', newValue, 'steppedValue:', steppedValue, 'oldValue:', context.value);
                 updateContext({ value: steppedValue });
+                // 同步 input
+                const input = (context as any)._input as HTMLInputElement | undefined;
+                if (input) input.value = String(steppedValue);
             },
             focus: () => {
                 focused.set(true);
@@ -48,6 +49,9 @@ const asSlider = <Props extends SliderProps, Exposes extends SliderExposes>(
                 context.thumbRef?.blur();
             },
         };
+
+        // 让 context 能访问 input
+        (context as any)._input = p.view.getElement().querySelector('input[type=hidden][data-slider-value]') as HTMLInputElement;
 
         return context;
     });
@@ -64,7 +68,6 @@ const asSlider = <Props extends SliderProps, Exposes extends SliderExposes>(
 
     p.lifecycle.onMounted(() => {
         const root = p.view.getElement();
-        // 检查是否已存在 input，避免重复插入
         let input = root.querySelector('input[type=hidden][data-slider-value]') as HTMLInputElement | null;
         if (!input) {
             input = document.createElement('input') as HTMLInputElement;
@@ -74,12 +77,8 @@ const asSlider = <Props extends SliderProps, Exposes extends SliderExposes>(
         }
         const context = p.context.get(SliderContext);
         input.value = String(context.value);
-        // 监听 value 变化同步 input
-        p.context.watch(SliderContext, (ctx, keys) => {
-            if (keys.includes('value')) {
-                input!.value = String(ctx.value);
-            }
-        });
+        // 让 context 能访问 input
+        (context as any)._input = input;
     });
 };
 

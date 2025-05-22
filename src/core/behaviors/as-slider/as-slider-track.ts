@@ -9,8 +9,12 @@ import {
 const asSliderTrack = <Props extends SliderTrackProps, Exposes extends SliderTrackExposes>(
     p: PrototypeAPI<Props, Exposes>
 ) => {
-    // 先 watch，确保依赖关系建立
-    p.context.watch(SliderContext);
+    // 只watch value用于可能的样式联动，但不动track本身的宽高
+    p.context.watch(SliderContext, (context, keys) => {
+        if (keys.includes('value')) {
+            // 这里只能做动画、active样式等，不能动宽高
+        }
+    });
 
     // 计算点击位置对应的值
     const _calculateValue = (clientX: number): number => {
@@ -25,19 +29,18 @@ const asSliderTrack = <Props extends SliderTrackProps, Exposes extends SliderTra
     // 处理轨道点击
     const _handleClick = (event: MouseEvent): void => {
         const context = p.context.get(SliderContext);
-        console.log('trackRef:', context.trackRef);
         if (context.disabled) return;
         const newValue = _calculateValue(event.clientX);
-        console.log('newValue:', newValue, 'oldValue:', context.value);
         context.updateValue(newValue);
-        console.log('dianjiguidao')
     };
 
     // 生命周期处理
     p.lifecycle.onMounted(() => {
         const component = p.view.getElement();
+        component.style.display = 'block';
         const context = p.context.get(SliderContext);
         context.trackRef = component;
+        // 不要动component.style.width/height
     });
 
     // 事件监听
@@ -45,7 +48,7 @@ const asSliderTrack = <Props extends SliderTrackProps, Exposes extends SliderTra
 
     // 清理
     p.lifecycle.onBeforeUnmount(() => {
-
+        // 无需特殊清理
     });
 };
 
