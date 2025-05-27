@@ -1,0 +1,9 @@
+prototype-slider-thumb {
+    position: absolute;
+    left: var(--slider-thumb-position);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.8rem;
+    height: 0.8rem;
+    z-index: 10;
+}
