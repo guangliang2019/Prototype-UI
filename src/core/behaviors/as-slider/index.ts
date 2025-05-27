@@ -6,15 +6,15 @@ export { default as asSliderRange } from './as-slider-range';
 
 // types
 export type {
-    SliderProps,
-    SliderTrackProps,
-    SliderThumbProps,
-    SliderRangeProps,
-    SliderExposes,
-    SliderTrackExposes,
-    SliderThumbExposes,
-    SliderRangeExposes,
-    SliderContextType,
+  SliderProps,
+  SliderTrackProps,
+  SliderThumbProps,
+  SliderRangeProps,
+  SliderExposes,
+  SliderTrackExposes,
+  SliderThumbExposes,
+  SliderRangeExposes,
+  SliderContextType,
 } from './interface';
 
 // context and constants
