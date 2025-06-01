@@ -7,18 +7,19 @@ export default class TestButtonBasic extends DocCode {
   protected _code = 'Code component is in development';
   protected _highlightRules: HighlightRule[] = [];
 
+  // TODO: 需要写一个 测试组件 先测试一下 VueAdapter 的 button 组件 
   protected _preview = () => {
     return Div({ class: 'flex flex-col items-center justify-center' }, [
       h(
-        'div',
+        'button',
         {
           class: 'w-10 h-10',
           id: 'vue-app',
           onClick: () => {
-            console.log('clicked');
+            console.log('clicked1');
           },
         },
-        ['Click me']
+        ['Click me111']
       ),
     ]);
   };

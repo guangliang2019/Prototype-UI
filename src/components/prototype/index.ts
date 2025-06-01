@@ -24,3 +24,4 @@ export { PrototypeTestTab, PrototypeTestTabTrigger, PrototypeTestTabContent } fr
 export { PrototypeTestButton } from './test-button';
 export { PrototypeCheckbox, PrototypeCheckboxIndicator } from './checkbox'
 export {PrototypeToggle} from './toggle'
+export { PrototypeSlider, PrototypeSliderTrack, PrototypeSliderRange, PrototypeSliderThumb } from './slider';

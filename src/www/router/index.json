@@ -128,6 +128,11 @@
       "title": "Toggle",
       "value": "prototype-toggle",
       "href": "/prototype/toggle"
+    },
+    {
+      "title": "Slider",
+      "value": "prototype-slider",
+      "href": "/prototype/slider"
     }
   ]
 }
