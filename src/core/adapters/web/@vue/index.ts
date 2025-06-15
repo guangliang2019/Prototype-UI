@@ -224,7 +224,7 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
           _lifecycleManager.add('created', callback);
         },
         onMounted: (callback) => {
-          debugger
+
           
           checkSetupPhase('lifecycle.onMounted');
           _lifecycleManager.add('mounted', callback);
@@ -409,7 +409,7 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
  
 
       onMounted(() => {
-        debugger
+
         console.log('onMounted')
       // 推迟执行
 
