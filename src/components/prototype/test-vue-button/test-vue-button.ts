@@ -1,15 +1,16 @@
 import { definePrototype, WebComponentAdapter } from '@/core';
 import { asButton, ButtonExposes } from '@/core/behaviors/as-button';
 import { TestButtonProps } from './interface';
-import { CONFIG } from '../_config';
-import { optimizeTailwindClasses } from '@/www/utils/tailwind';
-import { VueAdapter } from '@/core/adapters/vue/@vue-component';
 
-export const TestButtonPrototype = definePrototype<TestButtonProps, ButtonExposes>({
+import { optimizeTailwindClasses } from '@/www/utils/tailwind';
+import { VueAdapter } from '@/core/adapters/web/@vue/index';
+import { CONFIG } from '@/components/testvue/_config';
+
+export const TestVueButtonPrototype = definePrototype<TestButtonProps, ButtonExposes>({
   name: `${CONFIG.shadcn.prefix}-button`,
   setup: (p) => {
     // role
-    asButton(p);
+    // asButton(p);
 
     // props
     p.props.define({ variant: 'secondary', iconOnly: false });
@@ -20,7 +21,7 @@ export const TestButtonPrototype = definePrototype<TestButtonProps, ButtonExpose
     p.lifecycle.onMounted(() => {
       _originalCls = p.view.getElement().className;
     });
-
+    console.log('TestVueButtonPrototype', );
     return () => {
       const { iconOnly, disabled, variant } = p.props.get();
 
@@ -69,4 +70,4 @@ export const TestButtonPrototype = definePrototype<TestButtonProps, ButtonExpose
   },
 });
 
-export const TestButton = VueAdapter(TestButtonPrototype);
+export const TestVueButton = VueAdapter(TestVueButtonPrototype);
