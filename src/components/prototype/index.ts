@@ -25,3 +25,4 @@ export { PrototypeTestButton } from './test-button';
 export { TestVueButtonPrototype,TestVueButton} from './test-vue-button'
 export { PrototypeCheckbox, PrototypeCheckboxIndicator } from './checkbox'
 export {PrototypeToggle} from './toggle'
+export { PrototypeSlider, PrototypeSliderTrack, PrototypeSliderRange, PrototypeSliderThumb } from './slider';

@@ -129,10 +129,16 @@
       "value": "prototype-toggle",
       "href": "/prototype/toggle"
     },
+    
     {
       "title": "Test-vue-button",
       "value": "test-vue-button",
       "href": "/prototype/test-vue-button"
+    }
+    {
+      "title": "Slider",
+      "value": "prototype-slider",
+      "href": "/prototype/slider"
     }
   ]
   
