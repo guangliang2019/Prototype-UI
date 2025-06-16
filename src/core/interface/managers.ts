@@ -107,6 +107,11 @@ export interface StateManager {
 
   /** 清理所有状态 */
   clear(): void;
+
+  /**
+   * 同步所有待处理的属性到 DOM
+   */
+  flushAttributes?(): void;
 }
 
 /**

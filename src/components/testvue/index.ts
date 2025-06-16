@@ -1,1 +1,1 @@
-export { TestButton } from './button';
+export { TestVueButton } from './test-vue-button';

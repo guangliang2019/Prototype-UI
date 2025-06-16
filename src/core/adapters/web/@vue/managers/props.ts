@@ -1,14 +1,18 @@
 import { PropsManager, PropsOptions, SerializationRule } from '@/core/interface';
-import { getCurrentInstance, watch } from 'vue';
+import { ComponentInternalInstance, getCurrentInstance, watch } from 'vue';
 import { camelToKebab, kebabToCamel } from '@/core/utils/naming';
 
 
-export const createPropsManager = <T extends object>(options: PropsOptions<T> = {}): PropsManager<T> => {
-  const instance = getCurrentInstance();
+export const createPropsManager = <T extends object>(element:ComponentInternalInstance, options: PropsOptions<T> = {}): PropsManager<T> => {
+  const instance = element;
   if (!instance) {
     throw new Error('[VuePropsManager] getCurrentInstance() must be called inside setup().');
   }
   const vueProps = instance.props as T;
+
+  // 添加一个 Set 来存储回调函数
+  const changeCallbacks = new Set<(props: T) => void>();
+
 
   return {
     getProps: () => vueProps,
@@ -22,20 +26,31 @@ export const createPropsManager = <T extends object>(options: PropsOptions<T> = 
     deserializeFromAttribute: () => {
       throw new Error('[VuePropsManager] not should deserializeFromAttribute in Vue');
     },
-    // issue: 这里在原型是如何触发呢？以及在什么情况下会触发
+    // 这里应该跟webComponent的一样 
     onPropsChange: (callback: (props: T) => void) => {
-      // 直接使用 Vue 的 watch，Vue 会自动处理清理工作
-      watch(
-        () => ({ ...vueProps }),
-        (newVal) => callback(newVal as T),
-        { deep: true, immediate: true }
-      );
-      // 返回一个空函数以满足接口要求
-      return () => {};
+      changeCallbacks.add(callback);
+      return () => changeCallbacks.delete(callback);
     },
     defineProps: (defaultProps: T) => {
-      // TODO: 这个的defaultProps 转成vue的props的类型定义， 由TS -> JS
-      //defineProps(defaultProps);
+      //  这个的defaultProps 转成vue的props的类型定义， 由TS -> JS
+      // todo 需要这个这个吗 缺少required属性 缺少validator支持 缺少多类型支持
+
+      const vueProps = Object.entries(defaultProps).reduce((acc, [key, value]) => {
+        const type = Object.prototype.toString.call(value).slice(8, -1);
+        acc[key] = {
+          type: type === 'Date' ? Date :
+                 type === 'Array' ? Array :
+                 type === 'String' ? String :
+                 type === 'Number' ? Number :
+                 type === 'Boolean' ? Boolean :
+                 type === 'Function' ? Function :
+                 Object,
+          default: type === 'Object' || type === 'Array' ? () => value : value
+        };
+        return acc;
+      }, {} as Record<string, any>);
+      
+      return vueProps;
     }
   };
 };
