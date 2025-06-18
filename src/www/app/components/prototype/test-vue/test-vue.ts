@@ -1,5 +1,5 @@
 import { defineComponent, h, ref, onMounted } from 'vue';
-import { TestVueButton } from '@/components/testvue/test-vue-button';
+import { TestVueButton } from '@/components/prototype/test-vue-button';
 
 const TestVueComponent = defineComponent({
   setup() {
@@ -7,7 +7,6 @@ const TestVueComponent = defineComponent({
     const buttonVariant = ref('primary');
     const isDisabled = ref(false);
     const lifecycleLogs = ref<string[]>([]);
-
     // 测试生命周期
     onMounted(() => {
       console.log('Vue 组件已挂载');
@@ -22,7 +21,6 @@ const TestVueComponent = defineComponent({
 
     return () => h('div', { class: 'space-y-4 p-4' }, [
       // 测试按钮
-      11,
       h('div', { class: 'flex flex-wrap gap-4' }, [
         h(TestVueButton, {
           variant: buttonVariant.value,
@@ -32,16 +30,12 @@ const TestVueComponent = defineComponent({
             updateProps();
           }
         }, '111')
-      ]),
+      ]),11,
 
       // 显示当前 props 状态
       h('div', { class: 'mt-4 p-4 bg-gray-100 rounded' }, [
-        h('h3', { class: 'font-bold mb-2' }, '当前 Props123 状态：'),
-        h('pre', { class: 'text-sm' }, JSON.stringify({
-          variant: buttonVariant.value,
-          disabled: isDisabled.value,
-          text: buttonText.value
-        }, null, 2))
+        h('h3', { class: 'font-bold mb-2' }, '当前 Props 状态123：'),
+   
       ])
     ]);
   },

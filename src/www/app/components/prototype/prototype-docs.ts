@@ -13,6 +13,7 @@ import './test-button';
 import './new-switch';
 import './checkbox';
 import './toggle';
+import './test-vue';
 import './slider';
 
 import { h } from '@/www/utils/dom';
@@ -34,6 +35,7 @@ export default class PrototypeDoc extends HTMLElement {
     fragment.appendChild(h('button-doc'));
     fragment.appendChild(h('test-tab-doc'));
     fragment.appendChild(h('test-button-doc'));
+    fragment.appendChild(h('test-vue-button-doc'));
     fragment.appendChild(h('new-switch-doc'));
     fragment.appendChild(h('checkbox-doc'));
     fragment.appendChild(h('toggle-doc'));

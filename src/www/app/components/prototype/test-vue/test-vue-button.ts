@@ -1,14 +1,14 @@
 import { Doc, DocComponent } from '@/www/components/doc-component';
   
 import './test-vue-button-basic';
-import '@/components/testvue/button';
+import '@/components/prototype/test-button';
 
 export default class TestVueButtonDoc extends DocComponent {
   protected _doc: Doc = {
-    id: 'prototype-button',
-    title: 'Button',
-    desc: 'Describe Button',
-    route: ['Prototype', 'Button'],
+    id: 'prototype-test-vue-button',
+    title: 'TestVueButton',
+    desc: 'Describe TestVueButton',
+    route: ['Prototype', 'TestVueButton'],
     links: [],
     sections: [
       {
@@ -17,7 +17,7 @@ export default class TestVueButtonDoc extends DocComponent {
           {
               type: 'code',
               key: '',
-              content: 'button-basic',
+              content: 'test-button-basic',
             }
         ],
       },
