@@ -1,4 +1,4 @@
-import { Component } from './component';
+// import { Component } from './component';
 import {
   AttributeManager,
   EventHandler,
@@ -9,7 +9,7 @@ import {
 } from './managers';
 import { Prototype } from './prototype';
 
-export type ElementType = string | Prototype<any> | Component | symbol;
+export type ElementType = string | Prototype<any> | symbol;
 export type ElementChild = string | number | boolean | null | undefined | Element;
 
 export type ElementChildren = ElementChild | ElementChild[];
@@ -43,10 +43,10 @@ export interface RendererContext {
   propsManager: PropsManager<any>;
 }
 
-export interface RendererAPI {
-  createElement(type: ElementType, props?: ElementProps, children?: ElementChildren[]): Element;
+export interface RendererAPI<El = Element> {
+  createElement(type: ElementType, props?: ElementProps, children?: ElementChildren): El;
 
   createText(content: string): Text;
   createComment(content: string): Comment;
-  createFragment(children?: ElementChildren[]): Element;
+  createFragment(children?: ElementChildren[]): El;
 }

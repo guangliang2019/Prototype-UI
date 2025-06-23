@@ -1,4 +1,4 @@
-import { Component, CONTEXT_MANAGER_SYMBOL, EVENT_MANAGER_SYMBOL } from '@/core/interface';
+import { CONTEXT_MANAGER_SYMBOL, EVENT_MANAGER_SYMBOL } from '@/core/interface';
 import {
   WebLifecycleManager,
   WebRenderManager,
@@ -47,7 +47,7 @@ export interface WebComponentStatic {
 }
 
 // 组合所有需要的接口
-type WebComponentInstance<T extends HTMLElement> = T & Component & WebComponentLifecycle;
+type WebComponentInstance<T extends HTMLElement> = T & WebComponentLifecycle;
 
 // 组合静态类型
 export type WebComponentConstructor<T extends HTMLElement> = Constructor<WebComponentInstance<T>> &
@@ -60,7 +60,7 @@ export type WebComponentConstructor<T extends HTMLElement> = Constructor<WebComp
 export const WebComponentAdapter = <Props extends {}, Exposes extends {} = {}>(
   prototype: Prototype<Props, Exposes>
 ): WebComponentConstructor<HTMLElement> => {
-  const Constructor = class extends HTMLElement implements Component {
+  const Constructor = class extends HTMLElement {
     private _lifecycle = new WebLifecycleManager();
     private _attributeManager = new WebAttributeManagerImpl(this, this);
     private _statesManager = new WebStateManager(this, this._attributeManager);

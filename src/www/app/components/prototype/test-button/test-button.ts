@@ -1,7 +1,9 @@
 import { Doc, DocComponent } from '@/www/components/doc-component';
-  
+
 import './test-button-basic';
 import '@/components/prototype/test-button';
+import { createApp } from 'vue';
+import TestVueComponent from './test-vue';
 
 export default class TestButtonDoc extends DocComponent {
   protected _doc: Doc = {
@@ -15,10 +17,10 @@ export default class TestButtonDoc extends DocComponent {
         title: '',
         contents: [
           {
-              type: 'code',
-              key: '',
-              content: 'test-button-basic',
-            }
+            type: 'code',
+            key: '',
+            content: 'test-button-basic',
+          },
         ],
       },
     ],
@@ -26,3 +28,7 @@ export default class TestButtonDoc extends DocComponent {
 }
 
 customElements.define('test-button-doc', TestButtonDoc);
+
+requestAnimationFrame(() => {
+  createApp(TestVueComponent).mount('#vue-app');
+});

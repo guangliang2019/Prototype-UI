@@ -13,7 +13,6 @@ import './test-button';
 import './new-switch';
 import './checkbox';
 import './toggle';
-import './test-vue';
 import './slider';
 
 import { h } from '@/www/utils/dom';

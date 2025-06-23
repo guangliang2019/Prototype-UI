@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementChildren,
-  ElementProps,
-  Prototype,
-  EventHandler,
-} from '@/core/interface';
+import { ElementChildren, ElementProps, Prototype, EventHandler } from '@/core/interface';
 
 import { BaseRenderer } from '../renderer';
 import { WebComponentAdapter } from '.';
@@ -222,22 +216,6 @@ export class WebRenderer extends BaseRenderer {
 
     this.appendChildren(instance, children);
     return instance;
-  }
-
-  protected createFromComponent(
-    component: Component,
-    props?: ElementProps,
-    children?: ElementChildren[]
-  ): Element {
-    // 对于 Web Components，我们直接使用组件的 element
-    const element = component.element;
-
-    if (props && this.context) {
-      this.applyProps(element, props);
-    }
-
-    this.appendChildren(element, children);
-    return element;
   }
 
   protected applyClass(element: Element, value: ElementProps['class']): void {

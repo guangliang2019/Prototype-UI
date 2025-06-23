@@ -3,7 +3,6 @@ import {
   ElementProps,
   RendererAPI,
   RendererContext,
-  Component,
   Prototype,
   ElementChildren,
 } from '../../interface';
@@ -23,7 +22,6 @@ export abstract class BaseRenderer implements RendererAPI {
     this.createFragment = this.createFragment.bind(this);
     this.createNativeElement = this.createNativeElement.bind(this);
     this.createFromPrototype = this.createFromPrototype.bind(this);
-    this.createFromComponent = this.createFromComponent.bind(this);
     this.applyProps = this.applyProps.bind(this);
     this.applyClass = this.applyClass.bind(this);
     this.normalizeClass = this.normalizeClass.bind(this);
@@ -33,15 +31,13 @@ export abstract class BaseRenderer implements RendererAPI {
   createElement = (
     type: ElementType,
     props?: ElementProps,
-    children?: ElementChildren[]
+    children?: ElementChildren
   ): Element => {
     // 根据类型分发到不同的创建方法
     if (typeof type === 'string') {
       return this.createNativeElement(type, props, children);
     } else if (this.isPrototype(type)) {
       return this.createFromPrototype(type, props, children);
-    } else if (this.isComponent(type)) {
-      return this.createFromComponent(type, props, children);
     }
 
     throw new Error(`不支持的元素类型: ${String(type)}`);
@@ -54,27 +50,17 @@ export abstract class BaseRenderer implements RendererAPI {
   protected abstract createNativeElement(
     tag: string,
     props?: ElementProps,
-    children?: ElementChildren[]
+    children?: ElementChildren
   ): Element;
 
   protected abstract createFromPrototype(
     prototype: Prototype<any>,
     props?: ElementProps,
-    children?: ElementChildren[]
-  ): Element;
-
-  protected abstract createFromComponent(
-    component: Component,
-    props?: ElementProps,
-    children?: ElementChildren[]
+    children?: ElementChildren
   ): Element;
 
   protected isPrototype(type: any): type is Prototype<any> {
     return type && typeof type.setup === 'function';
-  }
-
-  protected isComponent(type: any): type is Component {
-    return type && typeof type.render === 'function';
   }
 
   protected applyProps(element: Element, props: ElementProps): void {

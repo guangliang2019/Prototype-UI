@@ -63,11 +63,11 @@ export const TestVueButtonPrototype = definePrototype<TestButtonProps, ButtonExp
       }
       // prettier-ignore
       const _computedClass = [basicCls, flexCls, shapeCls, sizeCls, cursorCls, fontCls, animationCls, disabledCls, focusCls, shadowCls, colorCls, borderCls, extraCls].join(' ').trimEnd();
-      p.view.getElement().className = optimizeTailwindClasses(
-        [_computedClass, _originalCls].join(' ').trimEnd()
-      );
+      // p.view.getElement().className = optimizeTailwindClasses(
+      //   [_computedClass, _originalCls].join(' ').trimEnd()
+      // );
     };
   },
 });
 
-export const TestVueButton = VueAdapter(TestVueButtonPrototype);
+// export const TestVueButton = VueAdapter(TestVueButtonPrototype);

@@ -70,4 +70,4 @@ export const TestVueButtonPrototype = definePrototype<TestButtonProps, ButtonExp
   },
 });
 
-export const TestVueButton = VueAdapter(TestVueButtonPrototype);
+// export const TestVueButton = VueAdapter(TestVueButtonPrototype);

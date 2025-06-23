@@ -157,3 +157,5 @@ Proto UI 的设计哲学非常简单，由 Adapter 将 Prototype 翻译为各种
 # 我能试用一下吗？
 
 当然可以。目前 Playground 支持将原型翻译为 React16、Vue3 和 Web Component，这里是一个[基础的 Button 原型翻译为 React 组件的示例](https://proto-ui.com/playground/button?lang=ts&framework=react)
+
+如果你想用于自己的项目，我们更推荐你尝试我们的[代码生成器](https://proto-ui.com/generator)，你可以任意挑选想要的组件库其设计语言和技术方案，并拿到能直接用于项目的成品组件库源码

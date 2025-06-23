@@ -174,16 +174,6 @@ export interface EventManager {
   markAsTrigger(): void;
 
   /**
-   * 组件挂载时调用
-   */
-  mount(): void;
-
-  /**
-   * 组件卸载时调用
-   */
-  unmount(): void;
-
-  /**
    * 销毁事件管理器
    */
   destroy(): void;

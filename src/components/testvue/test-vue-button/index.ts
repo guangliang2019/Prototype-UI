@@ -1,1 +1,1 @@
-export { TestVueButton, TestVueButtonPrototype } from './test-vue-button';
+// export { TestVueButton, TestVueButtonPrototype } from './test-vue-button';
