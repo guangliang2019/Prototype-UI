@@ -36,7 +36,6 @@ export const ShadcnButtonPrototype = definePrototype<ShadcnButtonProps, ButtonEx
       let colorCls = 'bg-secondary text-secondary-foreground  hover:bg-secondary/80';
       let borderCls = '';
       let extraCls = '';
-
       switch (variant) {
         case 'primary':
           colorCls = 'bg-primary text-primary-foreground hover:bg-primary/90';
