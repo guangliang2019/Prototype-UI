@@ -33,32 +33,41 @@ function convertElement(el: Element): VNode {
 }
 
 export const VueRenderer: RendererAPI<VNode> = {
+
   createElement(type, props, children) {
     switch (typeof type) {
       case 'string':
+        console.log('string',children,type,props);
         switch (typeof children) {
           case 'object':
+            console.log('children',children,type,props);
             if (children instanceof Element) return h(type, props, elementToVNode(children));
 
-            if (children === null) return h(type, props);
+            if (children === null) return h(type, props, [h('slot')]);
             if (Array.isArray(children)) {
+              if (children.length === 0) return h(type, props, [h('slot')]);
+
               return h(
                 type,
                 props,
-                children.map((child) => {
+                 children.map((child) => {
                   if (child instanceof Element) return elementToVNode(child);
                   if (child === null) return null;
+                  
                   return child;
                 })
               );
             }
-
+          case 'undefined':
+            return h(type, props, [h('slot')]);
           default:
-            h(type, props, children);
+            return h(type, props, children);
+            
         }
 
       case 'symbol':
-        throw new Error('VueRenderer 暂时不支持以 Symbol 作为 tag-name');
+
+        throw new Error(`VueRenderer 暂时不支持以 Symbol 作为 tag-name,${String(type)}`);
 
       case 'object':
         throw new Error('VueRenderer 暂时不支持以 Object 作为 tag-name');
