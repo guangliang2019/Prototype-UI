@@ -85,7 +85,7 @@ export interface Prototype<Props extends {} = {}, Exposes extends {} = {}, El = 
 /**
  * 原型设置函数的返回值
  */
-export type PrototypeSetupResult<El = Element> = (renderer: RendererAPI<El>) => Element | void;
+export type PrototypeSetupResult<El = Element> = (renderer: RendererAPI<El>) => El | void;
 
 /**
  * 原型设置函数

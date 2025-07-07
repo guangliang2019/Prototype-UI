@@ -18,31 +18,6 @@ interface TestVueProps {
   name?: string;
 }
 
-const testPrototype = VueAdapter(
-  definePrototype<TestVueProps>({
-    name: 'test-vue',
-    setup: (p) => {
-      p.props.define({ value: '222' });
-
-      // 这个props.watch 没有测试
-      p.lifecycle.onMounted(() => {
-        const props = p.props.get();
-      });
-      // TODO：一般来说这里是无法通过p.props.get()获取到值的，因为还没有初始化
-      // p.props.get();
-      p.event.on('click', () => {
-        p.props.set({ value: '456' });
-        p.view.getElement();
-      });
-
-      return (renderer) => {
-        const r = renderer.createElement;
-        return r('div', { class: 'bg-indigo-500 h-12 w-12' }, ['click me']);
-      };
-    },
-  })
-);
-
 /**
  * 让使用了 asButton 的组件具有按钮的行为
  * @param p 原型 API
@@ -209,11 +184,14 @@ const PrototypeButton = definePrototype<ShadcnButtonProps, ButtonExposes>({
       ]
         .join(' ')
         .trimEnd();
+      console.log(p.view.getElement());
       p.view.getElement().className = optimizeTailwindClasses(
         [_computedClass, _originalCls].join(' ').trimEnd()
       );
       // TODO:这里应该删除
-      const a=r('div', {variant: 'outline'}, ['3']);
+      const a = r('div', { variant: 'outline' }, [
+        r('button', { onClick: () => p.view.update() }, ['click me']),
+      ]);
       console.log('test6', a);
       return a;
     };

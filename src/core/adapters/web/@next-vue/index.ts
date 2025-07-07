@@ -1,5 +1,14 @@
 import { Prototype, PrototypeAPI, RendererAPI, State } from '@/core/interface';
-import { defineComponent, getCurrentInstance, onBeforeUnmount, onMounted, ref, VNode } from 'vue';
+import {
+  ComponentInternalInstance,
+  defineComponent,
+  getCurrentInstance,
+  h,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  VNode,
+} from 'vue';
 import { VueRenderer } from './renderer';
 import VueEventManager from './managers/event';
 import VuePropsManager from './managers/props';
@@ -8,8 +17,8 @@ import { WebAttributeManagerImpl } from '../attribute';
 import VueLifecycleManager from './managers/lifecycle';
 import { VueRenderManager } from './managers/render';
 
-export const VueAdapter = <Props extends {}, Exposes extends {} = {}, El = VNode>(
-  prototype: Prototype<Props, Exposes, El>
+export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
+  prototype: Prototype<Props, Exposes, VNode>
 ) => {
   const _setup = prototype.setup;
 
@@ -19,9 +28,9 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}, El = VNode
   const _lifecycleManager = new VueLifecycleManager();
   const _renderManager = new VueRenderManager();
 
-  const _renderer = VueRenderer;
-
-  const _element = ref<HTMLElement | null>(null);
+  let _getElement: () => HTMLElement = () => {
+    throw new Error('[VueAdapter] getElement is not implemented');
+  };
 
   const _pendingPropsListeners: Array<{
     props: (keyof Props)[];
@@ -102,7 +111,7 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}, El = VNode
     },
     view: {
       getElement: () => {
-        return _element.value;
+        return _getElement();
       },
       update: async () => {
         return _update();
@@ -113,51 +122,45 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}, El = VNode
 
   const _update = () => {
     if (_render) {
-      const element = _render(_renderer as unknown as RendererAPI<El>);
-      if (element) {
-        _renderManager.update(element);
-      }
+      _renderManager.requestRender();
     }
   };
   // 构建一个 vue 的组件
   return defineComponent({
     props: {},
     setup() {
+     
+      _getElement = () => {
+        return _root.el as HTMLElement;
+      };
       // 处理各个 manager 的初始化
-      _lifecycleManager.trigger('created');
-
-      _propsManager.initRef(getCurrentInstance()?.proxy as unknown as HTMLElement);
-      if (getCurrentInstance()?.proxy) {
-        _element.value = getCurrentInstance()?.proxy as unknown as HTMLElement;
-      }
+      _propsManager.initRef(_getElement());
       _propsManager.mount();
+
+      _lifecycleManager.trigger('created');
+      _renderManager.init(getCurrentInstance() as ComponentInternalInstance);
 
       onMounted(() => {
         _lifecycleManager.trigger('mounting');
 
         const domElement = getCurrentInstance()?.proxy?.$el;
-        _element.value = domElement;
 
         const _attributeManager = new WebAttributeManagerImpl(domElement, domElement);
 
         _eventManager.init(domElement);
 
         _stateManager.init(domElement, _attributeManager);
-        _renderManager.init(domElement);
         _eventManager.mount();
 
         _handlePendingPropsListeners();
         _lifecycleManager.trigger('mounted');
-
-        // TODO: 这里的update要怎么去触发
-        _update();
       });
       onBeforeUnmount(() => {
         _lifecycleManager.trigger('beforeUnmount');
         _eventManager.destroy();
       });
 
-      return () => _render?.(VueRenderer as RendererAPI<El>);
+      return () => h(prototype.name, {}, _render?.(VueRenderer) ?? undefined);
     },
   });
 };
