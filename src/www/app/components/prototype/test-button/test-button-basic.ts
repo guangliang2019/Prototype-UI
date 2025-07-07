@@ -7,11 +7,11 @@ export default class TestButtonBasic extends DocCode {
 
   // TODO: 需要写一个 测试组件 先测试一下 VueAdapter 的 button 组件
   protected _preview = () => {
-    return Div({ class: 'flex flex-col items-center justify-center' }, [
+    return Div({ class: 'flex flex-col items-center justify-center w-full h-[350px]' }, [
       h(
         'div',
         {
-          class: 'w-10 h-10',
+          class: 'w-full h-full',
           id: 'vue-app',
           onClick: () => {
             console.log('clicked1');
