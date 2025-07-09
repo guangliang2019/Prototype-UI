@@ -1,6 +1,5 @@
-import { Prototype, PrototypeAPI, RendererAPI, State } from '@/core/interface';
+import { Prototype, PrototypeAPI, State } from '@/core/interface';
 import {
-  ComponentInternalInstance,
   defineComponent,
   getCurrentInstance,
   h,
@@ -16,6 +15,7 @@ import VueStateManager from './managers/state';
 import { WebAttributeManagerImpl } from '../attribute';
 import VueLifecycleManager from './managers/lifecycle';
 import { VueRenderManager } from './managers/render';
+import { createPrototypeElement, PrototypeElement } from '../prototype-element';
 
 export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
   prototype: Prototype<Props, Exposes, VNode>
@@ -127,20 +127,28 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
   };
   // 构建一个 vue 的组件
   return defineComponent({
-    props: {},
-    setup() {
-     
-      _getElement = () => {
-        return _root.el as HTMLElement;
-      };
-      // 处理各个 manager 的初始化
-      _propsManager.initRef(_getElement());
-      _propsManager.mount();
+    // props: _propsManager.getVuePropsDefinition(),
+    setup(props) {
+      console.log(props, 'props');
+      const _temp_rootElement = createPrototypeElement();
+      const _rootRef = ref<HTMLElement | null>(null);
+      const _instance = getCurrentInstance();
+      if (!_instance) {
+        throw new Error('[VueAdapter] getCurrentInstance is not implemented');
+      }
 
+      _getElement = () => {
+        if (_rootRef.value) return _rootRef.value;
+        return _temp_rootElement.element;
+      };
+
+      _renderManager.init(_instance);
       _lifecycleManager.trigger('created');
-      _renderManager.init(getCurrentInstance() as ComponentInternalInstance);
 
       onMounted(() => {
+        // 处理各个 manager 的初始化
+        _propsManager.initRef(_getElement());
+        _propsManager.mount();
         _lifecycleManager.trigger('mounting');
 
         const domElement = getCurrentInstance()?.proxy?.$el;
@@ -160,7 +168,12 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
         _eventManager.destroy();
       });
 
-      return () => h(prototype.name, {}, _render?.(VueRenderer) ?? undefined);
+      return () =>
+        h(
+          prototype.name,
+          { ref: _rootRef, ..._temp_rootElement.toHProps() },
+          _render?.(VueRenderer) ?? undefined
+        );
     },
   });
 };
