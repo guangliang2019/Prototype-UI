@@ -187,7 +187,6 @@ const PrototypeButton = definePrototype<ShadcnButtonProps, ButtonExposes>({
         [_computedClass, _originalCls].join(' ').trimEnd()
       );
 
-      return 'Button1';
     };
   },
 });
@@ -203,7 +202,7 @@ const TestVueComponent = defineComponent({
     return () =>
       h('div', { class: 'space-y-4 p-4' }, [
         // h(testPrototype, { value: '123', name: '123' }),
-        h(vueButton, { variant: 'link' }, ['button','123']),
+        h(vueButton, { variant: 'link' }, ['123']),
       ]);
   },
 });

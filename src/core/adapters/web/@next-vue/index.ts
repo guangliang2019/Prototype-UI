@@ -129,7 +129,7 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
   return defineComponent({
     // props: _propsManager.getVuePropsDefinition(),
     props: _propsManager.getVuePropsDefinition(),
-    setup(props) {
+    setup(props, { slots }) {
       const _temp_rootElement = createPrototypeElement();
       const _rootRef = ref<HTMLElement | null>(null);
       const _instance = getCurrentInstance();
@@ -174,7 +174,7 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
         h(
           prototype.name,
           { ref: _rootRef, ..._temp_rootElement.toHProps(), ...props },
-          _render?.(VueRenderer) ?? undefined
+          _render?.(VueRenderer) ?? slots.default?.()
         );
     },
   });
