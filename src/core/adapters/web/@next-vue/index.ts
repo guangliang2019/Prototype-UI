@@ -174,6 +174,7 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
         h(
           prototype.name,
           { ref: _rootRef, ..._temp_rootElement.toHProps(), ...props },
+          // TODO:这里有点奇怪
           _render?.(VueRenderer) ?? slots.default?.()
         );
     },
