@@ -128,8 +128,8 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
   // 构建一个 vue 的组件
   return defineComponent({
     // props: _propsManager.getVuePropsDefinition(),
+    props: _propsManager.getVuePropsDefinition(),
     setup(props) {
-      console.log(props, 'props');
       const _temp_rootElement = createPrototypeElement();
       const _rootRef = ref<HTMLElement | null>(null);
       const _instance = getCurrentInstance();
@@ -158,20 +158,22 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
         _eventManager.init(domElement);
 
         _stateManager.init(domElement, _attributeManager);
+        _propsManager.setProps(props);
         _eventManager.mount();
 
         _handlePendingPropsListeners();
+        _update();
         _lifecycleManager.trigger('mounted');
       });
       onBeforeUnmount(() => {
         _lifecycleManager.trigger('beforeUnmount');
         _eventManager.destroy();
       });
-
+ 
       return () =>
         h(
           prototype.name,
-          { ref: _rootRef, ..._temp_rootElement.toHProps() },
+          { ref: _rootRef, ..._temp_rootElement.toHProps(), ...props },
           _render?.(VueRenderer) ?? undefined
         );
     },

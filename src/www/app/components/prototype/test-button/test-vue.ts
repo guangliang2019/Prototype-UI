@@ -119,7 +119,6 @@ const PrototypeButton = definePrototype<ShadcnButtonProps, ButtonExposes>({
     // props
     p.props.define({ variant: 'secondary', iconOnly: false });
     p.props.watch(['variant'], () => {
-      console.log('watch');
       p.view.update();
     });
 
@@ -131,7 +130,6 @@ const PrototypeButton = definePrototype<ShadcnButtonProps, ButtonExposes>({
 
     return (renderer) => {
       const r = renderer.createElement;
-      console.log(p.props.get(), 'props');
       const { iconOnly, disabled, variant } = p.props.get();
       let basicCls = 'select-none whitespace-nowrap';
       let flexCls = 'inline-flex items-center justify-center gap-2';
@@ -185,12 +183,11 @@ const PrototypeButton = definePrototype<ShadcnButtonProps, ButtonExposes>({
       ]
         .join(' ')
         .trimEnd();
-      console.log(p.view.getElement());
       p.view.getElement().className = optimizeTailwindClasses(
         [_computedClass, _originalCls].join(' ').trimEnd()
       );
 
-      return 'Button';
+      return 'Button1';
     };
   },
 });
@@ -202,11 +199,11 @@ const TestVueComponent = defineComponent({
     onMounted(() => {
       console.log('Vue 组件已挂载');
     });
-
+    // TODO: 要想办法得到这里的button才行不然没办法得到
     return () =>
       h('div', { class: 'space-y-4 p-4' }, [
         // h(testPrototype, { value: '123', name: '123' }),
-        h(vueButton, { variant: 'link' }, ['Button']),
+        h(vueButton, { variant: 'link' }, ['button','123']),
       ]);
   },
 });

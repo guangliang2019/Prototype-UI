@@ -79,10 +79,12 @@ export const VueRenderer: RendererAPI<VNode> = {
 
   createComment(content) {
     // TODO: 删掉或略过
+    console.log('createComment111',content);
     return h('text', {}, content) as any;
   },
 
   createFragment(children) {
+    console.log('createFragment111',children);
     return h(
       'fragment',
       {},
@@ -99,6 +101,7 @@ export const VueRenderer: RendererAPI<VNode> = {
 
   createText(content) {
     // TODO: 删掉或略过
+    console.log('createText111',content);
     return h('text', {}, content) as any;
   },
 };
