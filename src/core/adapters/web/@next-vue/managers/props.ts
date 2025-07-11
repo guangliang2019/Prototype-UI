@@ -24,7 +24,6 @@ class VuePropsManager<T extends object> implements PropsManager<T> {
     this._options = options;
     this._props = {} as T;
     this._changeCallbacks = new Set();
-    this._defineProps = {} as T;
 
     this.setupPropertyProxy();
 
@@ -61,6 +60,38 @@ class VuePropsManager<T extends object> implements PropsManager<T> {
       this._props = { ...this._props, ...initProps } as T;
       this._changeCallbacks.forEach((callback) => callback(this.getProps()));
     }
+  }
+
+  getVuePropsDefinition() {
+    const vueProps = Object.entries(this._defineProps).reduce(
+      (acc, [key, value]) => {
+        // 获取值的类型
+        const type = Object.prototype.toString.call(value).slice(8, -1);
+
+        acc[key] = {
+          // 根据值类型确定Vue props的type
+          type:
+            type === 'Date'
+              ? Date
+              : type === 'Array'
+                ? Array
+                : type === 'String'
+                  ? String
+                  : type === 'Number'
+                    ? Number
+                    : type === 'Boolean'
+                      ? Boolean
+                      : type === 'Function'
+                        ? Function
+                        : Object,
+          // 设置默认值
+          default: type === 'Object' || type === 'Array' ? () => value : value,
+        };
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+    return vueProps;
   }
 
   getProps(): T {
@@ -138,6 +169,8 @@ class VuePropsManager<T extends object> implements PropsManager<T> {
   }
 
   defineProps(defaultProps: T): void {
+    this._defineProps = { ...defaultProps } as T;
+
     if (!this._initFlag) {
       this._pendingProxies.add(defaultProps as T);
       return;
