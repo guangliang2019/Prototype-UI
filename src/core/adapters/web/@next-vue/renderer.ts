@@ -1,5 +1,5 @@
-import { RendererAPI } from '@/core/interface';
-import { h, VNode, VNodeChild } from 'vue';
+import { PrototypeSetupResult, RendererAPI } from '@/core/interface';
+import { h, RendererElement, RendererNode, VNode, VNodeChild } from 'vue';
 
 /*
  * 将一个 DOM Element 转换为 Vue 的 VNode
@@ -32,9 +32,27 @@ function convertElement(el: Element): VNode {
   return h(tag, props, children);
 }
 
-export const VueRenderer: RendererAPI<VNode> = {
+export class VueRenderer implements RendererAPI<VNode> {
+  private _slots: any;
+  private _render: void | PrototypeSetupResult<VNode<RendererNode, RendererElement, {
+    [key: string]: any;
+}>>;
+  constructor(render: void | PrototypeSetupResult<VNode<RendererNode, RendererElement, {
+    [key: string]: any;
+}>>, slots: any) {
+    this._render = render;
+    this._slots = slots;
+  }
 
-  createElement(type, props, children) {
+  createVNode() {
+    console.log('t1',this._slots);
+    this._render?.();
+    const slotNames = Object.keys(this._slots);
+    console.log('t2',slotNames)
+    return this._slots
+  }
+  
+  createElement(type: any, props: Record<string, any>, children: any) { 
     switch (typeof type) {
       case 'string':
         console.log('string',children,type,props);
@@ -75,20 +93,20 @@ export const VueRenderer: RendererAPI<VNode> = {
       default:
         throw new Error('VueRenderer 没有命中任何有效的 tag-name');
     }
-  },
+  }
 
-  createComment(content) {
+  createComment(content: string) {
     // TODO: 删掉或略过
     console.log('createComment111',content);
     return h('text', {}, content) as any;
-  },
+  }
 
-  createFragment(children) {
+  createFragment(children: any) {
     console.log('createFragment111',children);
     return h(
       'fragment',
       {},
-      children?.map((child) => {
+      children?.map((child: any) => {
         if (child instanceof Element) return elementToVNode(child);
         if (child === null) return null;
         if (Array.isArray(child))
@@ -97,11 +115,11 @@ export const VueRenderer: RendererAPI<VNode> = {
           });
       })
     );
-  },
+  }
 
-  createText(content) {
+  createText(content: string) {
     // TODO: 删掉或略过
     console.log('createText111',content);
     return h('text', {}, content) as any;
-  },
+  }
 };
