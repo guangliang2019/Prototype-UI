@@ -35,7 +35,7 @@ const asScrollArea = <Props extends {}, Exposes extends {}>(p: PrototypeAPI<Prop
   });
 
   p.event.on('scroll', readMetrics, { passive: true });
-  p.event.onGlobal('resize', readMetrics, { passive: true });
+  p.event.onGlobal('resize', readMetrics);
 
   p.context.provide(ScrollAreaContext, (update) => {
     updateContext = update;
