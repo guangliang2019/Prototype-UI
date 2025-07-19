@@ -1,6 +1,6 @@
 import { Div, h } from '@/www/utils/dom';
 import { DocCode, HighlightRule } from '@/www/components/doc-component';
-import { ShadcnScrollArea } from '@/components/shadcn';
+// import { ShadcnScrollArea } from '@/components/shadcn';
 
 export default class ShadcnScrollAreaBasic extends DocCode {
   protected _code = 'Code component is in development';
@@ -20,9 +20,9 @@ export default class ShadcnScrollAreaBasic extends DocCode {
         h('div', { class: 'h-20 w-full bg-primary opacity-5 text-primary' }, ['7']),
         h('div', { class: 'h-20 w-full bg-primary opacity-5 text-primary' }, ['8']),
       ]
-    ) as ShadcnScrollArea;
+    );
 
-    scrollArea.scrollContentRef.setAttribute('class', 'flex flex-col gap-4');
+    // scrollArea.scrollContentRef.setAttribute('class', 'flex flex-col gap-4');
 
     return Div({ class: 'flex flex-col items-center justify-center relative' }, [scrollArea]);
   };

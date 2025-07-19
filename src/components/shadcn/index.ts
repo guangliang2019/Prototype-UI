@@ -17,7 +17,7 @@ export {  ShadcnTooltipProvier, ShadcnTooltip } from './tooltip';
 
 export { ShadcnInput } from './input';
 
-export { ShadcnScrollArea, ShadcnScrollBar } from './scroll-area';
+// export { ShadcnScrollArea, ShadcnScrollBar } from './scroll-area';
 export type { ShadcnScrollAreaContext } from './scroll-area';
 
 export { ShadcnSwitch } from './switch';

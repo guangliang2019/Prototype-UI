@@ -15,6 +15,13 @@ export class WebStateManager implements StateManager {
       serialize: (value: any) => string | null;
     }
   >();
+  private pendingCSSVariables = new Map<
+    string,
+    {
+      value: any;
+      serialize: (value: any) => string | null;
+    }
+  >();
 
   constructor(
     private host: HTMLElement,
@@ -53,16 +60,19 @@ export class WebStateManager implements StateManager {
     const index = this.stateIndex++;
 
     // 验证 attribute 名称格式
-    if (attribute && !isValidKebabCase(attribute)) {
-      console.warn(`[Prototype-UI] attribute 名称必须是 kebab-case 格式，当前值为 "${attribute}"`);
+    if (attribute && !isValidKebabCase(attribute) && !attribute.startsWith('--')) {
+      console.warn(`[Prototype-UI] attribute 名称必须是 kebab-case 或 CSS 变量格式，当前值为 "${attribute}"`);
       attribute = undefined;
     }
 
-    // 检查是否需要同步到 attribute
+    // 检查是否是 CSS 变量
+    const isCSSVariable = attribute && attribute.startsWith('--');
+
+    // 检查是否需要同步到 attribute 或 CSS 变量
     const shouldSync = attribute && this.canSyncToAttribute(initial);
     if (attribute && !shouldSync) {
       console.warn(
-        `[Prototype-UI] 只有 boolean、string、number 类型的状态可以被暴露为 attribute，当前类型为 ${typeof initial}`
+        `[Prototype-UI] 只有 boolean、string、number 类型的状态可以被暴露为 ${isCSSVariable ? 'CSS 变量' : 'attribute'}，当前类型为 ${typeof initial}`
       );
     }
 
@@ -77,25 +87,44 @@ export class WebStateManager implements StateManager {
           // 更新内部状态
           currentValue = value;
 
-          // 如果需要同步到 attribute
+          // 如果需要同步到 attribute 或 CSS 变量
           if (shouldSync && attribute) {
             const serialize = options?.serialize ?? this.defaultSerialize;
             if (value !== this.publicStates.get(attribute)) {
               this.publicStates.set(attribute, value);
-              // 如果元素已经连接到 DOM
-              if (this.host.isConnected) {
-                const serializedValue = serialize(value);
-                if (serializedValue === null) {
-                  this.host.removeAttribute(attribute);
+              
+              if (isCSSVariable) {
+                // 同步到 CSS 变量
+                if (this.host.isConnected) {
+                  const serializedValue = serialize(value);
+                  if (serializedValue === null) {
+                    this.host.style.removeProperty(attribute);
+                  } else {
+                    this.host.style.setProperty(attribute, serializedValue);
+                  }
                 } else {
-                  this.host.setAttribute(attribute, serializedValue);
+                  // 否则加入待处理队列
+                  this.pendingCSSVariables.set(attribute, {
+                    value,
+                    serialize,
+                  });
                 }
               } else {
-                // 否则加入待处理队列
-                this.pendingAttributes.set(attribute, {
-                  value,
-                  serialize,
-                });
+                // 同步到 DOM 属性
+                if (this.host.isConnected) {
+                  const serializedValue = serialize(value);
+                  if (serializedValue === null) {
+                    this.host.removeAttribute(attribute);
+                  } else {
+                    this.host.setAttribute(attribute, serializedValue);
+                  }
+                } else {
+                  // 否则加入待处理队列
+                  this.pendingAttributes.set(attribute, {
+                    value,
+                    serialize,
+                  });
+                }
               }
             }
           }
@@ -104,23 +133,33 @@ export class WebStateManager implements StateManager {
 
       this.states.set(index, state);
 
-      // 如果需要同步到 attribute，设置初始值并监听变化
+      // 如果需要同步到 attribute 或 CSS 变量，设置初始值并监听变化
       if (shouldSync && attribute) {
         const serialize = options?.serialize ?? this.defaultSerialize;
         const deserialize = options?.deserialize ?? this.defaultDeserialize;
 
         this.publicStates.set(attribute, initial);
-        // 将初始值加入待处理队列
-        this.pendingAttributes.set(attribute, {
-          value: initial,
-          serialize,
-        });
+        
+        if (isCSSVariable) {
+          // 将初始值加入 CSS 变量待处理队列
+          this.pendingCSSVariables.set(attribute, {
+            value: initial,
+            serialize,
+          });
+        } else {
+          // 将初始值加入属性待处理队列
+          this.pendingAttributes.set(attribute, {
+            value: initial,
+            serialize,
+          });
 
-        this.attributeManager.watch(attribute, (_, newValue) => {
-          const value = deserialize(newValue);
-          this.publicStates.set(attribute, value);
-          state.set(value);
-        });
+          // 监听属性变化（仅对 DOM 属性）
+          this.attributeManager.watch(attribute, (_, newValue) => {
+            const value = deserialize(newValue);
+            this.publicStates.set(attribute, value);
+            state.set(value);
+          });
+        }
       }
 
       return state;
@@ -130,10 +169,11 @@ export class WebStateManager implements StateManager {
   }
 
   /**
-   * 同步所有待处理的属性到 DOM
+   * 同步所有待处理的属性和 CSS 变量到 DOM
    * 在元素连接到 DOM 后调用
    */
   flushAttributes(): void {
+    // 同步待处理的属性
     this.pendingAttributes.forEach(({ value, serialize }, attribute) => {
       // 设置当前上下文
       this.currentAttribute = attribute;
@@ -148,6 +188,23 @@ export class WebStateManager implements StateManager {
       }
     });
     this.pendingAttributes.clear();
+
+    // 同步待处理的 CSS 变量
+    this.pendingCSSVariables.forEach(({ value, serialize }, cssVariable) => {
+      console.log('pendingCSSVariables', cssVariable, value, serialize);
+      // 设置当前上下文
+      this.currentAttribute = cssVariable;
+      const serializedValue = serialize(value);
+      // 清理上下文
+      this.currentAttribute = undefined;
+
+      if (serializedValue === null) {
+        this.host.style.removeProperty(cssVariable);
+      } else {
+        this.host.style.setProperty(cssVariable, serializedValue);
+      }
+    });
+    this.pendingCSSVariables.clear();
   }
 
   getStates(): Readonly<Record<string, any>> {
@@ -160,6 +217,7 @@ export class WebStateManager implements StateManager {
     this.states.clear();
     this.publicStates.clear();
     this.pendingAttributes.clear();
+    this.pendingCSSVariables.clear();
     this.stateIndex = 0;
   }
 
