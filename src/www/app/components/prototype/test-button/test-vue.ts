@@ -128,8 +128,7 @@ const PrototypeButton = definePrototype<ShadcnButtonProps, ButtonExposes>({
       _originalCls = p.view.getElement().className;
     });
 
-    return (renderer) => {
-      const r = renderer.createElement;
+    return () => {
       const { iconOnly, disabled, variant } = p.props.get();
       let basicCls = 'select-none whitespace-nowrap';
       let flexCls = 'inline-flex items-center justify-center gap-2';
@@ -186,7 +185,6 @@ const PrototypeButton = definePrototype<ShadcnButtonProps, ButtonExposes>({
       p.view.getElement().className = optimizeTailwindClasses(
         [_computedClass, _originalCls].join(' ').trimEnd()
       );
-
     };
   },
 });
@@ -202,9 +200,17 @@ const TestVueComponent = defineComponent({
     return () =>
       h('div', { class: 'space-y-4 p-4' }, [
         // h(testPrototype, { value: '123', name: '123' }),
-        h(vueButton, { variant: 'link' }, ['123']),
+        h(vueButton, { variant: 'link' }, [
+         
+          h('br'),
+          h('div', {}, ['1']),
+
+        ]),
+
+
       ]);
   },
 });
 
 export default TestVueComponent;
+

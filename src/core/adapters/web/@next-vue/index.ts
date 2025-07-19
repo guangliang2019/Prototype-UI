@@ -47,6 +47,7 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
 
   const _p: PrototypeAPI<Props, Exposes> = {
     // TODO: 完善构建 p 的逻辑
+    // TODO: 少了context，export部分
 
     props: {
       define: (props: Props) => {
@@ -77,6 +78,12 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
           callback(value, oldValue);
         };
       },
+    },
+    context: {
+
+    },
+    expose: {
+
     },
     lifecycle: {
       onCreated: (callback: () => void) => {
@@ -163,19 +170,24 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
 
         _handlePendingPropsListeners();
         _update();
+        console.log(_render,'t4');
         _lifecycleManager.trigger('mounted');
       });
       onBeforeUnmount(() => {
         _lifecycleManager.trigger('beforeUnmount');
         _eventManager.destroy();
       });
- 
+      
+      console.log(slots.default?.(),'t2');
+      const _vueRenderer = new VueRenderer(_render,slots);
+
       return () =>
         h(
           prototype.name,
           { ref: _rootRef, ..._temp_rootElement.toHProps(), ...props },
           // TODO:这里有点奇怪
-          _render?.(VueRenderer) ?? slots.default?.()
+          // _render?.(VueRenderer) ?? slots.default?.()
+          _vueRenderer.createVNode()
         );
     },
   });
