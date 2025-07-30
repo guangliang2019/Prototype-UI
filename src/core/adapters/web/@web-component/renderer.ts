@@ -1,4 +1,10 @@
-import { ElementChildren, ElementProps, Prototype, EventHandler } from '@/core/interface';
+import {
+  ElementChildren,
+  ElementProps,
+  Prototype,
+  EventHandler,
+  ElementChild,
+} from '@/core/interface';
 
 import { BaseRenderer } from '../renderer';
 import { WebComponentAdapter } from '.';
@@ -92,7 +98,7 @@ export class WebRenderer extends BaseRenderer {
   protected createNativeElement(
     tag: string,
     props?: ElementProps,
-    children?: ElementChildren[]
+    children?: ElementChildren
   ): Element {
     const isSvg = SVGUtils.isSvgTag(tag);
     const element = isSvg ? SVGUtils.createSvgElement(tag) : document.createElement(tag);
@@ -109,12 +115,12 @@ export class WebRenderer extends BaseRenderer {
 
   protected appendChildren(
     parent: Element,
-    children: ElementChildren[] | undefined,
+    children: ElementChildren | undefined,
     isSvg: boolean = false
   ): void {
     if (!children) return;
 
-    children.flat().forEach((child) => {
+    const handleChild = (child: ElementChild) => {
       if (child != null) {
         if (child instanceof Node) {
           if (isSvg && child instanceof Element) {
@@ -128,7 +134,13 @@ export class WebRenderer extends BaseRenderer {
           parent.appendChild(this.createText(String(child)));
         }
       }
-    });
+    };
+
+    if (Array.isArray(children)) {
+      children.forEach(handleChild);
+    } else {
+      handleChild(children);
+    }
   }
 
   protected applyProps(element: Element, props: ElementProps, isSvg: boolean = false): void {
@@ -183,7 +195,7 @@ export class WebRenderer extends BaseRenderer {
     });
   }
 
-  createFragment(children?: ElementChildren[]): Element {
+  createFragment(children?: ElementChildren): Element {
     // 创建一个 div 作为 Fragment 的容器
     // 这样可以满足返回类型要求，同时保持 Fragment 的语义
     const fragment = document.createDocumentFragment();
@@ -197,7 +209,7 @@ export class WebRenderer extends BaseRenderer {
   protected createFromPrototype(
     prototype: Prototype<any>,
     props?: ElementProps,
-    children?: ElementChildren[]
+    children?: ElementChildren
   ): Element {
     const ComponentClass = WebComponentAdapter(prototype);
     const instance = new ComponentClass();
@@ -243,3 +255,4 @@ export class WebRenderer extends BaseRenderer {
     }
   }
 }
+

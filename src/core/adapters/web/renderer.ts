@@ -1,17 +1,17 @@
 import {
   ElementType,
   ElementProps,
-  RendererAPI,
   RendererContext,
   Prototype,
   ElementChildren,
+  ElementChild,
 } from '../../interface';
 import { EventHandler } from '../../interface/managers';
 
 /**
  * 基础渲染器实现
  */
-export abstract class BaseRenderer implements RendererAPI {
+export abstract class BaseRenderer {
   protected readonly context: RendererContext;
 
   constructor(context: RendererContext) {
@@ -45,7 +45,7 @@ export abstract class BaseRenderer implements RendererAPI {
 
   abstract createText(content: string): Text;
   abstract createComment(content: string): Comment;
-  abstract createFragment(children?: ElementChildren[]): Element;
+  abstract createFragment(children?: ElementChildren): Element;
 
   protected abstract createNativeElement(
     tag: string,
@@ -139,10 +139,9 @@ export abstract class BaseRenderer implements RendererAPI {
       .join(' ');
   }
 
-  protected appendChildren(parent: Element, children: ElementChildren[] | undefined): void {
+  protected appendChildren(parent: Element, children: ElementChildren | undefined): void {
     if (!children) return;
-
-    children.flat().forEach((child) => {
+    const handleChild = (child: ElementChild) => {
       if (child != null) {
         if (child instanceof Node) {
           // 如果是 Node 实例，直接追加
@@ -152,6 +151,11 @@ export abstract class BaseRenderer implements RendererAPI {
           parent.appendChild(this.createText(String(child)));
         }
       }
-    });
+    };
+    if (Array.isArray(children)) {
+      children.forEach(handleChild);
+    } else {
+      handleChild(children);
+    }
   }
 }

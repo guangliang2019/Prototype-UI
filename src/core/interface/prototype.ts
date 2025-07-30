@@ -1,6 +1,6 @@
 import { EventCommands } from './event';
 import { Context, State } from './managers';
-import { RendererAPI } from './renderer';
+import { Renderer } from './renderer';
 
 /**
  * 可以通过属性监听的类型
@@ -85,7 +85,7 @@ export interface Prototype<Props extends {} = {}, Exposes extends {} = {}, El = 
 /**
  * 原型设置函数的返回值
  */
-export type PrototypeSetupResult<El = Element> = (renderer: RendererAPI<El>) => El | void;
+export type PrototypeSetupResult<El = Element> = (renderer: Renderer<El>) => El | void;
 
 /**
  * 原型设置函数

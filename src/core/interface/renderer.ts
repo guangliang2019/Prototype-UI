@@ -43,10 +43,8 @@ export interface RendererContext {
   propsManager: PropsManager<any>;
 }
 
-export interface RendererAPI<El = Element> {
-  createElement(type: ElementType, props?: ElementProps, children?: ElementChildren): El;
-
-  createText(content: string): Text;
-  createComment(content: string): Comment;
-  createFragment(children?: ElementChildren[]): El;
-}
+export type Renderer<El = Element> = (
+  type: ElementType,
+  props?: ElementProps,
+  children?: ElementChildren
+) => El;

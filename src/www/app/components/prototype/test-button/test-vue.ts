@@ -200,7 +200,7 @@ const TestVueComponent = defineComponent({
     return () =>
       h('div', { class: 'space-y-4 p-4' }, [
         // h(testPrototype, { value: '123', name: '123' }),
-        h(vueButton, { variant: 'link' }, [
+        h(vueButton, { variant: 'primary' }, [
          
           h('br'),
           h('div', {}, ['1']),
