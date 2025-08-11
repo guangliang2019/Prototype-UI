@@ -60,6 +60,10 @@ export type WebComponentConstructor<T extends HTMLElement> = Constructor<WebComp
 export const WebComponentAdapter = <Props extends {}, Exposes extends {} = {}>(
   prototype: Prototype<Props, Exposes>
 ): WebComponentConstructor<HTMLElement> => {
+  if (typeof window === 'undefined' || typeof customElements === 'undefined') {
+    return null as any; // 在非浏览器环境返回 null, 避免阻塞 SSR
+  }
+
   const Constructor = class extends HTMLElement {
     private _lifecycle = new WebLifecycleManager();
     private _attributeManager = new WebAttributeManagerImpl(this, this);

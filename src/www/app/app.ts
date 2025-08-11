@@ -9,7 +9,7 @@ import './examples';
 
 import '@/components/lucide/chevrons-up-down';
 import { RouteChange, Router } from '../router';
-import { TabsExpose } from '@/core/behaviors/as-tabs/interface';
+import { TabsExposes } from '@/core/behaviors/as-tabs/interface';
 
 export default class AppRoot extends HTMLElement {
   connectedCallback() {
@@ -87,7 +87,7 @@ export default class AppRoot extends HTMLElement {
           h('prototype-docs'),
         ]),
       ]
-    ) as HTMLElement & TabsExpose;
+    ) as HTMLElement & TabsExposes;
     const navTab = h('prototype-tabs', { 'default-value': 'docs' }, [
       h('website-nav'),
       h('main', { class: 'flex-1 flex justify-center' }, [
@@ -95,7 +95,7 @@ export default class AppRoot extends HTMLElement {
         h('prototype-tabs-content', { value: 'components' }, ['components']),
         h('prototype-tabs-content', { value: 'examples' }, [h('examples-page')]),
       ]),
-    ]) as HTMLElement & TabsExpose;
+    ]) as HTMLElement & TabsExposes;
 
     this._changeNav = navTab.changeTab ?? (() => {});
     this._changeDocs = docsTab.changeTab ?? (() => {});

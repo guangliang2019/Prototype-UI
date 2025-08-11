@@ -25,7 +25,11 @@
     "dev": "vite",
     "dev:vue": "cross-env MODE=vue vite",
     "dev-cli": "node ./dev-cli/index.cjs",
-    "build": "vite build --emptyOutDir"
+    "build": "vite build --emptyOutDir",
+    "dev:docs": "cd src/next-www && npm run dev",
+    "build:docs": "node scripts/build-docs.js",
+    "preview:docs": "cd src/next-www && npm run preview",
+    "safelist": "node scripts/generate-safelist.js"
   },
   "repository": {
     "type": "git",

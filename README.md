@@ -1,79 +1,80 @@
-```markdown
 # Proto UI
 
-> Any Design System ✕ Any Platform Technology
+**One UI Protocol. Any Platform.**  
+Decouple interaction logic from visual design, enabling any design system and any tech stack to interoperate, combine, and progressively enhance.
 
-Proto UI is a framework-agnostic UI architecture built on interaction-first principles. Instead of treating components as static visual elements, Proto UI introduces a reusable behavior modeling system—**Prototypes**—to enable cross-platform, design-system-independent UI development.
-
----
-
-## 🚀 Why Proto UI?
-
-- Write once, run anywhere—React, Vue, Web Components, even native platforms
-- Fully customizable behaviors and structure, decoupled from rendering tech
-- Minimal runtime overhead, strict separation of concerns
-- Accessibility, security, and performance built in from day one
+[English](README.md) | [简体中文](README.zh-CN.md)
 
 ---
 
-## 🧠 Core Idea
+## Why We Believe This Will Work
 
-    Adapter(Prototype) => Component
+Proto UI is not a paper concept — it’s distilled from real-world production experience.  
+In my previous role, I spent two years building an enterprise-grade design system and component library across **Flutter, Swift, Kotlin, Vue2, Vue3, React, and WeChat Mini Programs**.
 
-Define a behavior model once (Prototype), and apply it across platforms via adapters. Proto UI breaks down interaction into modular, testable, and composable units.
+All platforms ran on a unified programming paradigm, achieving:
 
----
+- Consistent interaction logic across multiple platforms
+- Decoupling of visual design and interaction behavior
+- Progressive capability enhancement (accessibility, platform-specific features, interaction replacements)
 
-## 🛠 Getting Started
+Proto UI abstracts this practice into a universal modeling method and formalizes it as a protocol:
 
-Proto UI uses **Vite** as its development environment.
-
-### Requirements
-
-- **Node.js >= 18**
-- **npm** or other package managers (e.g. pnpm, yarn)
-
-### Setup
-
-    npm install
-    npm run dev
-
-Then open `http://localhost:5173` to explore the local playground.
+> **Prototype → Adapter → Component → Host Runtime**  
+> This allows any tech stack to reuse the same interaction logic and composition patterns.
 
 ---
 
-## 📦 What’s in the Works?
+## What We Have Completed
 
-Proto UI is in **early active development**. Here’s what we’re working on:
-
-- ✅ Expanding the **Prototype & Behavior libraries**
-- ✅ Supporting more **platform adapters**
-- ✅ CLI tool for install-by-source (true zero-runtime, on-demand integration)
-- ✅ Growing the **documentation site** and contributor guides
-- ✅ Building **customized testing systems** for fast, reliable validation
-- ✅ Preparing for **community launch and outreach**—help us warm up the engine 🚀
+✅ **Web Component adapter & compiler**  
+✅ **Headless UI prototypes** (Button / Menu / Dialog, etc.)  
+✅ **Shadcn UI prototypes** (partially complete)  
+✅ Core protocol APIs: `p.event` / `p.state` / `p.context` / `p.lifecycle` / `p.props`  
+✅ Automatic event lifecycle management & `asHook` conflict warnings
 
 ---
 
-## 🤝 How to Contribute
+## What We’re Building Next
 
-We need your help building a better UI foundation—whether you're into systems design, platform tooling, or just love refining interactions.
+- **Cross-platform adapters**: Qt / Flutter / React Native / Web
+- **Cross-design-system composition**: mix Material + Fluent freely
+- **Cross-technology bridging**: mix React components and Web Components with a semantic bridge beyond `postMessage`
+- **Progressive enhancement**: accessibility mode, child/elder-friendly modes, swappable interaction logic
 
-- Prototype missing components
-- Improve adapter quality
-- Expand documentation
-- Help with devtools, testing, or the CLI
-- Or just jump in and say hi
-
-👉 Check out `contribute/` to explore how things work  
-👉 Open a [Discussion](https://github.com/your-org/proto-ui/discussions)  
-👉 Or submit a [Pull Request](https://github.com/your-org/proto-ui/pulls)
-
-Let’s build something radically reusable.
+**Once implemented in the protocol core, these capabilities will automatically be available to all prototyped component libraries — no rewrites required.**
 
 ---
 
-## 📜 License
+## Why Join Now
 
-MIT
-```
+- The protocol core is already stable; future adapter work will rarely need refactoring
+- Early contributors can directly influence core APIs and specifications
+- Any adapter or prototype you connect will automatically benefit from all future protocol enhancements
+
+---
+
+## How to Contribute
+
+1. **Explore the protocol chain**  
+   Clone this repo, run `examples/`, and see how a Prototype runs on a host platform through an Adapter.
+2. **Build an adapter**  
+   Follow the [Adapter Development Guide](link-to-doc) to support your preferred platform or framework.
+3. **Contribute a prototype**  
+   Abstract common interaction patterns into Prototypes that can serve any platform.
+4. **Propose ideas**  
+   Discuss cross-platform interaction patterns, progressive enhancement capabilities, and protocol extensions.
+
+---
+
+## Links
+
+- [Documentation site](link-to-doc-site) (full overview & guides)
+- [Issue tracker](link-to-issues) (adapter tasks & core API discussions)
+- Community chat (Discord / QQ / Slack)
+
+---
+
+> **Note**  
+> Proto UI is in an early stage — its core feasibility is already validated, and we are building out more adapter chains.  
+> We welcome all discussions, adapters, and prototype contributions for cross-technology UI protocols.
