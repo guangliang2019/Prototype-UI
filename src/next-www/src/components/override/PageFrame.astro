@@ -1,0 +1,35 @@
+---
+import MobileMenuToggle from '@astrojs/starlight/components/MobileMenuToggle.astro';
+import '../../styles/global.css';
+
+const { hasSidebar } = Astro.locals.starlightRoute;
+---
+
+<div
+  class="text-foreground group/body overscroll-none font-sans antialiased [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)] __variable_5cfdac __variable_224a03 __variable_e8ce0c theme-default"
+>
+  <header class="bg-background sticky top-0 z-50 w-full"><slot name="header" /></header>
+  <div
+    class="group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex w-full 3xl:fixed:container 3xl:fixed:px-3 min-h-min flex-1 items-start px-0 [--sidebar-width:220px] [--top-spacing:0] lg:grid lg:grid-cols-[var(--sidebar-width)_minmax(0,1fr)] lg:[--sidebar-width:240px] lg:[--top-spacing:calc(var(--spacing)*4)]"
+  >
+    {
+      hasSidebar && (
+        <nav
+          class="text-sidebar-foreground w-(--sidebar-width) flex-col sticky top-[calc(var(--header-height)+1px)] z-30 hidden h-[calc(100svh-var(--header-height)-var(--footer-height))] bg-transparent lg:flex"
+          aria-label={Astro.locals.t('sidebarNav.accessibleLabel')}
+        >
+          <MobileMenuToggle />
+          <div id="starlight__sidebar" class="sidebar-pane">
+            <div class="sidebar-content sl-flex">
+              <slot name="sidebar" />
+            </div>
+          </div>
+        </nav>
+        <div class="main-frame"><slot /></div>
+      )
+    }
+  </div>
+  { !hasSidebar && <div class="main-frame"><slot /></div>}
+</div>
+
+<style></style>

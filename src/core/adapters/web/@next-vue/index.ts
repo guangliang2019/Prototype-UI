@@ -15,7 +15,7 @@ import VueStateManager from './managers/state';
 import { WebAttributeManagerImpl } from '../attribute';
 import VueLifecycleManager from './managers/lifecycle';
 import { VueRenderManager } from './managers/render';
-import { createPrototypeElement, PrototypeElement } from '../prototype-element';
+import { createPrototypeElement } from '../prototype-element';
 
 export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
   prototype: Prototype<Props, Exposes, VNode>
@@ -79,12 +79,8 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
         };
       },
     },
-    context: {
-
-    },
-    expose: {
-
-    },
+    context: {},
+    expose: {},
     lifecycle: {
       onCreated: (callback: () => void) => {
         _lifecycleManager.add('created', callback);
@@ -170,16 +166,16 @@ export const VueAdapter = <Props extends {}, Exposes extends {} = {}>(
 
         _handlePendingPropsListeners();
         _update();
-        console.log(_render,'t4');
+        console.log(_render, 't4');
         _lifecycleManager.trigger('mounted');
       });
       onBeforeUnmount(() => {
         _lifecycleManager.trigger('beforeUnmount');
         _eventManager.destroy();
       });
-      
-      console.log(slots.default?.(),'t2');
-      const _vueRenderer = new VueRenderer(_render,slots);
+
+      console.log(slots.default?.(), 't2');
+      const _vueRenderer = new VueRenderer(_render, slots);
 
       return () =>
         h(

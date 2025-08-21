@@ -1,1 +1,62 @@
-@import "./tailwindcss.css";
+@import './tailwindcss.css';
+@import './search-trigger.css';
+@import './markdown.css';
+
+.container-wrapper {
+  width: 100%;
+  padding-inline: calc(var(--spacing) * 2);
+  margin-inline: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  padding-inline: calc(var(--spacing) * 4);
+  margin-inline: auto;
+}
+
+@media (max-width: 64rem) {
+  .container {
+    padding-inline: calc(var(--spacing) * 8);
+  }
+}
+
+@media (min-width: 64rem) {
+  .container {
+    max-width: 64rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .container {
+    max-width: 48rem;
+  }
+}
+@media (min-width: 40rem) {
+  .container {
+    max-width: 40rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .\33 xl\:fixed\:px-0:is(.layout-fixed *) {
+    padding-inline: calc(var(--spacing) * 0);
+  }
+  .container-wrapper:is(.layout-fixed *) {
+    max-width: calc(var(--breakpoint-2xl) + 2rem);
+  }
+
+  @media (min-width: 64rem) {
+    .\33 xl\:fixed\:container:is(.layout-fixed *) {
+      padding-inline: calc(var(--spacing) * 8);
+    }
+  }
+}
+
+@media (min-width: 1600px) {
+  @media (min-width: 1600px) {
+    .\33 xl\:fixed\:container:is(.layout-fixed *) {
+      max-width: var(--breakpoint-2xl);
+    }
+  }
+}
